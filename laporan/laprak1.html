@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 1 — Instalasi &amp; Konfigurasi Laravel</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../custom.css" />
+
+    <style>
+        /* ── Page Header ── */
+        .laprak-hero {
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .laprak-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    var(--bg) 0%,
+                    var(--card) 50%,
+                    rgba(232, 62, 140, 0.08) 100%);
+            z-index: 0;
+        }
+
+        .laprak-hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .laprak-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .laprak-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .laprak-hero .lead {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232, 62, 140, 0.1);
+            border: 1px solid rgba(232, 62, 140, 0.25);
+            color: var(--accent-2);
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .btn-back-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn-back-hero:hover {
+            color: var(--accent);
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            padding: 48px 0 80px;
+            background: var(--bg);
+        }
+
+        /* ── Section Card ── */
+        .laprak-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .laprak-card:hover {
+            border-color: rgba(232, 62, 140, 0.25);
+            box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent-2);
+            margin-bottom: 18px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 22px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .section-label .num {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .laprak-card p,
+        .laprak-card li {
+            color: var(--muted);
+            font-size: 14.5px;
+            line-height: 1.85;
+        }
+
+        .laprak-card ul,
+        .laprak-card ol {
+            padding-left: 20px;
+        }
+
+        .laprak-card li {
+            margin-bottom: 4px;
+        }
+
+        .laprak-card strong {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        code {
+            background: rgba(232, 62, 140, 0.12);
+            color: var(--accent-2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* ── Step Block ── */
+        .step-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .step-block:hover {
+            background: rgba(232, 62, 140, 0.04);
+            border-color: rgba(232, 62, 140, 0.2);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+        }
+
+        .step-block p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0 0 10px;
+        }
+
+        .sub-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-2);
+            font-size: 13px;
+            font-weight: 600;
+            margin: 14px 0 8px;
+        }
+
+        .sub-label::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Code Block ── */
+        .code-wrap {
+            background: #0a0a12;
+            border: 1px solid rgba(232, 62, 140, 0.18);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .code-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(232, 62, 140, 0.07);
+            border-bottom: 1px solid rgba(232, 62, 140, 0.12);
+        }
+
+        .code-head .lang {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid rgba(232, 62, 140, 0.25);
+            color: var(--muted);
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(232, 62, 140, 0.15);
+            color: var(--accent-2);
+            border-color: var(--accent);
+        }
+
+        .code-wrap pre {
+            margin: 0;
+            padding: 16px 20px;
+            overflow-x: auto;
+            color: #e0c8e8;
+            line-height: 1.75;
+        }
+
+        .code-wrap pre code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .cm {
+            color: rgba(232, 62, 140, 0.5);
+            font-style: italic;
+        }
+
+        /* ── Image ── */
+        .img-wrap {
+            margin: 14px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .img-wrap img {
+            width: 100%;
+            display: block;
+        }
+
+        .img-cap {
+            padding: 7px 14px;
+            font-size: 11.5px;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-style: italic;
+        }
+
+        .img-placeholder {
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .img-placeholder i {
+            font-size: 28px;
+            opacity: 0.4;
+        }
+
+        /* ── Info Box ── */
+        .info-box {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        .info-box i {
+            flex-shrink: 0;
+            margin-top: 2px;
+            font-size: 15px;
+        }
+
+        .info-box.blue {
+            background: rgba(232, 62, 140, 0.08);
+            border-left: 3px solid var(--accent);
+            color: var(--accent-2);
+        }
+
+        .info-box.green {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 3px solid #27ae60;
+            color: #7ecf9d;
+        }
+
+        .info-box a {
+            color: var(--accent-2);
+        }
+
+        .info-box a:hover {
+            color: var(--accent);
+        }
+
+        /* ── Challenge List ── */
+        .challenge-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: chal;
+        }
+
+        .challenge-list>li {
+            counter-increment: chal;
+            position: relative;
+            padding-left: 38px;
+            margin-bottom: 24px;
+        }
+
+        .challenge-list>li::before {
+            content: counter(chal);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-radius: 50%;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(232, 62, 140, 0.4);
+        }
+
+        .challenge-list>li strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14.5px;
+        }
+
+        .challenge-list>li p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0 0 10px;
+        }
+
+        /* ── Nav footer ── */
+        .nav-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-footer a {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 20px;
+            background: rgba(232, 62, 140, 0.07);
+            border: 1px solid rgba(232, 62, 140, 0.2);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+            text-align: right;
+            min-width: 160px;
+        }
+
+        .nav-footer a:hover {
+            background: rgba(232, 62, 140, 0.15);
+            border-color: var(--accent);
+            transform: translateX(4px);
+            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.2);
+        }
+
+        .nav-footer a span {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 2px;
+        }
+
+        .nav-footer a strong {
+            font-size: 14px;
+            color: var(--accent-2);
+        }
+
+        @media (max-width: 600px) {
+            .laprak-card {
+                padding: 22px 18px;
+            }
+
+            .step-block {
+                padding: 16px 16px;
+            }
+
+            .laprak-hero {
+                padding: 80px 0 40px;
+            }
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img src="../images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle" />
+                <span class="fw-bold text-uppercase">Saskia Alifah</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
+                </ul>
+                <div class="ms-lg-4 ms-3 search-container">
+                    <input type="text" class="search-input" placeholder="Search..." aria-label="Search">
+                    <button type="submit" class="search-btn" aria-label="Search button"><i
+                            class="bi bi-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="laprak-hero">
+        <div class="container">
+            <a href="main.html" class="btn-back-hero">
+                <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+            </a>
+            <h1>Laprak 1 — <span>Instalasi &amp; Konfigurasi Laravel</span></h1>
+            <p class="lead">Pemrograman Web · Pertemuan 6</p>
+            <div class="badge-row">
+                <span class="badge-pill"><i class="bi bi-person-fill"></i> Saskia Alifah</span>
+                <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+                <span class="badge-pill"><i class="bi bi-calendar3"></i> Pemrograman Web</span>
+                <span class="badge-pill"><i class="bi bi-code-slash"></i> Laravel 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 860px;">
+
+            <!-- I. TUJUAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">I</span>Tujuan Praktikum</div>
+                <p>Setelah menyelesaikan praktikum ini, mahasiswa diharapkan mampu:</p>
+                <ul>
+                    <li>Melakukan instalasi Laragon sebagai local server environment</li>
+                    <li>Melakukan instalasi Laravel dan tools pendukungnya (Composer, Node.js, Git, NPM)</li>
+                    <li>Mengonfigurasi environment development Laravel</li>
+                    <li>Memahami struktur dasar project Laravel dan konsep MVC</li>
+                    <li>Menjalankan aplikasi Laravel melalui browser</li>
+                    <li>Membuat project baru Laravel dan mengimplementasikan pola MVC</li>
+                </ul>
+            </div>
+
+            <!-- II. DASAR TEORI -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">II</span>Dasar Teori</div>
+                <p>Laravel adalah framework PHP open source yang dikembangkan oleh Taylor Otwell. Framework ini
+                    dirancang dengan arsitektur <strong>MVC (Model–View–Controller)</strong> untuk mempermudah dan
+                    mempercepat pengembangan aplikasi web yang modern dan terstruktur.</p>
+                <p>Beberapa fitur unggulan Laravel antara lain: <strong>Eloquent ORM</strong> untuk interaksi database
+                    yang intuitif, <strong>Blade Templating Engine</strong> untuk pembuatan tampilan dinamis,
+                    <strong>Artisan CLI</strong> untuk otomatisasi tugas development, serta sistem
+                    <strong>Routing</strong> dan <strong>Middleware</strong> yang fleksibel.
+                </p>
+                <p><strong>Laragon</strong> merupakan local development environment untuk Windows yang ringan dan mudah
+                    digunakan. Laragon sudah menyertakan Apache/Nginx, PHP, MySQL, dan berbagai tools lainnya dalam satu
+                    paket, sehingga mempercepat proses setup environment Laravel tanpa konfigurasi manual yang rumit.
+                </p>
+            </div>
+
+            <!-- III. ALAT -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">III</span>Alat dan Bahan</div>
+                <ul>
+                    <li>Laptop / Komputer (OS Windows)</li>
+                    <li>Laragon Full (local server environment)</li>
+                    <li>Visual Studio Code</li>
+                    <li>Browser (Google Chrome / Firefox)</li>
+                    <li>Composer, Node.js, GIT, NPM</li>
+                    <li>Koneksi internet untuk download tools</li>
+                </ul>
+            </div>
+
+            <!-- IV. LANGKAH -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">IV</span>Langkah Kerja Praktikum</div>
+
+                <!-- Step 1 -->
+                <div class="step-block">
+                    <div class="step-title">
+                        <span class="step-num">1</span>Download dan Instalasi Laragon
+                    </div>
+
+                    <p>
+                        Langkah pertama adalah mengunduh Laragon Full dari situs resminya.
+                        Laragon Full sudah mencakup PHP, Apache, MySQL, dan berbagai tools
+                        yang dibutuhkan untuk development Laravel.
+                    </p>
+
+                    <div class="sub-label">1.1 — Cari Laragon di Google</div>
+
+                    <p>
+                        Buka browser, ketik <strong>"download laragon"</strong> di Google,
+                        lalu klik hasil pencarian menuju situs resmi
+                        <strong>laragon.net</strong>.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss1.png" alt="Pencarian Laragon di Google"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 1 – Pencarian "download laragon" di Google</div>
+                    </div>
+
+                    <div class="sub-label">1.2 — Halaman Resmi Laragon</div>
+
+                    <p>
+                        Setelah masuk ke situs <strong>laragon.net</strong>, pilih versi
+                        <strong>Laragon Full</strong> yang mencakup semua komponen yang
+                        dibutuhkan, lalu klik tombol download.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss2.png" alt="Halaman download Laragon"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 2 – Halaman resmi Laragon, pilih Laragon Full</div>
+                    </div>
+
+                    <div class="sub-label">1.3 — Proses Download</div>
+
+                    <p>
+                        Tunggu proses download file installer Laragon selesai. Ukuran file
+                        Laragon Full sekitar 170–200 MB tergantung versi.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss3.png" alt="Proses download Laragon"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 3 – Proses download file installer Laragon</div>
+                    </div>
+
+                    <div class="sub-label">1.4 — Jalankan Installer</div>
+
+                    <p>
+                        Buka file installer yang sudah didownload, ikuti langkah-langkah
+                        wizard instalasi. Pilih direktori instalasi (default:
+                        <code>C:\laragon</code>) lalu klik <strong>Install</strong>.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss4.png" alt="Wizard installer Laragon"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 4 – Wizard installer Laragon</div>
+                    </div>
+
+                    <div class="sub-label">1.5 — Instalasi Selesai, Buka Laragon</div>
+
+                    <p>
+                        Setelah instalasi selesai, buka Laragon. Klik tombol
+                        <strong>"Start All"</strong> untuk menjalankan semua service (Apache
+                        dan MySQL). Pastikan indikator status berwarna hijau.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss5.png" alt="Tampilan awal Laragon"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 5 – Tampilan Laragon setelah berhasil diinstall</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss6.png" alt="Laragon Start All"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 6 – Laragon dengan semua service aktif (Start All)</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-block">
+                    <div class="step-title">
+                        <span class="step-num">2</span>Verifikasi Tools Pendukung Laravel
+                    </div>
+
+                    <p>
+                        Laragon Full sudah menyertakan PHP, Composer, Node.js, dan NPM secara
+                        otomatis. Verifikasi semua tools sudah terinstall dengan benar
+                        menggunakan terminal Laragon (klik kanan ikon Laragon di system tray
+                        → Terminal).
+                    </p>
+
+                    <div class="code-wrap">
+                        <div class="code-head">
+                            <span class="lang">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard me-1"></i>Salin
+                            </button>
+                        </div>
+                        <pre><code><span class="cm"># Cek versi Composer</span>
+composer --version
+
+<span class="cm"># Cek versi Git</span>
+git --version
+
+<span class="cm"># Cek versi Node.js</span>
+node --version
+
+<span class="cm"># Cek versi NPM</span>
+npm --version</code></pre>
+                    </div>
+
+                    <p>
+                        Jika semua perintah menampilkan nomor versi tanpa error, berarti semua
+                        tools siap digunakan.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss7.png" alt="Verifikasi versi tools"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 7 – Output versi Composer, Git, Node.js, dan NPM</div>
+                    </div>
+
+                    <div class="info-box blue">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <div>
+                            Jika Git belum terinstall, download di
+                            <strong>git-scm.com/downloads/win</strong>. Laravel 13 membutuhkan
+                            minimal <strong>PHP &gt;= 8.2</strong> dan
+                            <strong>Composer</strong> untuk manajemen dependency.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-block">
+                    <div class="step-title">
+                        <span class="step-num">3</span>Membuat Project Laravel
+                    </div>
+
+                    <p>
+                        Ada dua cara membuat project Laravel: menggunakan
+                        <strong>Laravel Installer</strong> atau <strong>Composer</strong>.
+                        Pada praktikum ini digunakan Composer karena lebih umum dan tidak
+                        memerlukan instalasi tambahan.
+                    </p>
+
+                    <p>Buka terminal Laragon, lalu jalankan perintah berikut:</p>
+
+                    <div class="code-wrap">
+                        <div class="code-head">
+                            <span class="lang">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard me-1"></i>Salin
+                            </button>
+                        </div>
+                        <pre><code><span class="cm"># Buat project Laravel 13</span>
+composer create-project laravel/laravel laravel --prefer-dist</code></pre>
+                    </div>
+
+                    <p>
+                        Proses ini akan mengunduh semua dependency Laravel dan membutuhkan
+                        beberapa menit tergantung kecepatan internet.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss8.png" alt="Membuat project Laravel"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 8 – Proses pembuatan project Laravel dengan Composer</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss9.png" alt="Download dependency selesai"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 9 – Proses download dependency Laravel selesai</div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-block">
+                    <div class="step-title">
+                        <span class="step-num">4</span>Menjalankan Project Laravel
+                    </div>
+
+                    <p>
+                        Setelah project berhasil dibuat, masuk ke direktori project dan
+                        jalankan server development bawaan Laravel menggunakan Artisan CLI.
+                    </p>
+
+                    <div class="code-wrap">
+                        <div class="code-head">
+                            <span class="lang">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard me-1"></i>Salin
+                            </button>
+                        </div>
+                        <pre><code><span class="cm"># Masuk ke direktori project</span>
+cd laravel</code></pre>
+                    </div>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss10.png" alt="Masuk ke direktori project"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 10 – Masuk ke direktori project Laravel</div>
+                    </div>
+
+                    <div class="code-wrap">
+                        <div class="code-head">
+                            <span class="lang">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard me-1"></i>Salin
+                            </button>
+                        </div>
+                        <pre><code><span class="cm"># Jalankan server development Laravel</span>
+php artisan serve</code></pre>
+                    </div>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss11.png" alt="php artisan serve"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 11 – Server Laravel berjalan di localhost:8000</div>
+                    </div>
+
+                    <p>
+                        Buka browser dan akses <strong>http://localhost:8000</strong>.
+                        Jika muncul halaman welcome Laravel, berarti instalasi berhasil.
+                    </p>
+
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan1/ss12.png" alt="Halaman welcome Laravel"
+                            onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                        <div class="img-cap">Gambar 12 – Halaman welcome Laravel berhasil ditampilkan di browser</div>
+                    </div>
+                </div>
+
+                <!-- Step 5 — Challenge -->
+                <div class="step-block">
+                    <div class="step-title">
+                        <span class="step-num">5</span>
+                        Challenge: Penerapan MVC pada Laravel
+                    </div>
+
+                    <p>
+                        Pada bagian ini kita akan mengimplementasikan pola MVC secara sederhana
+                        dengan membuat halaman user menggunakan Controller, View, dan Routing.
+                    </p>
+
+                    <ol class="challenge-list">
+
+                        <!-- 5.1 -->
+                        <li>
+                            <strong>Membuat Controller "UserController"</strong>
+
+                            <p>
+                                Jalankan perintah Artisan berikut di terminal untuk membuat controller baru:
+                            </p>
+
+                            <div class="code-wrap">
+                                <div class="code-head">
+                                    <span class="lang">bash</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i class="bi bi-clipboard me-1"></i>Salin
+                                    </button>
+                                </div>
+                                <pre><code>php artisan make:controller UserController</code></pre>
+                            </div>
+
+                            <div class="img-wrap">
+                                <img src="../images/laporan/laporan1/ss13.png" alt="Membuat UserController"
+                                    onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                                <div class="img-cap">Gambar 13 – Pembuatan UserController berhasil</div>
+                            </div>
+                        </li>
+
+                        <!-- 5.2 -->
+                        <li>
+                            <strong>Membuat Function Index di UserController</strong>
+
+                            <p>
+                                Buka file
+                                <code>app/Http/Controllers/UserController.php</code>
+                                di VS Code, lalu tambahkan method
+                                <code>index()</code>
+                                yang akan mengirim data ke view:
+                            </p>
+
+                            <div class="img-wrap">
+                                <img src="../images/laporan/laporan1/ss14.png" alt="Method index UserController"
+                                    onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                                <div class="img-cap">Gambar 14 – Method index() pada UserController</div>
+                            </div>
+                        </li>
+
+                        <!-- 5.3 -->
+                        <li>
+                            <strong>
+                                Membuat View
+                                <code>resources/views/user/index.blade.php</code>
+                            </strong>
+
+                            <p>
+                                Buat folder <code>user</code> di dalam
+                                <code>resources/views/</code>, kemudian buat file
+                                <code>index.blade.php</code>
+                                dengan tampilan HTML sederhana:
+                            </p>
+
+                            <div class="img-wrap">
+                                <img src="../images/laporan/laporan1/ss15.png" alt="Membuat view blade"
+                                    onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                                <div class="img-cap">Gambar 15 – Isi file index.blade.php untuk tampilan User</div>
+                            </div>
+                        </li>
+
+                        <!-- 5.4 -->
+                        <li>
+                            <strong>Menambahkan Routing di <code>routes/web.php</code></strong>
+
+                            <p>
+                                Buka file <code>routes/web.php</code> dan tambahkan route
+                                untuk URL <code>/user</code> yang mengarah ke
+                                <code>UserController@index</code>:
+                            </p>
+
+                            <div class="img-wrap">
+                                <img src="../images/laporan/laporan1/ss16.png" alt="Routing /user"
+                                    onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                                <div class="img-cap">Gambar 16 – Routing /user ditambahkan di routes/web.php</div>
+                            </div>
+                        </li>
+
+                        <!-- 5.5 -->
+                        <li>
+                            <strong>Akses Route di Browser</strong>
+
+                            <p>
+                                Pastikan server masih berjalan
+                                (<code>php artisan serve</code>),
+                                lalu buka browser dan akses
+                                <strong>http://127.0.0.1:8000/user</strong>.
+                                Halaman akan menampilkan teks
+                                "Hello dari User Index!"
+                                sebagai bukti MVC berhasil diimplementasikan.
+                            </p>
+
+                            <div class="img-wrap">
+                                <img src="../images/laporan/laporan1/ss17.png" alt="Halaman /user di browser"
+                                    onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><i class=\'bi bi-image\'></i><span>Screenshot belum ditambahkan</span></div>'">
+                                <div class="img-cap">
+                                    Gambar 17 – Halaman /user menampilkan "Hello dari User Index!" di browser
+                                </div>
+                            </div>
+                        </li>
+
+                    </ol>
+                </div>
+
+            </div><!-- /laprak-card IV -->
+
+            <!-- V. HASIL -->
+            <div class="laprak-card">
+                <div class="section-label">
+                    <span class="num">V</span>
+                    Hasil &amp; Pembahasan
+                </div>
+
+                <p>
+                    Praktikum ini berhasil dilaksanakan secara menyeluruh,
+                    mulai dari proses download dan instalasi Laragon sebagai
+                    local server environment, verifikasi tools pendukung
+                    (Composer, Node.js, Git, NPM), pembuatan project Laravel 13,
+                    konfigurasi koneksi database dari SQLite ke MySQL,
+                    hingga menjalankan migration.
+                </p>
+
+                <p>
+                    Penerapan pola MVC juga berhasil diimplementasikan
+                    dengan membuat <code>UserController</code> sebagai Controller,
+                    file <code>index.blade.php</code> sebagai View,
+                    dan mendefinisikan route <code>/user</code> di
+                    <code>web.php</code>. Hasilnya, halaman
+                    "Hello dari User Index!" berhasil ditampilkan di browser,
+                    membuktikan bahwa alur MVC — dari Request → Routing →
+                    Controller → View — berjalan dengan benar.
+                </p>
+            </div>
+
+            <!-- VI. KESIMPULAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VI</span>Kesimpulan</div>
+                <p>Berdasarkan praktikum yang telah dilakukan, dapat disimpulkan bahwa:</p>
+                <ol>
+                    <li>Laragon Full berhasil diinstall dan menyediakan environment siap pakai (PHP, MySQL, Apache)
+                        tanpa konfigurasi manual yang rumit.</li>
+                    <li>Laravel 13 berhasil diinstall dan dikonfigurasi menggunakan Composer dengan semua dependency
+                        yang dibutuhkan terpenuhi.</li>
+                    <li>Struktur project Laravel mengikuti pola MVC yang memisahkan logic (Controller), tampilan (View),
+                        dan data (Model), sehingga kode lebih terorganisir dan mudah dikembangkan.</li>
+                    <li>Server development Laravel berjalan dengan baik menggunakan perintah
+                        <code>php artisan serve</code> dan dapat diakses melalui browser di <code>localhost:8000</code>.
+                    </li>
+                    <li>Routing, Controller, dan View berfungsi sesuai harapan — terbukti dengan keberhasilan
+                        menampilkan halaman <code>/user</code> di browser.</li>
+                </ol>
+
+                <div class="info-box green" style="margin-top: 20px;">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <div>
+                        Semua langkah berhasil dijalankan dan output sesuai yang diharapkan. &nbsp;·&nbsp;
+                        <a href="https://github.com/saskiaalifah/Web-Profile-Saskia-Alifah" target="_blank">
+                            <i class="bi bi-github me-1"></i>Lihat Repository GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-footer">
+                    <a href="laprak2.html">
+                        <span>Berikutnya →</span>
+                        <strong>Laprak 2</strong>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer footer-compact">
+        <div class="container py-2">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-4 text-md-start text-center">
+                    <a class="footer-brand fw-bold text-uppercase" href="../index.html">Saskia Alifah</a>
+                    <div class="d-block text-muted small mt-1">Creative studio — design & code</div>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <nav class="footer-nav">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="../index.html">Home</a></li>
+                            <li class="list-inline-item"><a href="../about.html">About</a></li>
+                            <li class="list-inline-item"><a href="../portofolio.html">Portfolio</a></li>
+                            <li class="list-inline-item"><a href="main.html">Laporan</a></li>
+                            <li class="list-inline-item"><a href="../kontak.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-md-4 text-md-end text-center">
+                    <div class="social-icons d-inline-flex gap-2">
+                        <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr"
+                            class="social-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Follow me on Instagram" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Connect with me on LinkedIn"
+                            target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/saskiaalifah" class="social-icon" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Follow me on GitHub" target="_blank"
+                            rel="noopener noreferrer">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-12 text-center">
+                    <small class="footer-copyright">&copy; <span id="year"></span> Saskia Alifah. All rights
+                        reserved.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Year
+        (function () {
+            const el = document.getElementById("year");
+            if (el) el.textContent = new Date().getFullYear();
+        })();
+
+        // Tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
+        });
+
+        // Navbar scrolled
+        window.addEventListener('scroll', function () {
+            document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Copy code
+        function copyCode(btn) {
+            const pre = btn.closest('.code-wrap').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check me-1"></i>Tersalin!';
+                setTimeout(() => btn.innerHTML = orig, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute("href"));
+                if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+        });
+    </script>
+</body>
+
+</html>

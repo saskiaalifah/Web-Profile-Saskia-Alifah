@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saskia Alifah - Creative Design Solutions</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Font Awesome (needed for .fab social icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Custom style -->
+  <link rel="stylesheet" href="custom.css" />
+</head>
+
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <img src="images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle" />
+        <span class="fw-bold text-uppercase">Saskia Alifah</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+          <li class="nav-item"><a class="nav-link" href="../laporan/main.html">Laporan</a></li>
+          <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
+        </ul>
+
+        <div class="ms-lg-4 ms-3 search-container">
+          <input type="text" class="search-input" placeholder="Search..." aria-label="Search" />
+          <button type="submit" class="search-btn" aria-label="Search button">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="row align-items-center gy-4 hero-row">
+        <!-- Kolom kiri: konten -->
+        <div class="col-lg-6">
+          <div class="hero-content">
+            <h1>SASKIA ALIFAH</h1>
+            <p>
+              Crafting extraordinary digital experiences with style and
+              precision
+            </p>
+            <div class="cta-buttons">
+              <a href="#features" class="btn-primary-custom">Get Started</a>
+              <a href="portofolio.html" class="btn-secondary-custom">View Our Work</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kolom kanan: foto -->
+        <div class="col-lg-6">
+          <div class="hero-photo-wrapper">
+            <div class="hero-photo-bg"></div>
+            <img src="images/hero.png" alt="Saskia Alifah - Hero" class="hero-photo img-fluid rounded-4" />
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+    <!-- end container -->
+  </section>
+
+  <!-- ==================== FEATURES/SERVICES SECTION ==================== -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="section-title">Our Services</h2>
+      <p class="section-subtitle">
+        We deliver premium creative solutions tailored to your unique vision
+      </p>
+
+      <div class="row g-4">
+        <!-- Feature 1: UI/UX Design -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-pen-fancy"></i>
+            </div>
+            <h5>UI/UX Design</h5>
+            <p>
+              Create stunning user interfaces with exceptional user
+              experiences that delight your audience and drive engagement.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 2: Web Development -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-code"></i>
+            </div>
+            <h5>Web Development</h5>
+            <p>
+              Build responsive and performant websites using cutting-edge
+              technologies and best practices.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 3: Branding -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h5>Branding</h5>
+            <p>
+              Develop compelling brand identities that resonate with your
+              target audience and stand out in the market.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 4: Digital Marketing -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h5>Digital Marketing</h5>
+            <p>
+              Strategic marketing campaigns that maximize your reach and
+              convert visitors into loyal customers.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 5: Animation -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-film"></i>
+            </div>
+            <h5>Animation</h5>
+            <p>
+              Captivating motion graphics and animations that bring your brand
+              story to life with creativity.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 6: Consultation -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <h5>Strategic Consultation</h5>
+            <p>
+              Expert guidance to help you navigate digital transformation and
+              achieve your business goals.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CAROUSEL/TESTIMONIALS SECTION ==================== -->
+  <section class="carousel-section" id="testimonials">
+    <div class="container">
+      <h2 class="section-title">Client Testimonials</h2>
+      <p class="section-subtitle">
+        Hear what our satisfied clients have to say about our work
+      </p>
+
+      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1"
+            aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2"
+            aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="3"
+            aria-label="Slide 4"></button>
+        </div>
+
+        <div class="carousel-inner">
+          <!-- Slide 1 -->
+          <div class="carousel-item active" data-bs-interval="5000">
+            <div class="carousel-content">
+              <h3>Amazing Work!</h3>
+              <p>
+                "The team delivered an exceptional website that exceeded all
+                our expectations. Their attention to detail and creative
+                approach is unmatched. We couldn't be happier with the
+                results!"
+              </p>
+              <div class="author">
+                ⭐⭐⭐⭐⭐ - Sarah Johnson, CEO of TechVision
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="carousel-item" data-bs-interval="5000">
+            <div class="carousel-content">
+              <h3>Professional & Creative</h3>
+              <p>
+                "From concept to launch, the entire process was seamless. The
+                design is not only beautiful but also highly functional. They
+                truly understand what modern users expect."
+              </p>
+              <div class="author">
+                ⭐⭐⭐⭐⭐ - Michael Chen, Founder of DesignHub
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="carousel-item" data-bs-interval="5000">
+            <div class="carousel-content">
+              <h3>Game Changing Partnership</h3>
+              <p>
+                "We've seen a 300% increase in user engagement after our
+                redesign. The team's expertise in UX and performance
+                optimization is truly remarkable."
+              </p>
+              <div class="author">
+                ⭐⭐⭐⭐⭐ - Emma Rodriguez, Marketing Director
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div class="carousel-item" data-bs-interval="5000">
+            <div class="carousel-content">
+              <h3>Best Decision Ever</h3>
+              <p>
+                "We partnered with them for a complete brand refresh and
+                couldn't be more satisfied. The entire experience was smooth,
+                professional, and results-driven."
+              </p>
+              <div class="author">
+                ⭐⭐⭐⭐⭐ - David Park, Owner of ElegantStore
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer footer-compact">
+    <div class="container py-2">
+
+      <div class="row align-items-center gy-3">
+
+        <!-- Brand -->
+        <div class="col-md-4 text-md-start text-center">
+          <a class="footer-brand fw-bold text-uppercase" href="../index.html">Saskia Alifah</a>
+          <div class="d-block text-muted small mt-1">Creative studio — design & code</div>
+        </div>
+
+        <!-- Footer Nav -->
+        <div class="col-md-4 text-center">
+          <nav class="footer-nav d-flex justify-content-center align-items-center flex-wrap gap-2">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../portofolio.html">Portfolio</a>
+            <a href="../laporan/main.html">Laporan</a>
+            <a href="../kontak.html">Contact</a>
+          </nav>
+        </div>
+
+        <!-- Social -->
+        <div class="col-md-4 text-md-end text-center">
+          <div class="social-icons d-inline-flex gap-2">
+            <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr" class="social-icon"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Follow me on Instagram" target="_blank"
+              rel="noopener noreferrer">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon" data-bs-toggle="tooltip"
+              data-bs-placement="top" title="Connect with me on LinkedIn" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://github.com/saskiaalifah" class="social-icon" data-bs-toggle="tooltip"
+              data-bs-placement="top" title="Follow me on GitHub" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Copyright -->
+      <div class="row mt-2">
+        <div class="col-12 text-center">
+          <small class="footer-copyright">
+            &copy; <span id="year"></span> Saskia Alifah. All rights reserved.
+          </small>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Initialize tooltips -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+  </script>
+
+  <script>
+    // Add smooth scrolling effect
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+    });
+
+    // Update active navbar link on scroll
+    window.addEventListener("scroll", () => {
+      const sections = document.querySelectorAll("section");
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      let current = "";
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.classList.remove("active");
+        if (link.getAttribute("href").slice(1) === current) {
+          link.classList.add("active");
+        }
+      });
+    });
+    // Insert current year into footer
+    (function () {
+      const y = new Date().getFullYear();
+      const el = document.getElementById("year");
+      if (el) el.textContent = y;
+    })();
+  </script>
+</body>
+
+</html>

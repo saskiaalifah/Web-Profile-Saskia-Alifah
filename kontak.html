@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak | Saskia Alifah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="custom.css" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <img src="images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle" />
+        <span class="fw-bold text-uppercase">Saskia Alifah</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="portofolio.html">Portfolio</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="../laporan/main.html">Laporan</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Contact</a>
+          </li>
+        </ul>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+          <div id="contactToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+              <strong class="me-auto">Sukses!</strong>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-light">
+              Pesan Anda berhasil terkirim!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Contact -->
+  <section class="hero position-relative overflow-hidden">
+    <div class="hero-gradient"></div>
+    <div class="container position-relative py-5">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-7">
+          <p class="badge rounded-pill bg-accent text-dark mb-3 px-3 py-2 shadow-sm">
+            Contact Us
+          </p>
+          <h1 class="display-5 fw-bold lh-tight mb-3 text-light">
+            Let's start your elegant project.
+          </h1>
+          <p class="lead text-muted mb-4">
+            Fill in the form below or contact our team directly. We will
+            respond as soon as possible with the best solution for your brand.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#contactForm" class="btn btn-primary-custom px-4 py-3 fw-semibold">Send Message</a>
+            <a href="tel:+6281364382262" class="btn btn-secondary-custom px-4 py-3 fw-semibold"><i
+                class="bi bi-telephone me-2"></i>+62 813 6438 2262</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card hero-card border-0 text-light hero-float">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <div class="avatar-gradient me-3">
+                  <i class="bi bi-chat-left-text fs-2 text-light"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0">Operating Hours</h5>
+                  <small class="text-muted">Monday - Friday, 09.00 - 18.00</small>
+
+                  >
+                </div>
+              </div>
+              <div class="mini-card mb-2">
+                <small class="text-muted d-block">Alamat</small>
+                <span class="text-light">Jl. Dr. Moh. Hatta, Cupak Tangah, Kec. Pauh, Kota Padang,
+                  Sumatera Barat 25157</span>
+              </div>
+              <div class="mini-card mb-2">
+                <small class="text-muted d-block">Email</small>
+                <span class="text-light">saskiaalifah2006@gmail.com</span>
+              </div>
+              <div class="mini-card">
+                <small class="text-muted d-block">Phone</small>
+                <span class="text-light">+62 813 6438 2262</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-glow one"></div>
+    <div class="floating-glow two"></div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="section-title text-light">Contact Me</h2>
+        <p class="section-subtitle text-muted">
+          Send a message or reach me through the information below
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Contact Form -->
+        <div class="col-lg-7">
+          <div class="card border-0 h-100">
+            <div class="card-body p-4 p-lg-5">
+              <h4 class="mb-4">Send a Message</h4>
+              <div id="formAlert"></div>
+
+              <form id="contactForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name <span class="text-accent">*</span></label>
+                    <input type="text" class="form-control" id="name" required />
+                    <div class="invalid-feedback">Name is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Email <span class="text-accent">*</span></label>
+                    <input type="email" class="form-control" id="email" required />
+                    <div class="invalid-feedback">Invalid email address</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Phone Number <span class="text-accent">*</span></label>
+                    <input type="tel" class="form-control" id="phone" pattern="[0-9]{10,}"
+                      title="Please enter at least 10 digits" required />
+                    <div class="invalid-feedback">Please enter a valid phone number (minimum 10 digits)</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Subject <span class="text-accent">*</span></label>
+                    <select class="form-select" id="subject" required>
+                      <option value="" selected disabled>
+                        Select a subject...
+                      </option>
+                      <option>New Project</option>
+                      <option>Collaboration</option>
+                      <option>Job Opportunity</option>
+                      <option>Question</option>
+                      <option>Other</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Please select a subject
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Message <span class="text-accent">*</span></label>
+                    <textarea class="form-control" id="message" rows="4" required></textarea>
+                    <div class="invalid-feedback">
+                      Message cannot be empty
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="agree" required />
+                      <label class="form-check-label small" for="agree">
+                        I agree to the
+                        <a href="#" class="text-accent">privacy policy</a>
+                        and
+                        <a href="#" class="text-accent">terms & conditions</a>
+                        <span class="text-accent">*</span>
+                      </label>
+                      <div class="invalid-feedback">
+                        You must agree to the terms & conditions
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 mt-2">
+                    <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-semibold">
+                      <i class="bi bi-send me-2"></i>Send Message
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMPLE VALIDATION SCRIPT -->
+        <script>
+          document
+            .getElementById("contactForm")
+            .addEventListener("submit", function (e) {
+              e.preventDefault();
+              const form = this;
+              const alertBox = document.getElementById("formAlert");
+              const requiredFields = form.querySelectorAll('[required]');
+              let isValid = true;
+
+              // Reset alert and validation
+              alertBox.innerHTML = "";
+              form.classList.add("was-validated");
+
+              // Check each required field
+              requiredFields.forEach(field => {
+                if (!field.checkValidity()) {
+                  isValid = false;
+                  field.classList.add('is-invalid');
+                } else {
+                  field.classList.remove('is-invalid');
+                }
+              });
+
+              // If any field is invalid, show error message
+              if (!isValid) {
+                alertBox.innerHTML = `
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      Please fill in all required fields correctly.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>`;
+                return;
+              }
+
+              // If all fields are valid, show success message
+              if (isValid) {
+                // Show success message
+                alertBox.innerHTML = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      Pesan Anda berhasil terkirim! Kami akan segera menghubungi Anda.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>`;
+
+                // Reset form
+                form.reset();
+                form.classList.remove("was-validated");
+              }
+            });
+        </script>
+
+        <div class="col-lg-5">
+          <div class="card contact-card border-0 h-100">
+            <div class="card-body d-flex flex-column gap-3">
+              <div>
+                <h5 class="text-light mb-3">Contact Information</h5>
+                <div class="d-flex align-items-start gap-3 mb-3">
+                  <div class="icon-circle"><i class="bi bi-geo-alt"></i></div>
+                  <div>
+                    <small class="text-muted d-block">Alamat</small>
+                    <span class="text-light">Jl. Dr. Moh. Hatta, Cupak Tangah, Kec. Pauh, Kota
+                      Padang, Sumatera Barat 25157</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-3 mb-3">
+                  <div class="icon-circle">
+                    <i class="bi bi-telephone"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Phone</small>
+                    <span class="text-light">+62 813 6438 2262</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-3 mb-3">
+                  <div class="icon-circle">
+                    <i class="bi bi-envelope"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Email</small>
+                    <span class="text-light">saskiaalifah2006@gmail.com</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-circle"><i class="bi bi-share"></i></div>
+                  <div>
+                    <small class="text-muted d-block">Social</small>
+                    <div class="d-flex gap-3 fs-5">
+                      <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr"
+                        class="text-muted"><i class="bi bi-instagram"></i></a>
+                      <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="text-muted"><i
+                          class="bi bi-linkedin"></i></a>
+                      <a href="https://github.com/saskiaalifah" class="text-muted"><i class="bi bi-github"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="map-embed rounded-4 overflow-hidden flex-grow-1">
+                <iframe title="Google Maps"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31865.22496953628!2d100.4676!3d-0.8984!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4c752a96d83ed%3A0x9ce2d9d56f8dd1f8!2sJl.%20Dr.%20Moh.%20Hatta%2C%20Cupak%20Tangah%2C%20Kec.%20Pauh%2C%20Kota%20Padang%2C%20Sumatera%20Barat%2025157!5e0!3m2!1sen!2sid!4v1733913600!5m2!1sen!2sid"
+                  width="100%" height="100%" style="border: 0" allowfullscreen="" loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer footer-compact">
+    <div class="container py-2">
+
+      <div class="row align-items-center gy-3">
+
+        <!-- Brand -->
+        <div class="col-md-4 text-md-start text-center">
+          <a class="footer-brand fw-bold text-uppercase" href="../index.html">Saskia Alifah</a>
+          <div class="d-block text-muted small mt-1">Creative studio — design & code</div>
+        </div>
+
+        <!-- Footer Nav -->
+        <div class="col-md-4 text-center">
+          <nav class="footer-nav d-flex justify-content-center align-items-center flex-wrap gap-2">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../portofolio.html">Portfolio</a>
+            <a href="../laporan/main.html">Laporan</a>
+            <a href="../kontak.html">Contact</a>
+          </nav>
+        </div>
+
+        <!-- Social -->
+        <div class="col-md-4 text-md-end text-center">
+          <div class="social-icons d-inline-flex gap-2">
+            <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr" class="social-icon"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Follow me on Instagram" target="_blank"
+              rel="noopener noreferrer">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon" data-bs-toggle="tooltip"
+              data-bs-placement="top" title="Connect with me on LinkedIn" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://github.com/saskiaalifah" class="social-icon" data-bs-toggle="tooltip"
+              data-bs-placement="top" title="Follow me on GitHub" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Copyright -->
+      <div class="row mt-2">
+        <div class="col-12 text-center">
+          <small class="footer-copyright">
+            &copy; <span id="year"></span> Saskia Alifah. All rights reserved.
+          </small>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Terms and Conditions Modal -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="termsModalLabel">
+            Terms and Conditions
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>1. Data Collection</h6>
+          <p>
+            By filling out this form, you agree to the collection and use of
+            your personal data in accordance with our privacy policy.
+          </p>
+
+          <h6>2. Use of Information</h6>
+          <p>
+            The information you provide will be used for communication
+            purposes and to improve our services. We will not share your
+            information with third parties without your consent.
+          </p>
+
+          <h6>3. Responsibility</h6>
+          <p>
+            You are responsible for ensuring that all information you provide
+            is accurate and valid.
+          </p>
+
+          <h6>4. Changes to Terms</h6>
+          <p>
+            We reserve the right to change these terms and conditions at any
+            time. Changes will be notified via email or announcements on our
+            website.
+          </p>
+
+          <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="agreeCheck" />
+            <label class="form-check-label" for="agreeCheck">
+              I have read and agree to the terms and conditions above
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-accent" id="acceptTerms" disabled>
+            Agree
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Initialize tooltips -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+  </script>
+
+  <script>
+    // Initialize toast
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize toast
+      var toastEl = document.getElementById('contactToast');
+      var contactToast = new bootstrap.Toast(toastEl, {
+        autohide: true,
+        delay: 5000
+      });
+
+      // Handle form submission
+      var contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          // Here you would typically send the form data to a server
+          // For now, we'll just show the toast
+          document.querySelector('.toast-body').textContent = 'Pesan Anda berhasil terkirim! Kami akan segera menghubungi Anda.';
+          contactToast.show();
+
+          // Reset the form
+          this.reset();
+
+          // Optional: Close any open tooltips
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return bootstrap.Tooltip.getInstance(tooltipTriggerEl)?.hide();
+          });
+        });
+      }
+    });
+  </script>
+  <script>
+    const form = document.getElementById("contactForm");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const subjectSelect = document.getElementById("subject");
+    const messageTextarea = document.getElementById("message");
+    const termsCheckbox = document.getElementById("termsCheckbox");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const successAlert = document.getElementById("successAlert");
+    const errorAlert = document.getElementById("errorAlert");
+    const warningAlert = document.getElementById("warningAlert");
+
+    // Fungsi untuk memeriksa apakah semua field valid
+    function checkFormValidity() {
+      const isNameValid = nameInput.checkValidity();
+      const isEmailValid = emailInput.checkValidity();
+      const isPhoneValid = phoneInput.checkValidity();
+      const isSubjectValid = subjectSelect.checkValidity();
+      const isMessageValid = messageTextarea.checkValidity();
+      const isTermsChecked = termsCheckbox.checked;
+
+      if (
+        isNameValid &&
+        isEmailValid &&
+        isPhoneValid &&
+        isSubjectValid &&
+        isMessageValid &&
+        isTermsChecked
+      ) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("btn-secondary");
+        submitBtn.classList.add("btn-primary");
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.classList.remove("btn-primary");
+        submitBtn.classList.add("btn-secondary");
+      }
+    }
+
+    // Event listener untuk setiap input
+    [
+      nameInput,
+      emailInput,
+      phoneInput,
+      phoneInput,
+      subjectSelect,
+      messageTextarea,
+      termsCheckbox,
+    ].forEach((input) => {
+      input.addEventListener("input", () => {
+        // Validasi real-time
+        if (input.validity.valid) {
+          input.classList.remove("is-invalid");
+          input.classList.add("is-valid");
+        } else {
+          input.classList.remove("is-valid");
+          input.classList.add("is-invalid");
+        }
+        checkFormValidity();
+      });
+    });
+
+    // Event listener untuk form submit
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Reset alert
+      successAlert.classList.add("d-none");
+      errorAlert.classList.add("d-none");
+      warningAlert.classList.add("d-none");
+
+      // Periksa validitas lagi sebelum submit
+      if (!form.checkValidity()) {
+        errorAlert.classList.remove("d-none");
+        // Tampilkan pesan invalid di setiap field
+        form.classList.add("was-validated");
+        return;
+      }
+
+      // Simulasi pengiriman sukses
+      successAlert.classList.remove("d-none");
+      form.reset();
+      // Setel ulang kelas validasi
+      form
+        .querySelectorAll(".form-control, .form-select, .form-check-input")
+        .forEach((el) => {
+          el.classList.remove("is-valid", "is-invalid");
+        });
+      // Nonaktifkan tombol setelah submit
+      submitBtn.disabled = true;
+      submitBtn.classList.remove("btn-primary");
+      submitBtn.classList.add("btn-secondary");
+    });
+  </script>
+</body>
+
+</html>

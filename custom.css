@@ -9,6 +9,34 @@
   --border: rgba(255, 255, 255, 0.08);
 }
 
+.github-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 14px 24px;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #ff5ca8, #ff8ec7);
+    color: white;
+
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 10px 25px rgba(255, 92, 168, 0.25);
+}
+
+.github-btn:hover {
+    transform: translateY(-3px);
+    color: white;
+
+    box-shadow:
+        0 15px 35px rgba(255, 92, 168, 0.4);
+}
 /* Typographic baseline */
 html {
   font-size: 16px;

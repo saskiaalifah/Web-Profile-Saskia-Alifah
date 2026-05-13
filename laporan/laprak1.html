@@ -528,11 +528,13 @@
 
     <!-- MAIN -->
     <main>
-        <div class="container" style="max-width: 860px;">
+        <div class="container">
 
-            <!-- I. TUJUAN -->
+            <!-- I. TUJUAN & DASAR TEORI -->
             <div class="laprak-card">
-                <div class="section-label"><span class="num">I</span>Tujuan Praktikum</div>
+                <div class="section-label"><span class="num">I</span>Tujuan & Dasar Teori</div>
+                
+                <h4 style="color: var(--accent-2); margin-bottom: 1rem; font-weight: 600;"> Tujuan Praktikum</h4>
                 <p>Setelah menyelesaikan praktikum ini, mahasiswa diharapkan mampu:</p>
                 <ul>
                     <li>Melakukan instalasi Laragon sebagai local server environment</li>
@@ -542,17 +544,14 @@
                     <li>Menjalankan aplikasi Laravel melalui browser</li>
                     <li>Membuat project baru Laravel dan mengimplementasikan pola MVC</li>
                 </ul>
-            </div>
-
-            <!-- II. DASAR TEORI -->
-            <div class="laprak-card">
-                <div class="section-label"><span class="num">II</span>Dasar Teori</div>
+                
+                <h4 style="color: var(--accent-2); margin: 2rem 0 1rem; font-weight: 600;"> Dasar Teori</h4>
                 <p>Laravel adalah framework PHP open source yang dikembangkan oleh Taylor Otwell. Framework ini
                     dirancang dengan arsitektur <strong>MVC (Model–View–Controller)</strong> untuk mempermudah dan
                     mempercepat pengembangan aplikasi web yang modern dan terstruktur.</p>
                 <p>Beberapa fitur unggulan Laravel antara lain: <strong>Eloquent ORM</strong> untuk interaksi database
                     yang intuitif, <strong>Blade Templating Engine</strong> untuk pembuatan tampilan dinamis,
-                    <strong>Artisan CLI</strong> untuk otomatisasi tugas development, serta sistem
+                    <strong>Artisan CLI</strong> untuk otomasi tugas development, serta sistem
                     <strong>Routing</strong> dan <strong>Middleware</strong> yang fleksibel.
                 </p>
                 <p><strong>Laragon</strong> merupakan local development environment untuk Windows yang ringan dan mudah
@@ -561,9 +560,11 @@
                 </p>
             </div>
 
-            <!-- III. ALAT -->
+            <!-- II. ALAT & LANGKAH KERJA -->
             <div class="laprak-card">
-                <div class="section-label"><span class="num">III</span>Alat dan Bahan</div>
+                <div class="section-label"><span class="num">II</span>Alat & Langkah Kerja</div>
+                
+                <h4 style="color: var(--accent-2); margin-bottom: 1rem; font-weight: 600;">🛠️ Alat dan Bahan</h4>
                 <ul>
                     <li>Laptop / Komputer (OS Windows)</li>
                     <li>Laragon Full (local server environment)</li>
@@ -572,11 +573,8 @@
                     <li>Composer, Node.js, GIT, NPM</li>
                     <li>Koneksi internet untuk download tools</li>
                 </ul>
-            </div>
-
-            <!-- IV. LANGKAH -->
-            <div class="laprak-card">
-                <div class="section-label"><span class="num">IV</span>Langkah Kerja Praktikum</div>
+                
+                <h4 style="color: var(--accent-2); margin: 2rem 0 1rem; font-weight: 600;"> Langkah Kerja Praktikum</h4>
 
                 <!-- Step 1 -->
                 <div class="step-block">
@@ -946,50 +944,26 @@ php artisan serve</code></pre>
 
             </div><!-- /laprak-card IV -->
 
-            <!-- V. HASIL -->
+            <!-- III. HASIL & KESIMPULAN -->
             <div class="laprak-card">
-                <div class="section-label">
-                    <span class="num">V</span>
-                    Hasil &amp; Pembahasan
-                </div>
-
-                <p>
-                    Praktikum ini berhasil dilaksanakan secara menyeluruh,
-                    mulai dari proses download dan instalasi Laragon sebagai
-                    local server environment, verifikasi tools pendukung
-                    (Composer, Node.js, Git, NPM), pembuatan project Laravel 13,
-                    konfigurasi koneksi database dari SQLite ke MySQL,
-                    hingga menjalankan migration.
-                </p>
-
-                <p>
-                    Penerapan pola MVC juga berhasil diimplementasikan
-                    dengan membuat <code>UserController</code> sebagai Controller,
-                    file <code>index.blade.php</code> sebagai View,
-                    dan mendefinisikan route <code>/user</code> di
-                    <code>web.php</code>. Hasilnya, halaman
-                    "Hello dari User Index!" berhasil ditampilkan di browser,
-                    membuktikan bahwa alur MVC — dari Request → Routing →
-                    Controller → View — berjalan dengan benar.
-                </p>
-            </div>
-
-            <!-- VI. KESIMPULAN -->
-            <div class="laprak-card">
-                <div class="section-label"><span class="num">VI</span>Kesimpulan</div>
-                <p>Berdasarkan praktikum yang telah dilakukan, dapat disimpulkan bahwa:</p>
+                <div class="section-label"><span class="num">III</span>Hasil & Kesimpulan</div>
+                
+                <h4 style="color: var(--accent-2); margin-bottom: 1rem; font-weight: 600;"> Hasil Praktikum</h4>
                 <ol>
-                    <li>Laragon Full berhasil diinstall dan menyediakan environment siap pakai (PHP, MySQL, Apache)
-                        tanpa konfigurasi manual yang rumit.</li>
-                    <li>Laravel 13 berhasil diinstall dan dikonfigurasi menggunakan Composer dengan semua dependency
-                        yang dibutuhkan terpenuhi.</li>
-                    <li>Struktur project Laravel mengikuti pola MVC yang memisahkan logic (Controller), tampilan (View),
-                        dan data (Model), sehingga kode lebih terorganisir dan mudah dikembangkan.</li>
-                    <li>Server development Laravel berjalan dengan baik menggunakan perintah
-                        <code>php artisan serve</code> dan dapat diakses melalui browser di <code>localhost:8000</code>.
-                    </li>
-                    <li>Routing, Controller, dan View berfungsi sesuai harapan — terbukti dengan keberhasilan
-                        menampilkan halaman <code>/user</code> di browser.</li>
+                    <li><strong>Laragon berhasil diinstall</strong> dengan semua komponen (Apache, PHP, MySQL).</li>
+                    <li><strong>Laravel 13 berhasil diinstall</strong> menggunakan Composer dengan semua dependency.</li>
+                    <li><strong>Project Laravel berhasil dibuat</strong> dengan struktur folder MVC.</li>
+                    <li><strong>Server development berjalan</strong> pada <code>localhost:8000</code>.</li>
+                    <li><strong>Controller dan View berhasil dibuat</strong> — alur MVC berjalan dengan benar.</li>
+                </ol>
+                
+                <h4 style="color: var(--accent-2); margin: 2rem 0 1rem; font-weight: 600;"> Kesimpulan</h4>
+                <ol>
+                    <li>Laragon menyediakan environment siap pakai tanpa konfigurasi manual.</li>
+                    <li>Laravel 13 berhasil dikonfigurasi dengan semua dependency terpenuhi.</li>
+                    <li>Struktur MVC memisahkan logic, tampilan, dan data dengan baik.</li>
+                    <li>Server development Laravel berjalan optimal di <code>localhost:8000</code>.</li>
+                    <li>Routing, Controller, dan View berfungsi sesuai harapan.</li>
                 </ol>
 
                 <div class="info-box green" style="margin-top: 20px;">

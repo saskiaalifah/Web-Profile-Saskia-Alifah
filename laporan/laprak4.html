@@ -142,11 +142,15 @@
             font-weight: 700;
         }
 
-        h1 span {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+       h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
 
         .desc {
             max-width: 580px;

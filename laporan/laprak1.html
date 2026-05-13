@@ -115,52 +115,50 @@
         .laprak-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px 36px;
-            margin-bottom: 24px;
-            transition: border-color 0.25s, box-shadow 0.25s;
+            border-radius: 18px;
+            padding: 40px 48px;
+            margin-bottom: 32px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        .laprak-card:hover {
-            border-color: rgba(232, 62, 140, 0.25);
-            box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
-        }
-
+        /* ── Section Label ── */
         .section-label {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            color: var(--accent-2);
-            margin-bottom: 18px;
+            color: var(--text);
+            margin-bottom: 24px;
         }
 
         .section-label::before {
             content: '';
             display: block;
-            width: 4px;
-            height: 22px;
+            width: 5px;
+            height: 28px;
             background: linear-gradient(to bottom, var(--accent), var(--accent-2));
-            border-radius: 4px;
+            border-radius: 5px;
             flex-shrink: 0;
         }
 
         .section-label .num {
             font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.1em;
-            color: var(--muted);
+            letter-spacing: 0.15em;
+            color: var(--accent-2);
             text-transform: uppercase;
         }
 
         .laprak-card p,
         .laprak-card li {
             color: var(--muted);
-            font-size: 14.5px;
-            line-height: 1.85;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 12px;
         }
 
         .laprak-card ul,
@@ -187,42 +185,36 @@
 
         /* ── Step Block ── */
         .step-block {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 22px 24px;
-            margin-bottom: 18px;
-            transition: border-color 0.2s, background 0.2s;
-        }
-
-        .step-block:hover {
-            background: rgba(232, 62, 140, 0.04);
-            border-color: rgba(232, 62, 140, 0.2);
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
         }
 
         .step-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             font-weight: 600;
-            font-size: 14.5px;
+            font-size: 16px;
             color: var(--text);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .step-num {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             color: #fff;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+            box-shadow: 0 3px 8px rgba(232, 62, 140, 0.3);
         }
 
         .step-block p {
@@ -289,12 +281,6 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .copy-btn:hover {
-            background: rgba(232, 62, 140, 0.15);
-            color: var(--accent-2);
-            border-color: var(--accent);
-        }
-
         .code-wrap pre {
             margin: 0;
             padding: 16px 20px;
@@ -318,14 +304,16 @@
 
         /* ── Image ── */
         .img-wrap {
-            margin: 14px 0;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 1.5rem 0;
         }
 
         .img-wrap img {
+            max-width: 85%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             width: 100%;
             display: block;
         }
@@ -462,12 +450,7 @@
             min-width: 160px;
         }
 
-        .nav-footer a:hover {
-            background: rgba(232, 62, 140, 0.15);
-            border-color: var(--accent);
-            transform: translateX(4px);
-            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.2);
-        }
+        /* Hover effects removed */
 
         .nav-footer a span {
             font-size: 11px;

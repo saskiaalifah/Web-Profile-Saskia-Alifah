@@ -2,277 +2,1054 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Belum Tersedia</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 7 — Migration, Seeding, Model, Route, Controller, View</title>
 
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../custom.css" />
 
     <style>
-        :root {
-            --bg: #0d0d12;
-            --card: rgba(24, 24, 32, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --muted: #b7b7c9;
-            --accent: #ff5ca8;
-            --accent2: #ff8ec7;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top right,
-                    rgba(255, 92, 168, 0.12),
-                    transparent 30%),
-                radial-gradient(circle at bottom left,
-                    rgba(255, 142, 199, 0.08),
-                    transparent 35%),
-                var(--bg);
-
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            color: var(--text);
+        /* ── Page Header ── */
+        .laprak-hero {
+            padding: 100px 0 60px;
+            position: relative;
             overflow: hidden;
         }
 
-        .glass-card {
-            width: 100%;
-            max-width: 760px;
+        .laprak-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                var(--bg) 0%,
+                var(--card) 50%,
+                rgba(232, 62, 140, 0.08) 100%
+            );
+            z-index: 0;
+        }
+
+        .laprak-hero .container {
             position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 60px 50px;
-            text-align: center;
-            backdrop-filter: blur(18px);
-
-            box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            z-index: 1;
         }
 
-        .glass-card::before {
-            content: "";
-            position: absolute;
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 92, 168, 0.08);
-            border-radius: 50%;
-            top: -120px;
-            right: -100px;
-            filter: blur(10px);
+        .laprak-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.25;
         }
 
-        .glass-card::after {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 142, 199, 0.06);
-            border-radius: 50%;
-            bottom: -80px;
-            left: -70px;
-            filter: blur(10px);
+        .laprak-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .status-badge {
+        .laprak-hero .lead {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232, 62, 140, 0.1);
+            border: 1px solid rgba(232, 62, 140, 0.25);
+            color: var(--accent-2);
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .btn-back-hero {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 92, 168, 0.1);
-            border: 1px solid rgba(255, 92, 168, 0.2);
-            color: var(--accent2);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 28px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            margin-bottom: 20px;
         }
 
-        .main-icon {
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 30px;
+        .btn-back-hero:hover {
+            color: var(--accent);
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            padding: 48px 0 80px;
+            background: var(--bg);
+        }
+
+        /* ── Section Card ── */
+        .laprak-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .laprak-card:hover {
+            border-color: rgba(232, 62, 140, 0.25);
+            box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent-2);
+            margin-bottom: 18px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 22px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .section-label .num {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .laprak-card p,
+        .laprak-card li {
+            color: var(--muted);
+            font-size: 14.5px;
+            line-height: 1.85;
+        }
+
+        .laprak-card ul,
+        .laprak-card ol {
+            padding-left: 20px;
+        }
+
+        .laprak-card li {
+            margin-bottom: 4px;
+        }
+
+        .laprak-card strong {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        code {
+            background: rgba(232, 62, 140, 0.12);
+            color: var(--accent-2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* ── Step Block ── */
+        .step-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .step-block:hover {
+            background: rgba(232, 62, 140, 0.04);
+            border-color: rgba(232, 62, 140, 0.2);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(255, 92, 168, 0.2),
-                    rgba(255, 142, 199, 0.08));
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-
-            font-size: 42px;
-            color: var(--accent);
-
-            box-shadow:
-                0 0 40px rgba(255, 92, 168, 0.18),
-                inset 0 0 20px rgba(255, 255, 255, 0.02);
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
         }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            margin-bottom: 18px;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-    h1 span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-        .desc {
-            max-width: 580px;
-            margin: 0 auto 38px;
+        .step-block p {
             color: var(--muted);
-            line-height: 1.9;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0 0 10px;
+        }
+
+        .sub-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-2);
+            font-size: 13px;
+            font-weight: 600;
+            margin: 14px 0 8px;
+        }
+
+        .sub-label::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Code Block ── */
+        .code-wrap {
+            background: #0a0a12;
+            border: 1px solid rgba(232, 62, 140, 0.18);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .code-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(232, 62, 140, 0.07);
+            border-bottom: 1px solid rgba(232, 62, 140, 0.12);
+        }
+
+        .code-head .lang {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid rgba(232, 62, 140, 0.25);
+            color: var(--muted);
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(232, 62, 140, 0.15);
+            color: var(--accent-2);
+            border-color: var(--accent);
+        }
+
+        .code-wrap pre {
+            margin: 0;
+            padding: 16px 20px;
+            overflow-x: auto;
+            color: #e0c8e8;
+            line-height: 1.75;
+        }
+
+        .code-wrap pre code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* ── Image Styling (Maksimal Proporsional & Rapi) ── */
+        .img-wrap {
+            margin: 20px auto;
+            max-width: 620px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .img-wrap:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+            border-color: rgba(232, 62, 140, 0.3);
+        }
+
+        .img-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            max-height: 380px;
+            background: #14141e;
+        }
+
+        .img-cap {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-style: italic;
+            background: rgba(232, 62, 140, 0.03);
+        }
+
+        .img-placeholder {
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .img-placeholder i {
+            font-size: 26px;
+            opacity: 0.4;
+            color: var(--accent);
+        }
+
+        /* Inputan Unggah Gambar */
+        .ss-upload-zone {
+            display: none;
+        }
+
+        /* ── Info Box ── */
+        .info-box {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        .info-box i {
+            flex-shrink: 0;
+            margin-top: 2px;
             font-size: 15px;
         }
 
-        .bottom-info {
+        .info-box.blue {
+            background: rgba(232, 62, 140, 0.08);
+            border-left: 3px solid var(--accent);
+            color: var(--accent-2);
+        }
+
+        .info-box.green {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 3px solid #27ae60;
+            color: #7ecf9d;
+        }
+
+        /* ── Nav footer ── */
+        .nav-footer {
             display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 38px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
         }
 
-        .info-item {
-            padding: 11px 18px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d7d7e6;
-            font-size: 14px;
-        }
-
-        .info-item i {
-            color: var(--accent2);
-            margin-right: 8px;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            border-radius: 14px;
+        .nav-footer a {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 20px;
+            background: rgba(232, 62, 140, 0.07);
+            border: 1px solid rgba(232, 62, 140, 0.2);
+            border-radius: 10px;
             text-decoration: none;
-            color: white;
-            font-weight: 600;
-
-            background:
-                linear-gradient(135deg,
-                    var(--accent),
-                    var(--accent2));
-
-            transition: .25s ease;
-
-            box-shadow:
-                0 10px 30px rgba(255, 92, 168, 0.28);
+            color: var(--text);
+            transition: all 0.2s;
+            text-align: right;
+            min-width: 160px;
         }
 
-        .btn-back:hover {
-            transform: translateY(-3px);
-            color: white;
+        .nav-footer a:hover {
+            background: rgba(232, 62, 140, 0.15);
+            border-color: var(--accent);
+            transform: translateX(4px);
+            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.2);
+        }
 
-            box-shadow:
-                0 16px 38px rgba(255, 92, 168, 0.4);
+        .nav-footer a span {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 2px;
+        }
+
+        .nav-footer a strong {
+            font-size: 14px;
+            color: var(--accent-2);
         }
 
         @media (max-width: 600px) {
-            .glass-card {
-                padding: 42px 24px;
+            .laprak-card {
+                padding: 22px 18px;
             }
 
-            h1 {
-                font-size: 2rem;
+            .step-block {
+                padding: 16px 16px;
             }
 
-            .desc {
-                font-size: 14px;
+            .img-wrap img {
+                max-height: 260px;
             }
         }
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-    <div class="glass-card">
-
-        <div class="status-badge">
-            <i class="fa-solid fa-sparkles"></i>
-            Halaman Sedang Disiapkan
-        </div>
-
-        <div class="main-icon">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h1>Laporan Praktikum <span>Belum Tersedia</span></h1>
-
-        <p class="desc">
-            Konten laporan untuk praktikum ini masih dalam tahap penyusunan.
-            Pembahasan materi, dokumentasi, serta hasil praktikum akan segera
-            ditambahkan setelah proses revisi selesai.
-        </p>
-
-        <div class="bottom-info">
-
-            <div class="info-item">
-                <i class="fa-solid fa-pen-ruler"></i>
-                Sedang Direvisi
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <img src="../images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle" />
+                <span class="fw-bold text-uppercase">Saskia Alifah</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
+                </ul>
+                <div class="ms-lg-4 ms-3 search-container">
+                    <input type="text" class="search-input" placeholder="Search..." aria-label="Search">
+                    <button type="submit" class="search-btn" aria-label="Search button"><i class="bi bi-search"></i></button>
+                </div>
             </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-camera"></i>
-                Dokumentasi Menyusul
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                Akan Segera Tersedia
-            </div>
-
         </div>
+    </nav>
 
-        <a href="main.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Kembali ke Laporan
-        </a>
-
+    <!-- PAGE HEADER -->
+    <div class="laprak-hero">
+        <div class="container">
+            <a href="main.html" class="btn-back-hero">
+                <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+            </a>
+            <h1>Laprak 7 — <span>Migration, Seeding, Routing, Model, Controller, View</span></h1>
+            <p class="lead">Pemrograman Web · Pertemuan 7</p>
+            <div class="badge-row">
+                <span class="badge-pill"><i class="bi bi-person-fill"></i> Saskia Alifah</span>
+                <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+                <span class="badge-pill"><i class="bi bi-calendar3"></i> Pemrograman Web</span>
+                <span class="badge-pill"><i class="bi bi-code-slash"></i> Laravel 13</span>
+            </div>
+        </div>
     </div>
 
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 860px;">
+
+            <!-- I. TUJUAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">I</span>Tujuan Praktikum</div>
+                <p>Setelah menyelesaikan praktikum ini, mahasiswa diharapkan mampu:</p>
+                <ul>
+                    <li>Memberikan pemahaman dan keterampilan dasar kepada mahasiswa dalam membangun aplikasi web modern berbasis framework PHP dengan menerapkan konsep MVC (Model View Controller).</li>
+                    <li>Memahami struktur dan alur kerja Laravel sebagai salah satu framework yang banyak digunakan dalam pengembangan aplikasi web.</li>
+                    <li>Melatih kemampuan mahasiswa dalam mengelola database menggunakan migration dan seeding.</li>
+                    <li>Membuat serta mengatur routing aplikasi, membangun model untuk interaksi data, serta membuat tampilan antarmuka menggunakan Blade Template Engine.</li>
+                    <li>Mengembangkan controller sebagai penghubung antara model, view, and request user.</li>
+                    <li>Mengimplementasikan seluruh materi dalam bentuk aplikasi CRUD (Create, Read, Update, Delete) sederhana.</li>
+                </ul>
+            </div>
+
+            <!-- II. DASAR TEORI -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">II</span>Dasar Teori</div>
+                <p><strong>Konfigurasi Database (.env):</strong> File environment global (<code>.env</code>) menyimpan kredensial database lokal. Hal ini memisahkan konfigurasi sensitif dari kode program inti aplikasi.</p>
+                <p><strong>Migration:</strong> Fitur yang bertindak sebagai <i>version control</i> bagi skema database. Pengembang dapat mendesain struktur tabel secara konsisten menggunakan kode program PHP tanpa menyentuh DBMS manual.</p>
+                <p><strong>Seeding:</strong> Proses pengisian data awal atau rekaman dummy ke dalam tabel pangkalan data secara otomatis untuk mempermudah proses pengujian fungsionalitas sistem.</p>
+                <p><strong>Model (Eloquent ORM):</strong> Menyediakan abstraksi berorientasi objek yang memetakan setiap tabel database menjadi satu representasi kelas kode program, menyederhanakan kueri SQL melalui Active Record.</p>
+                <p><strong>Controller:</strong> Berfungsi mengelola alur logika aplikasi, menerima masukan data dari request pengguna, memprosesnya melalui Model, lalu mengembalikannya menuju komponen View.</p>
+                <p><strong>View (Blade Layout):</strong> Mesin pemrosesan template visual bawaan Laravel untuk memproduksi tampilan antarmuka pengguna secara dinamis dan mendukung reusabilitas komponen UI.</p>
+            </div>
+
+            <!-- III. ALAT DAN BAHAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">III</span>Alat dan Bahan</div>
+                <ul>
+                    <li>Laptop / Komputer dengan sistem operasi Windows</li>
+                    <li>Laragon Full / XAMPP (Local Development Environment)</li>
+                    <li>Visual Studio Code (Code Editor)</li>
+                    <li>Web Browser (Google Chrome / Mozilla Firefox)</li>
+                    <li>Composer (Dependency Manager PHP) & Git Version Control</li>
+                    <li>Node.js & NPM Package Manager</li>
+                </ul>
+            </div>
+
+            <!-- IV. LANGKAH KERJA PRAKTIKUM (MANDIRI) -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">IV</span>Langkah Kerja Praktikum: Demo Data Produk</div>
+                <p>Berikut adalah runtutan langkah praktikum mandiri untuk mengonfigurasi dan menguji integrasi awal pangkalan data produk menggunakan Laravel.</p>
+
+                <!-- Langkah 1 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">1</span>Buka Terminal di Folder Project</div>
+                    <p>Langkah awal adalah memastikan posisi direktori pengerjaan terminal aktif berada tepat di dalam root folder project Laravel Anda.</p>
+                    <div class="sub-label">Aksi: Jalankan Command Terminal</div>
+                    <p>Pastikan posisi terminal aktif berada di direktori project berikut:</p>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">cmd</span><button class="copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Salin</button></div>
+                        <pre><code>C:\laragon\www\laravel</code></pre>
+                    </div>
+                </div>
+
+                <!-- Langkah 2 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">2</span>Jalankan Server Development</div>
+                    <p>Menjalankan server bawaan Laravel agar aplikasi dapat diakses lokal melalui peramban web browser.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah Artisan Serve</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Salin</button></div>
+                        <pre><code>php artisan serve</code></pre>
+                    </div>
+                    <div class="info-box blue"><i class="bi bi-info-circle-fill"></i><div>Biarkan terminal ini tetap terbuka dan berjalan di latar belakang, jangan ditutup.</div></div>
+                </div>
+
+                <!-- Langkah 3 (Merged as requested) -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">3</span>Buat File Skema Migration Product</div>
+                    <p>Membuat file cetak biru skema migrasi baru untuk mendefinisikan tabel produk ke database.</p>
+                    <div class="sub-label">Aksi: Jalankan Command Generator</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss1.png" class="preview-target" alt="Screenshot Langkah 3">
+                        <div class="img-cap">Gambar 1 – Berkas file cetak biru migrasi tabel produk sukses diproduksi</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 4 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">4</span>Isi Kolom Struktur File Migration</div>
+                    <p>Membuka berkas skema di VS Code untuk mengonfigurasi kolom-kolom atribut spesifik tabel produk.</p>
+                    <div class="sub-label">Aksi: Lengkapi Method up() di database/migrations/xxxx_create_products_table.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss2.png" class="preview-target" alt="Screenshot Langkah 4">
+                        <div class="img-cap">Gambar 2 – Pengaturan rancangan tipe data kolom tabel produk pada berkas skema</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 5 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">5</span>Jalankan Eksekusi Migration</div>
+                    <p>Mengirim rancangan tabel PHP ke server basis data MySQL agar tabel terbentuk secara nyata.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Migrate</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss3.png" class="preview-target" alt="Screenshot Langkah 5">
+                        <div class="img-cap">Gambar 3 – Log terminal membuktikan tabel products berhasil digenerate ke database</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 6 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">6</span>Buat File Seeder Product</div>
+                    <p>Membuat file generator seeder untuk memasukkan data uji coba awal ke dalam tabel produk.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah Pembuatan Seeder</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss4.png" class="preview-target" alt="Screenshot Langkah 6">
+                        <div class="img-cap">Gambar 4 – File ProductSeeder.php berhasil dibuat di folder database/seeders</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 7 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">7</span>Isi Array Data Dummy Seeder</div>
+                    <p>Mengonfigurasi isi baris data produk dummy di dalam berkas ProductSeeder yang baru saja terbuat.</p>
+                    <div class="sub-label">Aksi: Edit File database/seeders/ProductSeeder.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss5.png" class="preview-target" alt="Screenshot Langkah 7">
+                        <div class="img-cap">Gambar 5 – Pendefinisian array data sampel produk laptop dan mouse</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 8 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">8</span>Daftarkan Seeder ke DatabaseSeeder</div>
+                    <p>Menghubungkan ProductSeeder agar dapat dieksekusi oleh master seeder bawaan Laravel.</p>
+                    <div class="sub-label">Aksi: Sesuaikan Method run() di database/seeders/DatabaseSeeder.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss6.png" class="preview-target" alt="Screenshot Langkah 8">
+                        <div class="img-cap">Gambar 6 – Registrasi pemanggilan kelas seeder produk pada master seeder induk</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 9 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">9</span>Eksekusi Proses Seeding Data</div>
+                    <p>Menjalankan perintah pengisian data dummy tersebut ke dalam database melalui perintah Artisan.</p>
+                    <div class="sub-label">Aksi: Jalankan db:seed</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss7.png" class="preview-target" alt="Screenshot Langkah 9">
+                        <div class="img-cap">Gambar 7 – Notifikasi konsol terminal menyatakan pengisian data dummy sukses</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 10 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">10</span>Buat Model Eloquent Product</div>
+                    <p>Membuat file model sebagai perwakilan objek pemetaan data tabel produk di kode program aplikasi Anda.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah Pembuatan Model</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss8.png" class="preview-target" alt="Screenshot Langkah 10">
+                        <div class="img-cap">Gambar 8 – Komponen file Model Product berhasil diproduksi otomatis</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 11 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">11</span>Isi Mass Assignment Fillable pada Model</div>
+                    <p>Mengonfigurasi properti whitelist fillable pada model agar kolom tabel aman diisi data secara massal.</p>
+                    <div class="sub-label">Aksi: Edit Konfigurasi File app/Models/Product.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss9.png" class="preview-target" alt="Screenshot Langkah 11">
+                        <div class="img-cap">Gambar 9 – Pengaturan whitelist atribut field masukan data pada kelas model produk</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 12 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">12</span>Buat File Product Controller</div>
+                    <p>Membuat file controller yang nantinya akan mengontrol alur logika penampilan data produk.</p>
+                    <div class="sub-label">Aksi: Jalankan Command Make Controller</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss10.png" class="preview-target" alt="Screenshot Langkah 12">
+                        <div class="img-cap">Gambar 10 – Inisialisasi komponen file ProductController baru berhasil dilakukan</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 13 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">13</span>Isi Fungsi Logika Pengambilan Data pada Controller</div>
+                    <p>Menulis kueri Eloquent All() untuk mengambil seluruh data dari model produk dan mengirimkannya ke view.</p>
+                    <div class="sub-label">Aksi: Modifikasi Berkas app/Http/Controllers/ProductController.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss11.png" class="preview-target" alt="Screenshot Langkah 13">
+                        <div class="img-cap">Gambar 11 – Deklarasi kueri pengambilan data produk serta pengiriman berkas compact view</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 14 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">14</span>Konfigurasi Pemetaan Routing URL Web</div>
+                    <p>Mendaftarkan alamat URL khusus di file route aplikasi agar link `/products` bisa diakses.</p>
+                    <div class="sub-label">Aksi: Edit Pemetaan URL di routes/web.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss12.png" class="preview-target" alt="Screenshot Langkah 14">
+                        <div class="img-cap">Gambar 12 – Pemetaan penambahan endpoint url /products pada file routes induk</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 15 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">15</span>Buat Struktur Tampilan File Blade View</div>
+                    <p>Membuat file antarmuka HTML menggunakan template engine Blade untuk menampilkan perulangan data produk.</p>
+                    <div class="sub-label">Aksi: Buat Berkas Baru resources/views/products.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss13.png" class="preview-target" alt="Screenshot Langkah 15">
+                        <div class="img-cap">Gambar 13 – Penulisan perulangan directives @foreach data produk dinamis pada file view</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 16 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">16</span>Uji Hasil Output Produk di Browser</div>
+                    <p>Langkah pengujian akhir untuk memastikan bahwa semua komponen terhubung dengan baik tanpa ada kesalahan.</p>
+                    <div class="sub-label">Aksi: Jalankan dan Buka URL Browser</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss14.png" class="preview-target" alt="Screenshot Langkah 16">
+                        <div class="img-cap">Gambar 14 – Halaman browser berhasil menampilkan daftar data dummy dari database produk</div>
+                    </div>
+                </div>
+            </div><!-- /laprak-card IV -->
+
+            <!-- V. LATIHAN / TUGAS CRUD MAHASISWA -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">V</span>Latihan & Tugas: Implementasi Aplikasi CRUD Mahasiswa</div>
+                <p>Bagian terpisah ini mendokumentasikan langkah pengerjaan tugas mandiri pembuatan sistem manajemen pengolahan data mahasiswa secara lengkap (Create, Read, Update, Delete).</p>
+
+                <!-- Tugas Langkah 1 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">1</span>Buat Berkas Skema Migration Mahasiswa</div>
+                    <p>Membuat file skema migrasi baru di terminal Laragon khusus untuk mencetak struktur tabel mahasiswa.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Command</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss15.png" class="preview-target" alt="Screenshot Tugas 1">
+                        <div class="img-cap">Gambar 15 – Pembuatan berkas migrasi penampung skema tabel mahasiswa</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 2 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">2</span>Isi Atribut Kolom File Migration Mahasiswa</div>
+                    <p>Membuka file migrasi mahasiswa di VS Code, kemudian menambahkan kolom nama, nim (unik), jurusan, dan email.</p>
+                    <div class="sub-label">Aksi: Lengkapi Method up() di File database/migrations/xxxx_create_mahasiswas_table.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss16.png" class="preview-target" alt="Screenshot Tugas 2">
+                        <div class="img-cap">Gambar 16 – Konfigurasi penambahan field kolom entitas mahasiswa pada file up() migrasi</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 3 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">3</span>Jalankan Eksekusi Migrasi Tabel Mahasiswa</div>
+                    <p>Menjalankan migrasi untuk membuat tabel mahasiswa secara nyata ke dalam pangkalan data MySQL.</p>
+                    <div class="sub-label">Aksi: Jalankan Command Migrate</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss17.png" class="preview-target" alt="Screenshot Tugas 3">
+                        <div class="img-cap">Gambar 17 – Proses pembentukan tabel mahasiswas di database berhasil dilakukan</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 4 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">4</span>Buat Berkas Seeder Mahasiswa</div>
+                    <p>Membuat file seeder khusus mahasiswa untuk mempermudah penyediaan data dummy pengujian.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Make Seeder</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss18.png" class="preview-target" alt="Screenshot Tugas 4">
+                        <div class="img-cap">Gambar 18 – File penampung data dummy seeder mahasiswa sukses dibuat</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 5 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">5</span>Isi Data Dummy pada File Seeder Mahasiswa</div>
+                    <p>Membuka file `MahasiswaSeeder.php` and memasukkan data sampel seperti 'Budi Santoso' dan 'Siti Aminah'.</p>
+                    <div class="sub-label">Aksi: Edit File database/seeders/MahasiswaSeeder.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss19.png" class="preview-target" alt="Screenshot Tugas 5">
+                        <div class="img-cap">Gambar 19 – Pengisian record sampel data isian mahasiswa lengkap dengan penanda waktu</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 6 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">6</span>Daftarkan Kelas MahasiswaSeeder ke Berkas Induk</div>
+                    <p>Menambahkan instruksi pendaftaran panggil seeder mahasiswa ke dalam file master seeder utama.</p>
+                    <div class="sub-label">Aksi: Edit Method run() di database/seeders/DatabaseSeeder.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss20.png" class="preview-target" alt="Screenshot Tugas 6">
+                        <div class="img-cap">Gambar 20 – Penambahan pemanggilan kelas MahasiswaSeeder pada DatabaseSeeder induk</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 7 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">7</span>Jalankan Seeding Data Mahasiswa</div>
+                    <p>Mengisi baris data dummy mahasiswa secara instan ke pangkalan data menggunakan terminal.</p>
+                    <div class="sub-label">Aksi: Jalankan db:seed Kembali</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss21.png" class="preview-target" alt="Screenshot Tugas 7">
+                        <div class="img-cap">Gambar 21 – Eksekusi injeksi data awal mahasiswa berhasil masuk ke database</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 8 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">8</span>Buat Model Eloquent Mahasiswa</div>
+                    <p>Membuat file model berorientasi objek khusus untuk memetakan tabel data mahasiswa.</p>
+                    <div class="sub-label">Aksi: Jalankan Command Make Model</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss22.png" class="preview-target" alt="Screenshot Tugas 8">
+                        <div class="img-cap">Gambar 22 – Berkas kelas Model Mahasiswa.php sukses digenerate aplikasi</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 9 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">9</span>Konfigurasi Property Atribut Whitelist Fillable Model</div>
+                    <p>Mengatur kolom yang boleh diisi pada model mahasiswa demi alasan keamanan sistem masukan data.</p>
+                    <div class="sub-label">Aksi: Edit Isi Berkas app/Models/Mahasiswa.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss23.png" class="preview-target" alt="Screenshot Tugas 9">
+                        <div class="img-cap">Gambar 23 – Proteksi mass assignment fillable untuk kolom data mahasiswa</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 10 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">10</span>Buat Mahasiswa Resource Controller untuk CRUD</div>
+                    <p>Membuat controller dengan flag `--resource` agar otomatis terisi fungsi dasar CRUD (Index, Create, Store, Edit, Update, Destroy).</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah Resource Generator</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss24.png" class="preview-target" alt="Screenshot Tugas 10">
+                        <div class="img-cap">Gambar 24 – Pembuatan berkas file MahasiswaController lengkap dengan boilerplate method standar</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 11 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">11</span>Isi Logika Validasi & Manipulasi Data Lengkap pada Controller</div>
+                    <p>Mengisi setiap method di MahasiswaController untuk menangani validasi masukan data dan proses penyimpanan database.</p>
+                    <div class="sub-label">Aksi: Lengkapi Seluruh Method di app/Http/Controllers/MahasiswaController.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss25.png" class="preview-target" alt="Screenshot Tugas 11">
+                        <div class="img-cap">Gambar 25 – Implementasi fungsi validasi form serta operasi simpan data mahasiswa</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 12 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">12</span>Daftarkan Resource Route Mahasiswa</div>
+                    <p>Mendaftarkan rute resource tunggal di `web.php` untuk menangani ketujuh jalur URL CRUD mahasiswa secara otomatis.</p>
+                    <div class="sub-label">Aksi: Edit Berkas routes/web.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss26.png" class="preview-target" alt="Screenshot Tugas 12">
+                        <div class="img-cap">Gambar 26 – Deklarasi rute makro resource untuk memetakan otomatis fungsionalitas CRUD</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 13 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">13</span>Buat Folder Penampung Tampilan View</div>
+                    <p>Membuat struktur subfolder baru khusus bernama `mahasiswa` di dalam direktori views agar file rapi.</p>
+                    <div class="sub-label">Aksi: Buat Folder Baru</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss27.png" class="preview-target" alt="Screenshot Tugas 13">
+                        <div class="img-cap">Gambar 27 – Struktur folder penyimpanan khusus untuk modul view mahasiswa</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 14 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">14</span>Susun Tampilan Halaman Tabel Utama (Index)</div>
+                    <p>Membuat halaman tabel untuk menampilkan daftar data mahasiswa yang dilengkapi dengan tombol aksi Edit dan Hapus.</p>
+                    <div class="sub-label">Aksi: Buat Berkas Baru resources/views/mahasiswa/index.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss28.png" class="preview-target" alt="Screenshot Tugas 14">
+                        <div class="img-cap">Gambar 28 – Penyusunan struktur tabel data dinamis serta formulir hapus data</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 15 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">15</span>Susun Tampilan Halaman Formulir Tambah Data (Create)</div>
+                    <p>Membuat halaman form tambah data mahasiswa baru yang dilengkapi dengan pesan error jika isian form tidak valid.</p>
+                    <div class="sub-label">Aksi: Buat Berkas Baru resources/views/mahasiswa/create.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss29.png" class="preview-target" alt="Screenshot Tugas 15">
+                        <div class="img-cap">Gambar 29 – Pembuatan form tambah masukan data mahasiswa lengkap beserta token keamanan @csrf</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 16 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">16</span>Susun Tampilan Halaman Formulir Edit Data (Edit)</div>
+                    <p>Membuat halaman form edit yang otomatis menampilkan data lama pengguna yang akan di-update menggunakan spoofing method `@method('PUT')`.</p>
+                    <div class="sub-label">Aksi: Buat Berkas Baru resources/views/mahasiswa/edit.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss30.png" class="preview-target" alt="Screenshot Tugas 16">
+                        <div class="img-cap">Gambar 30 – Implementasi fungsi penempatan nilai lama data serta deklarasi PUT spoofing method</div>
+                    </div>
+                </div>
+
+                <!-- Tugas Langkah 17 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">17</span>Uji Hasil Akhir CRUD Mahasiswa di Browser</div>
+                    <p>Langkah akhir untuk memastikan seluruh fungsionalitas manajemen aplikasi pengolahan data mahasiswa berjalan lancar.</p>
+                    <div class="sub-label">Aksi: Buka URL Browser Utama</div>
+                    
+                    <!-- Additional Images for Step 17 as requested -->
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss31.png" class="preview-target" alt="Tampilan Awal Browser">
+                        <div class="img-cap">Gambar 31 – Tampilan awal daftar mahasiswa saat pertama kali dibuka di browser</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss32.png" class="preview-target" alt="Tampilan Form Tambah">
+                        <div class="img-cap">Gambar 32 – Tampilan formulir penambahan data mahasiswa baru</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss33.png" class="preview-target" alt="Tampilan Setelah Ditambah">
+                        <div class="img-cap">Gambar 33 – Tampilan halaman indeks setelah data mahasiswa berhasil ditambahkan</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss34.png" class="preview-target" alt="Tampilan Form Edit">
+                        <div class="img-cap">Gambar 34 – Tampilan formulir pengubahan (edit) data mahasiswa terpilih</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="../images/laporan/laporan2/ss35.png" class="preview-target" alt="Tampilan Setelah Edit">
+                        <div class="img-cap">Gambar 35 – Tampilan halaman indeks setelah proses pembaruan data berhasil dilakukan</div>
+                    </div>
+                </div>
+
+            </div><!-- /laprak-card V -->
+
+            <!-- VI. HASIL DAN PEMBAHASAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VI</span>Hasil &amp; Pembahasan</div>
+                <p>Melalui serangkaian tahapan praktikum Pertemuan 7 ini, integrasi penuh arsitektur MVC (Model-View-Controller) pada framework Laravel berhasil dijalankan dengan baik:</p>
+                <ul>
+                    <li><strong>Konfigurasi Environment Database:</strong> Berhasil menghubungkan aplikasi dengan MySQL lokal melalui pengaturan file `.env`.</li>
+                    <li><strong>Migration & Seeding:</strong> Skema tabel `products` dan `mahasiswas` berhasil diproduksi otomatis oleh Artisan. Pengisian data dummy lewat seeder juga berhasil masuk ke dalam record database.</li>
+                    <li><strong>Fungsionalitas CRUD:</strong> Pengujian endpoint `/mahasiswa` di browser membuktikan bahwa kelima operasi manipulasi pangkalan data (Index, Create, Store, Edit, Update, Destroy) berjalan lancar dengan sistem validasi form yang aman.</li>
+                </ul>
+            </div>
+
+            <!-- VII. KESIMPULAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VII</span>Kesimpulan</div>
+                <p>Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan, diperoleh beberapa poin kesimpulan penting:</p>
+                <ol>
+                    <li>Pola arsitektur <strong>Model-View-Controller (MVC)</strong> terbukti mempermudah pengembangan aplikasi dengan memisahkan bagian database (Model), tampilan visual (View), and pemroses logika utama (Controller).</li>
+                    <li>Fitur <strong>Migration</strong> dan <strong>Seeder</strong> mempermudah pengelolaan skema database secara konsisten tanpa perlu ekspor/impor SQL manual lewat phpMyAdmin.</li>
+                    <li>Penggunaan <strong>Eloquent ORM</strong> menyederhanakan penulisan query database yang rumit menjadi perintah berorientasi objek yang lebih singkat dan aman dari serangan SQL Injection.</li>
+                    <li>Pemanfaatan <strong>Resource Controller & Route</strong> menghemat penulisan jalur kode routing secara signifikan melalui standarisasi restful API endpoint bawaan Laravel.</li>
+                </ol>
+
+                
+<div class="text-center mt-4">
+
+    <a href="https://github.com/saskiaalifah/SaskiaAlifah-Laravel-PWEB"
+        target="_blank"
+        class="github-btn">
+
+        <i class="bi bi-github me-2"></i>
+        Lihat Repository GitHub
+
+    </a>
+
+</div>
+
+                <div class="nav-footer">
+                    <a href="laprak3.html">
+                        <span>Berikutnya →</span>
+                        <strong>Laprak 3</strong>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer footer-compact">
+        <div class="container py-2">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-4 text-md-start text-center">
+                    <a class="footer-brand fw-bold text-uppercase" href="../index.html" style="text-decoration:none; color:inherit;">Saskia Alifah</a>
+                    <div class="d-block text-muted small mt-1">Creative studio — design & code</div>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <nav class="footer-nav">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="../index.html" style="color:var(--muted); text-decoration:none;">Home</a></li>
+                            <li class="list-inline-item"><a href="../about.html" style="color:var(--muted); text-decoration:none;">About</a></li>
+                            <li class="list-inline-item"><a href="../portofolio.html" style="color:var(--muted); text-decoration:none;">Portfolio</a></li>
+                            <li class="list-inline-item"><a href="main.html" style="color:var(--muted); text-decoration:none;">Laporan</a></li>
+                            <li class="list-inline-item"><a href="../kontak.html" style="color:var(--muted); text-decoration:none;">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-md-4 text-md-end text-center">
+                    <div class="social-icons d-inline-flex gap-2">
+                        <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr" class="social-icon" target="_blank" rel="noopener noreferrer" style="color:var(--muted);"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon" target="_blank" rel="noopener noreferrer" style="color:var(--muted);"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/saskiaalifah" class="social-icon" target="_blank" rel="noopener noreferrer" style="color:var(--muted);"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-12 text-center">
+                    <small class="footer-copyright" style="color:var(--muted);">&copy; <span id="year"></span> Saskia Alifah. All rights reserved.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Year
+        (function () {
+            const el = document.getElementById("year");
+            if (el) el.textContent = new Date().getFullYear();
+        })();
+
+        // Navbar scrolled
+        window.addEventListener('scroll', function () {
+            document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Copy code
+        function copyCode(btn) {
+            const pre = btn.closest('.code-wrap').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check me-1"></i>Tersalin!';
+                setTimeout(() => btn.innerHTML = orig, 2000);
+            });
+        }
+    </script>
 </body>
 
 </html>

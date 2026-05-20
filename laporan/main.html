@@ -6,606 +6,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan - Saskia Alifah</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Bootstrap -->
     <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../custom.css">
 
     <style>
-        /* ===== LAPORAN HERO ===== */
+        /* ===== LAPORAN HERO (Style asli kamu) ===== */
         .laporan-hero {
-            padding: 120px 0 80px;
+            padding: 120px 0 60px;
+            background: linear-gradient(180deg, rgba(21, 19, 32, 0) 0%, var(--bg) 100%);
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
         }
 
-        .laporan-hero::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg,
-                    var(--bg) 0%,
-                    var(--card) 40%,
-                    rgba(232, 62, 140, 0.12) 100%);
-            z-index: 0;
-        }
-
-        .laporan-hero::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(
-                circle at center,
-                rgba(232, 62, 140, 0.15) 0%,
-                rgba(255, 111, 183, 0.08) 30%,
-                transparent 70%
-            );
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: 0;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        .laporan-hero .container {
-            position: relative;
-            z-index: 2;
-        }
-
-        .portfolio-hero-title {
-            font-family: "Playfair Display", serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
+        .laporan-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
             font-weight: 700;
-            color: var(--text);
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1s ease-out;
-            text-shadow: 0 4px 20px rgba(232, 62, 140, 0.2);
+            margin-bottom: 1rem;
         }
 
-        .portfolio-hero-title span {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2), #fff);
+        .laporan-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
         }
 
-        .portfolio-hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--muted);
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        .hero-decoration {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 4px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                var(--accent) 20%, 
-                var(--accent-2) 50%, 
-                var(--accent) 80%, 
-                transparent 100%);
-            border-radius: 2px;
-            animation: glow 3s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(232, 62, 140, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(232, 62, 140, 0.8); }
-        }
-
-        /* ===== FILTER SECTION ===== */
-        .portfolio-filter-section {
-            background: linear-gradient(180deg, 
-                rgba(21, 19, 32, 0.8) 0%, 
-                var(--bg) 100%);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 76px;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .filter-tabs {
-            position: relative;
-        }
-
-        .filter-tabs::before {
-            content: "";
-            position: absolute;
-            bottom: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            border-radius: 1px;
-        }
-
+        /* --- Style Filter --- */
         .filter-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
             color: var(--muted);
-            padding: 0.8rem 1.8rem;
+            padding: 0.6rem 1.5rem;
             border-radius: 50px;
-            font-size: 0.9rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
         }
 
-        .filter-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.1), 
-                transparent);
-            transition: left 0.5s ease;
-        }
-
-        .filter-btn:hover::before {
-            left: 100%;
-        }
-
-        .filter-btn:hover {
-            background: rgba(232, 62, 140, 0.1);
-            border-color: rgba(232, 62, 140, 0.3);
-            color: var(--accent-2);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(232, 62, 140, 0.2);
-        }
-
-        .filter-btn.active {
+        .filter-btn.active, .filter-btn:hover {
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
             border-color: transparent;
-            color: #fff;
-            box-shadow: 0 8px 30px rgba(232, 62, 140, 0.4);
-            transform: translateY(-2px) scale(1.05);
         }
 
-        /* ===== GRID SECTION ===== */
-        .laporan-grid-section {
-            background: linear-gradient(180deg, 
-                var(--bg) 0%, 
-                rgba(21, 19, 32, 0.95) 50%, 
-                var(--card) 100%);
-            padding: 80px 0;
-            position: relative;
-        }
-
-        .laporan-grid-section::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                var(--accent) 50%, 
-                transparent 100%);
-        }
-
-        /* ===== LAPORAN CARD ===== */
-        .laporan-card {
-            background: linear-gradient(145deg, 
-                rgba(21, 19, 32, 0.9), 
-                rgba(17, 16, 26, 0.95));
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* --- Card Rombakan (Lebih Profesional) --- */
+        .laprak-card {
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             display: flex;
             flex-direction: column;
-            position: relative;
-            backdrop-filter: blur(10px);
         }
 
-        .laporan-card::before {
-            content: "";
+        .laprak-image-box {
+            height: 180px;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .laprak-image-box i {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .laprak-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, 
-                var(--accent), 
-                var(--accent-2), 
-                var(--accent));
-            background-size: 200% 100%;
-            animation: shimmer 3s linear infinite;
+            inset: 0;
+            background: rgba(232, 62, 140, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        .laprak-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
         }
 
-        .laporan-card:hover::before {
+        .laprak-card:hover .laprak-overlay {
             opacity: 1;
         }
 
-        .laporan-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(232, 62, 140, 0.25);
-            border-color: rgba(232, 62, 140, 0.4);
-        }
-
-        .card-thumb {
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 56px;
-            background: linear-gradient(135deg,
-                    rgba(232, 62, 140, 0.12),
-                    rgba(255, 111, 183, 0.08),
-                    rgba(21, 19, 32, 0.1));
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-thumb::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(
-                circle at center,
-                rgba(255, 255, 255, 0.03) 0%,
-                transparent 70%
-            );
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .badge-laprak {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 30px;
-            letter-spacing: 0.4px;
-            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.4);
-            z-index: 2;
-            text-transform: uppercase;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .laporan-card .card-body {
+        .laprak-content {
             padding: 1.5rem;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
-            background: rgba(255, 255, 255, 0.02);
-            position: relative;
         }
 
-        .mata-kuliah {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--accent-2);
+        .laprak-badge {
+            font-size: 0.7rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .mata-kuliah::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .laporan-card .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 1.2rem;
-            line-height: 1.4;
-            flex-grow: 1;
-            transition: color 0.3s ease;
-        }
-
-        .laporan-card:hover .card-title {
-            color: var(--accent-2);
-        }
-
-        .btn-laprak {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            color: #fff;
-            border: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.7rem 1.5rem;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 20px rgba(232, 62, 140, 0.35);
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-laprak::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.2), 
-                transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-laprak:hover::before {
-            left: 100%;
-        }
-
-        .btn-laprak:hover {
-            background: linear-gradient(135deg, var(--accent-2), var(--accent));
-            color: #fff;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(232, 62, 140, 0.5);
-        }
-
-        /* Section heading */
-        .section-label {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .section-heading {
-            font-family: "Playfair Display", serif;
-            font-size: 2rem;
+        .laprak-title {
+            font-size: 1.2rem;
             font-weight: 700;
+            margin-bottom: 10px;
             color: var(--text);
-            margin-bottom: 2.5rem;
         }
 
-        .section-divider {
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            margin: 0 auto 2rem;
-            border-radius: 2px;
-            position: relative;
+        .laprak-desc {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
         }
 
-        .section-divider::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: var(--accent-2);
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(232, 62, 140, 0.6);
+        .laprak-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Scroll Reveal Animation */
+        /* --- Reveal Animation --- */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.8s ease;
         }
-
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .reveal:nth-child(1) { transition-delay: 0.1s; }
-        .reveal:nth-child(2) { transition-delay: 0.2s; }
-        .reveal:nth-child(3) { transition-delay: 0.3s; }
-        .reveal:nth-child(4) { transition-delay: 0.4s; }
-        .reveal:nth-child(5) { transition-delay: 0.5s; }
-        .reveal:nth-child(6) { transition-delay: 0.6s; }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .laporan-hero {
-                padding: 100px 0 60px;
-                min-height: 50vh;
-            }
-            
-            .portfolio-hero-title {
-                font-size: clamp(2rem, 8vw, 3rem);
-            }
-            
-            .portfolio-hero-subtitle {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .hero-decoration {
-                width: 150px;
-                height: 3px;
-            }
-            
-            .portfolio-filter-section {
-                position: static;
-                top: auto;
-                padding: 1rem 0;
-            }
-            
-            .filter-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.8rem;
-            }
-            
-            .laporan-grid-section {
-                padding: 50px 0;
-            }
-            
-            .laporan-card {
-                margin-bottom: 1.5rem;
-            }
-            
-            .card-thumb {
-                height: 120px;
-                font-size: 42px;
-            }
-            
-            .badge-laprak {
-                font-size: 10px;
-                padding: 4px 10px;
-            }
-            
-            .laporan-card .card-body {
-                padding: 1.2rem;
-            }
-            
-            .card-title {
-                font-size: 1rem;
-            }
-            
-            .btn-laprak {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.8rem;
-            }
-            
-            .section-heading {
-                font-size: 1.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .laporan-hero {
-                padding: 80px 0 50px;
-            }
-            
-            .portfolio-hero-title {
-                font-size: 1.8rem;
-            }
-            
-            .filter-tabs {
-                gap: 0.5rem;
-            }
-            
-            .filter-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.75rem;
-            }
-            
-            .card-thumb {
-                height: 100px;
-                font-size: 36px;
-            }
-            
-            .laporan-card .card-body {
-                padding: 1rem;
-            }
-            
-            .mata-kuliah {
-                font-size: 9px;
-            }
-            
-            .card-title {
-                font-size: 0.95rem;
-                margin-bottom: 1rem;
-            }
-            
-            .btn-laprak {
-                padding: 0.5rem 1rem;
-                font-size: 0.75rem;
-            }
         }
     </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- ==================== NAVBAR ==================== -->
     <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
         <div class="container">
-
             <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
                 <img src="../images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle">
                 <span class="fw-bold text-uppercase">Saskia Alifah</span>
             </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
@@ -614,279 +177,171 @@
                     <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
                     <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
                 </ul>
-
-                <div class="ms-lg-4 ms-3 search-container">
-                    <input type="text" class="search-input" placeholder="Search..." aria-label="Search">
-                    <button type="submit" class="search-btn" aria-label="Search button">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </nav>
 
-    <!-- ==================== MAIN ==================== -->
     <main class="flex-grow-1">
-
-        <!-- HERO -->
         <section class="laporan-hero">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 mx-auto text-center">
-                        <h1 class="portfolio-hero-title">Laporan <span>Praktikum</span></h1>
-                        <p class="portfolio-hero-subtitle">Kumpulan dokumentasi dan hasil praktikum pemrograman web</p>
-                        <div class="hero-decoration"></div>
-                    </div>
-                </div>
+                <h1 class="reveal">My <span>Journals</span></h1>
+                <p class="text-muted reveal">Dokumentasi praktikum Pemrograman Web berbasis framework Laravel.</p>
             </div>
         </section>
 
-        <!-- FILTER -->
-        <section class="portfolio-filter-section py-4">
-            <div class="container">
-                <div class="filter-tabs d-flex justify-content-center flex-wrap gap-2">
-                    <button class="filter-btn active" data-filter="all">Semua</button>
-                    <button class="filter-btn" data-filter="web">Pemrograman Web</button>
-                </div>
+        <div class="container mb-5">
+            <div class="d-flex justify-content-center gap-3 reveal">
+                <button class="filter-btn active" data-filter="all">Semua Laporan</button>
+                <button class="filter-btn" data-filter="pweb">Pemrograman Web</button>
             </div>
-        </section>
+        </div>
 
-        <!-- GRID -->
-        <section class="laporan-grid-section">
-            <div class="container">
-
-                <div class="text-center mb-5">
-                    <p class="section-label">Akademik</p>
-                    <h2 class="section-heading">Daftar Laporan</h2>
-                    <div class="section-divider"></div>
+        <div class="container pb-5">
+            <div class="row g-4" id="laporanGrid">
+                
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-terminal"></i>
+                            <div class="laprak-overlay"><a href="laprak1.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 01</span>
+                            <h3 class="laprak-title">Instalasi & Konfigurasi</h3>
+                            <p class="laprak-desc">Persiapan environment dan inisialisasi project Laravel 11.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 1</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row g-4" id="laporanGrid">
-
-                    <!-- Laprak 1 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-code text-info"></i>
-                                <span class="badge-laprak">Laprak 1</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">Konfigurasi Laravel</h5>
-                                <a href="laprak1.html" class="btn-laprak">Selengkapnya</a>
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-database"></i>
+                            <div class="laprak-overlay"><a href="laprak2.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 02</span>
+                            <h3 class="laprak-title">Migration & Seeding</h3>
+                            <p class="laprak-desc">Pengelolaan skema database dan pengisian data dummy otomatis.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 2</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Laprak 2 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-laptop-code" style="color: var(--accent-2);"></i>
-                                <span class="badge-laprak">Laprak 2</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">HTML & CSS Fundamentals</h5>
-                                <a href="laprak2.html" class="btn-laprak">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Laprak 3 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-database" style="color: var(--accent);"></i>
-                                <span class="badge-laprak">Laprak 3</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">JavaScript Basics</h5>
-                                <a href="laprak3.html" class="btn-laprak">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Laprak 4 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-server" style="color: #f0a500;"></i>
-                                <span class="badge-laprak">Laprak 4</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">DOM Manipulation</h5>
-                                <a href="laprak4.html" class="btn-laprak">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Laprak 5 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-cogs" style="color: var(--muted);"></i>
-                                <span class="badge-laprak">Laprak 5</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">Responsive Design</h5>
-                                <a href="laprak5.html" class="btn-laprak">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Laprak 6 -->
-                    <div class="col-md-6 col-lg-4 laporan-item reveal" data-category="web">
-                        <div class="laporan-card">
-                            <div class="card-thumb">
-                                <i class="fas fa-globe" style="color: #17a2b8;"></i>
-                                <span class="badge-laprak">Laprak 6</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="mata-kuliah">Pemrograman Web</div>
-                                <h5 class="card-title">Web Performance</h5>
-                                <a href="laprak6.html" class="btn-laprak">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
+
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-layout-text-window-reverse"></i>
+                            <div class="laprak-overlay"><a href="laprak3.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 03</span>
+                            <h3 class="laprak-title">Blade Templating</h3>
+                            <p class="laprak-desc">Membangun layout dinamis dengan engine template Blade.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 3</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-gear-wide-connected"></i>
+                            <div class="laprak-overlay"><a href="laprak4.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 04</span>
+                            <h3 class="laprak-title">Controller & Routing</h3>
+                            <p class="laprak-desc">Manajemen alur logika aplikasi dan sistem navigasi URL.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 4</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-code-square"></i>
+                            <div class="laprak-overlay"><a href="laprak5.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 05</span>
+                            <h3 class="laprak-title">Eloquent CRUD</h3>
+                            <p class="laprak-desc">Operasi Database (Create, Read, Update, Delete) menggunakan ORM.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 5</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+                    <div class="laprak-card">
+                        <div class="laprak-image-box">
+                            <i class="bi bi-shield-lock"></i>
+                            <div class="laprak-overlay"><a href="laprak6.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
+                        </div>
+                        <div class="laprak-content">
+                            <span class="laprak-badge">Praktikum 06</span>
+                            <h3 class="laprak-title">Authentication</h3>
+                            <p class="laprak-desc">Sistem login, register, dan keamanan hak akses user.</p>
+                            <div class="laprak-footer">
+                                <small class="text-muted">Laporan 6</small>
+                                <i class="bi bi-arrow-right text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </section>
-
+        </div>
     </main>
 
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="site-footer footer-compact">
-        <div class="container py-2">
-
-            <div class="row align-items-center gy-3">
-
-                <!-- Brand -->
-                <div class="col-md-4 text-md-start text-center">
-                    <a class="footer-brand fw-bold text-uppercase" href="../index.html">Saskia Alifah</a>
-                    <div class="d-block text-muted small mt-1">Creative studio — design & code</div>
-                </div>
-
-                <!-- Footer Nav -->
-                <div class="col-md-4 text-center">
-                    <nav class="footer-nav d-flex justify-content-center align-items-center flex-wrap gap-2">
-                        <a href="../index.html">Home</a>
-                        <a href="../about.html">About</a>
-                        <a href="../portofolio.html">Portfolio</a>
-                        <a href="main.html">Laporan</a>
-                        <a href="../kontak.html">Contact</a>
-                    </nav>
-                </div>
-
-                <!-- Social -->
-                <div class="col-md-4 text-md-end text-center">
-                    <div class="social-icons d-inline-flex gap-2">
-                        <a href="https://www.instagram.com/saskiaalifahh?igsh=bnF2dnQ3Y3phM3p5&utm_source=qr"
-                            class="social-icon" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Follow me on Instagram" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon"
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="Connect with me on LinkedIn"
-                            target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://github.com/saskiaalifah" class="social-icon" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Follow me on GitHub" target="_blank"
-                            rel="noopener noreferrer">
-                            <i class="fab fa-github"></i>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Copyright -->
-            <div class="row mt-2">
-                <div class="col-12 text-center">
-                    <small class="footer-copyright">
-                        &copy; <span id="year"></span> Saskia Alifah. All rights reserved.
-                    </small>
-                </div>
-            </div>
-
+    <footer class="py-4 mt-auto border-top border-secondary border-opacity-10">
+        <div class="container text-center">
+            <small class="text-muted">&copy; 2024 Saskia Alifah. Universitas Andalas.</small>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Year
-        (function () {
-            const el = document.getElementById("year");
-            if (el) el.textContent = new Date().getFullYear();
-        })();
+        // Reveal animation (Sesuai style aslimu)
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) el.classList.add("active");
+            });
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
 
-        // Tooltips
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
-        });
-
-        // Filter
-        document.addEventListener('DOMContentLoaded', function () {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const laporanItems = document.querySelectorAll('.laporan-item');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const filterValue = button.getAttribute('data-filter');
-                    laporanItems.forEach(item => {
-                        item.style.display =
-                            (filterValue === 'all' || item.getAttribute('data-category') === filterValue)
-                                ? 'block' : 'none';
-                    });
+        // Filter Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                document.querySelectorAll('.reveal[data-category]').forEach(card => {
+                    card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'block' : 'none';
                 });
             });
         });
-
-        // Navbar scrolled effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Scroll Reveal Animation
-        function reveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            
-            reveals.forEach(element => {
-                const windowHeight = window.innerHeight;
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < windowHeight - elementVisible) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', reveal);
-        
-        // Trigger reveal on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(reveal, 100);
-        });
     </script>
-
 </body>
-
 </html>

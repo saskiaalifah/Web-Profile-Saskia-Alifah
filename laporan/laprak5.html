@@ -2,278 +2,1106 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Belum Tersedia</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 8 — Laravel Relationship (Student, Major, Subject &amp; Jadwal)</title>
 
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
         :root {
-            --bg: #0d0d12;
-            --card: rgba(24, 24, 32, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --muted: #b7b7c9;
-            --accent: #ff5ca8;
-            --accent2: #ff8ec7;
+            --bg: #0d0d18;
+            --card: #13131f;
+            --border: rgba(255,255,255,0.07);
+            --text: #e8e8f0;
+            --muted: #8b8ba0;
+            --accent: #e83e8c;
+            --accent-2: #f472b6;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top right,
-                    rgba(255, 92, 168, 0.12),
-                    transparent 30%),
-                radial-gradient(circle at bottom left,
-                    rgba(255, 142, 199, 0.08),
-                    transparent 35%),
-                var(--bg);
-
             font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            background: var(--bg);
             color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .glass-nav {
+            background: rgba(13,13,24,0.85) !important;
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+        .glass-nav .navbar-brand { font-size: 0.95rem; letter-spacing: 0.06em; }
+        .glass-nav .nav-link { color: var(--muted) !important; font-size: 0.875rem; transition: color .2s; }
+        .glass-nav .nav-link:hover, .glass-nav .nav-link.active { color: var(--accent-2) !important; }
+
+        /* ── Hero ── */
+        .laprak-hero {
+            padding: 100px 0 60px;
+            position: relative;
             overflow: hidden;
         }
-
-        .glass-card {
-            width: 100%;
-            max-width: 760px;
-            position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 60px 50px;
-            text-align: center;
-            backdrop-filter: blur(18px);
-
-            box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-
-        .glass-card::before {
-            content: "";
+        .laprak-hero::before {
+            content: '';
             position: absolute;
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 92, 168, 0.08);
-            border-radius: 50%;
-            top: -120px;
-            right: -100px;
-            filter: blur(10px);
+            inset: 0;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--card) 50%, rgba(232,62,140,0.08) 100%);
+            z-index: 0;
         }
-
-        .glass-card::after {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 142, 199, 0.06);
-            border-radius: 50%;
-            bottom: -80px;
-            left: -70px;
-            filter: blur(10px);
+        .laprak-hero .container { position: relative; z-index: 1; }
+        .laprak-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.3rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.25;
         }
+        .laprak-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .laprak-hero .lead { color: var(--muted); font-size: 0.95rem; }
 
-        .status-badge {
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232,62,140,0.1);
+            border: 1px solid rgba(232,62,140,0.25);
+            color: var(--accent-2);
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+        .btn-back-hero {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 92, 168, 0.1);
-            border: 1px solid rgba(255, 92, 168, 0.2);
-            color: var(--accent2);
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-back-hero:hover { color: var(--accent); }
+
+        /* ── Main ── */
+        main { flex: 1; padding: 48px 0 80px; background: var(--bg); }
+
+        /* ── Section Card ── */
+        .laprak-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            transition: border-color .25s, box-shadow .25s;
+        }
+        .laprak-card:hover {
+            border-color: rgba(232,62,140,0.25);
+            box-shadow: 0 8px 30px rgba(232,62,140,0.08);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent-2);
+            margin-bottom: 18px;
+        }
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 22px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .section-label .num {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .laprak-card p, .laprak-card li { color: var(--muted); font-size: 14.5px; line-height: 1.85; }
+        .laprak-card ul, .laprak-card ol { padding-left: 20px; }
+        .laprak-card li { margin-bottom: 4px; }
+        .laprak-card strong { color: var(--accent-2); font-weight: 600; }
+
+        code {
+            background: rgba(232,62,140,0.12);
+            color: var(--accent-2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* ── Step Block ── */
+        .step-block {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            transition: border-color .2s, background .2s;
+        }
+        .step-block:hover {
+            background: rgba(232,62,140,0.04);
+            border-color: rgba(232,62,140,0.2);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .step-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(232,62,140,0.4);
+        }
+        .step-num.challenge {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            box-shadow: 0 2px 8px rgba(168,85,247,0.4);
+        }
+
+        .step-block p { color: var(--muted); font-size: 14px; line-height: 1.8; margin: 0 0 10px; }
+
+        .sub-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-2);
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 28px;
+            margin: 14px 0 8px;
+        }
+        .sub-label::before {
+            content: '';
+            width: 5px; height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
-        .main-icon {
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
+        /* ── Image ── */
+        .img-wrap {
+            margin: 20px auto;
+            max-width: 620px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .img-wrap:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232,62,140,0.12);
+            border-color: rgba(232,62,140,0.3);
+        }
+        .img-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            max-height: 380px;
+            background: #14141e;
+        }
+        .img-cap {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-style: italic;
+            background: rgba(232,62,140,0.03);
+        }
+        .img-placeholder {
+            height: 160px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(255, 92, 168, 0.2),
-                    rgba(255, 142, 199, 0.08));
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-
-            font-size: 42px;
-            color: var(--accent);
-
-            box-shadow:
-                0 0 40px rgba(255, 92, 168, 0.18),
-                inset 0 0 20px rgba(255, 255, 255, 0.02);
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            margin-bottom: 18px;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-     h1 span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-
-        .desc {
-            max-width: 580px;
-            margin: 0 auto 38px;
+            gap: 8px;
             color: var(--muted);
-            line-height: 1.9;
-            font-size: 15px;
+            font-size: 13px;
+            background: rgba(255,255,255,0.01);
         }
+        .img-placeholder i { font-size: 26px; opacity: 0.4; color: var(--accent); }
 
-        .bottom-info {
+        /* ── Info Box ── */
+        .info-box {
             display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 38px;
-        }
-
-        .info-item {
-            padding: 11px 18px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d7d7e6;
+            gap: 12px;
+            align-items: flex-start;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 14px 0;
             font-size: 14px;
+            line-height: 1.75;
+        }
+        .info-box i { flex-shrink: 0; margin-top: 2px; font-size: 15px; }
+        .info-box.blue { background: rgba(232,62,140,0.08); border-left: 3px solid var(--accent); color: var(--accent-2); }
+        .info-box.green { background: rgba(39,174,96,0.1); border-left: 3px solid #27ae60; color: #7ecf9d; }
+        .info-box.purple { background: rgba(168,85,247,0.08); border-left: 3px solid #a855f7; color: #c084fc; }
+
+        /* ── Challenge Banner ── */
+        .challenge-banner {
+            background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(168,85,247,0.06));
+            border: 1px solid rgba(168,85,247,0.25);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .challenge-banner i { color: #a855f7; font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .challenge-banner h5 { color: #c084fc; font-size: 14.5px; font-weight: 700; margin-bottom: 4px; }
+        .challenge-banner p { color: var(--muted); font-size: 13.5px; line-height: 1.7; margin: 0; }
+
+        /* ── Latihan Banner ── */
+        .latihan-banner {
+            background: linear-gradient(135deg, rgba(232,62,140,0.1), rgba(244,114,182,0.05));
+            border: 1px solid rgba(232,62,140,0.2);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .latihan-banner i { color: var(--accent); font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .latihan-banner h5 { color: var(--accent-2); font-size: 14.5px; font-weight: 700; margin-bottom: 4px; }
+        .latihan-banner p { color: var(--muted); font-size: 13.5px; line-height: 1.7; margin: 0; }
+
+        /* ── Nav Footer ── */
+        .nav-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .nav-footer a {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 20px;
+            background: rgba(232,62,140,0.07);
+            border: 1px solid rgba(232,62,140,0.2);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all .2s;
+            text-align: right;
+            min-width: 160px;
+        }
+        .nav-footer a:hover {
+            background: rgba(232,62,140,0.15);
+            border-color: var(--accent);
+            transform: translateX(4px);
+            box-shadow: 0 6px 20px rgba(232,62,140,0.2);
+        }
+        .nav-footer a span { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+        .nav-footer a strong { font-size: 14px; color: var(--accent-2); }
+
+        /* ── Footer ── */
+        .site-footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
         }
 
-        .info-item i {
-            color: var(--accent2);
-            margin-right: 8px;
-        }
-
-        .btn-back {
+        /* ── Github btn ── */
+        .github-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            border-radius: 14px;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--muted);
             text-decoration: none;
-            color: white;
-            font-weight: 600;
-
-            background:
-                linear-gradient(135deg,
-                    var(--accent),
-                    var(--accent2));
-
-            transition: .25s ease;
-
-            box-shadow:
-                0 10px 30px rgba(255, 92, 168, 0.28);
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all .2s;
+        }
+        .github-btn:hover {
+            background: rgba(232,62,140,0.12);
+            border-color: rgba(232,62,140,0.3);
+            color: var(--accent-2);
         }
 
-        .btn-back:hover {
-            transform: translateY(-3px);
-            color: white;
-
-            box-shadow:
-                0 16px 38px rgba(255, 92, 168, 0.4);
-        }
-
-        @media (max-width: 600px) {
-            .glass-card {
-                padding: 42px 24px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .desc {
-                font-size: 14px;
-            }
+        @media (max-width:600px) {
+            .laprak-card { padding: 22px 18px; }
+            .step-block { padding: 16px 16px; }
+            .img-wrap img { max-height: 260px; }
         }
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-    <div class="glass-card">
-
-        <div class="status-badge">
-            <i class="fa-solid fa-sparkles"></i>
-            Halaman Sedang Disiapkan
-        </div>
-
-        <div class="main-icon">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h1>Laporan Praktikum <span>Belum Tersedia</span></h1>
-
-        <p class="desc">
-            Konten laporan untuk praktikum ini masih dalam tahap penyusunan.
-            Pembahasan materi, dokumentasi, serta hasil praktikum akan segera
-            ditambahkan setelah proses revisi selesai.
-        </p>
-
-        <div class="bottom-info">
-
-            <div class="info-item">
-                <i class="fa-solid fa-pen-ruler"></i>
-                Sedang Direvisi
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase" href="../index.html">
+                <i class="bi bi-code-slash" style="color:var(--accent);"></i>
+                Saskia Alifah
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
+                </ul>
             </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-camera"></i>
-                Dokumentasi Menyusul
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                Akan Segera Tersedia
-            </div>
-
         </div>
+    </nav>
 
-        <a href="main.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Kembali ke Laporan
-        </a>
-
+    <!-- PAGE HERO -->
+    <div class="laprak-hero">
+        <div class="container">
+            <a href="main.html" class="btn-back-hero">
+                <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+            </a>
+            <h1>Laprak 8 — <span>Laravel Relationship: Student, Major, Subject &amp; Jadwal</span></h1>
+            <p class="lead">Pemrograman Web · Pertemuan 8</p>
+            <div class="badge-row">
+                <span class="badge-pill"><i class="bi bi-person-fill"></i> Saskia Alifah</span>
+                <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+                <span class="badge-pill"><i class="bi bi-calendar3"></i> Pemrograman Web</span>
+                <span class="badge-pill"><i class="bi bi-code-slash"></i> Laravel</span>
+                <span class="badge-pill"><i class="bi bi-diagram-3"></i> Eloquent Relationship</span>
+            </div>
+        </div>
     </div>
 
-</body>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width:860px;">
 
+            <!-- I. TUJUAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">I</span>Tujuan Praktikum</div>
+                <p>Setelah menyelesaikan praktikum ini, mahasiswa diharapkan mampu:</p>
+                <ul>
+                    <li>Memahami konsep dan jenis-jenis <strong>Relationship</strong> dalam Laravel Eloquent ORM.</li>
+                    <li>Mengimplementasikan relasi <strong>One-to-Many</strong> antara tabel <code>majors</code> dan <code>students</code>.</li>
+                    <li>Mengimplementasikan relasi <strong>Many-to-Many</strong> antara tabel <code>students</code> dan <code>subjects</code> melalui tabel pivot.</li>
+                    <li>Membuat <strong>Migration</strong> dengan foreign key dan constraint referensial.</li>
+                    <li>Menggunakan <strong>Eager Loading</strong> untuk menghindari N+1 query problem.</li>
+                    <li>Menampilkan data relasi di <strong>View Blade</strong> secara dinamis.</li>
+                    <li>Mengimplementasikan fitur CRUD lengkap menggunakan Resource Controller.</li>
+                </ul>
+            </div>
+
+            <!-- II. DASAR TEORI -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">II</span>Dasar Teori</div>
+                <p><strong>Laravel Eloquent Relationship</strong> adalah fitur ORM bawaan Laravel yang memungkinkan developer mendefinisikan hubungan antar tabel database secara elegan di dalam kelas Model, sehingga query data relasional menjadi lebih mudah dan ekspresif.</p>
+
+                <p><strong>One-to-Many (hasMany / belongsTo):</strong> Relasi di mana satu record di tabel A dapat berelasi dengan banyak record di tabel B. Contoh: satu Jurusan (<code>Major</code>) memiliki banyak Mahasiswa (<code>Student</code>). Di sisi model <code>Major</code> digunakan <code>hasMany()</code>, sedangkan di model <code>Student</code> digunakan <code>belongsTo()</code>.</p>
+
+                <p><strong>Many-to-Many (belongsToMany):</strong> Relasi di mana banyak record di tabel A berelasi dengan banyak record di tabel B, dihubungkan oleh tabel pivot. Contoh: satu Mahasiswa dapat mengambil banyak Mata Kuliah, dan satu Mata Kuliah dapat diambil oleh banyak Mahasiswa. Kedua model menggunakan metode <code>belongsToMany()</code> dan tabel pivot <code>student_subject</code> menampung kombinasi kunci asingnya.</p>
+
+                <p><strong>Eager Loading (with()):</strong> Teknik pemuatan data relasi secara sekaligus dalam satu query SQL yang efisien untuk menghindari masalah N+1, di mana N+1 query terjadi ketika setiap record induk melakukan query tambahan untuk mengambil data relasinya secara terpisah.</p>
+
+                <p><strong>Pivot Table:</strong> Tabel perantara khusus tanpa Primary Key entitas sendiri yang hanya berisi pasangan foreign key dari dua tabel yang berelasi Many-to-Many. Konvensi penamaan Laravel menggunakan nama kedua tabel dalam urutan alfabet, dipisah underscore (contoh: <code>student_subject</code>).</p>
+
+                <p><strong>Foreign Key Constraint:</strong> Aturan integritas referensial di level database yang memastikan nilai di kolom foreign key selalu merujuk pada data yang valid di tabel induknya. Opsi <code>onDelete('cascade')</code> akan menghapus data anak secara otomatis ketika data induk dihapus.</p>
+            </div>
+
+            <!-- III. ALAT DAN BAHAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">III</span>Alat dan Bahan</div>
+                <ul>
+                    <li>Laptop / Komputer dengan sistem operasi Windows</li>
+                    <li>Laragon Full (Local Development Environment — Apache &amp; MySQL)</li>
+                    <li>Visual Studio Code (Code Editor)</li>
+                    <li>Web Browser (Google Chrome / Mozilla Firefox)</li>
+                    <li>Composer (Dependency Manager PHP)</li>
+                    <li>Project Laravel yang sudah terbuat di <code>C:/laragon/www/laravel</code></li>
+                    <li>phpMyAdmin untuk verifikasi struktur database</li>
+                </ul>
+            </div>
+
+            <!-- IV. LANGKAH KERJA PRAKTIKUM -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">IV</span>Langkah Kerja Praktikum: Laravel Relationship</div>
+                <p>Berikut adalah runtutan langkah praktikum untuk membangun sistem manajemen akademik mahasiswa dengan relasi antar tabel menggunakan Eloquent ORM Laravel.</p>
+
+                <!-- Langkah 1 — Migration -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">1</span>Membuat File Migration untuk Semua Tabel</div>
+                    <p>Migration adalah fitur Laravel yang berfungsi sebagai <em>version control</em> skema database. Kita membuat 4 file migration sekaligus: untuk tabel <code>majors</code>, <code>students</code>, <code>subjects</code>, dan tabel pivot <code>student_subject</code>. Urutan pembuatan penting karena tabel yang direferensi foreign key harus ada terlebih dahulu.</p>
+                    
+                    <div class="sub-label">Aksi: Jalankan 4 Perintah di Terminal Laragon</div>
+                    <p>Jalankan keempat perintah artisan berikut satu per satu di terminal dari dalam folder project <code>C:/laragon/www/laravel</code>.</p>
+                    
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan make:migration create_majors_table</span></div>
+                        <div class="img-cap">Gambar 1a – Perintah pembuatan file migration tabel majors berhasil dijalankan</div>
+                    </div>
+                    
+                    <div class="sub-label">Aksi: Edit File Migration Tabel Majors</div>
+                    <p>Buka folder <code>database/migrations/</code> di VS Code, temukan file <code>xxxx_create_majors_table.php</code> dan isi method <code>up()</code> dengan kolom <code>id</code>, <code>name</code>, dan <code>timestamps</code>.</p>
+                    
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: isi method up() majors_table</span></div>
+                        <div class="img-cap">Gambar 1b – Definisi kolom tabel majors: id (PK auto-increment) dan name (string)</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit File Migration Tabel Students</div>
+                    <p>Temukan file <code>xxxx_create_students_table.php</code>. Tambahkan kolom <code>nim</code> (unique), <code>name</code>, <code>address</code>, dan <code>major_id</code> sebagai foreign key yang merujuk ke tabel <code>majors</code> dengan opsi <code>onDelete('cascade')</code>.</p>
+                    
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: isi method up() students_table dengan foreignId major_id</span></div>
+                        <div class="img-cap">Gambar 1c – Definisi kolom tabel students dengan foreign key major_id → majors.id</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit File Migration Tabel Subjects</div>
+                    <p>Temukan file <code>xxxx_create_subjects_table.php</code>. Tambahkan kolom <code>name</code> dan <code>sks</code> (integer untuk jumlah Satuan Kredit Semester).</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: isi method up() subjects_table dengan kolom sks</span></div>
+                        <div class="img-cap">Gambar 1d – Definisi kolom tabel subjects: name (string) dan sks (integer)</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit File Migration Tabel Pivot student_subject</div>
+                    <p>Temukan file <code>xxxx_create_student_subject_table.php</code>. Tambahkan <code>student_id</code> dan <code>subject_id</code> sebagai foreign key, serta constraint <code>unique(['student_id', 'subject_id'])</code> untuk mencegah duplikasi kombinasi.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: isi pivot table student_subject dengan 2 foreign key</span></div>
+                        <div class="img-cap">Gambar 1e – Tabel pivot student_subject dengan dua foreign key dan unique constraint</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Jalankan Migration</div>
+                    <p>Setelah keempat file migration terisi, jalankan perintah berikut untuk mengirim semua skema ke database MySQL. Pastikan Laragon sudah menyala dan database <code>laravel</code> sudah ada di phpMyAdmin.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan migrate berhasil, 4 tabel terbuat</span></div>
+                        <div class="img-cap">Gambar 1f – Log terminal menunjukkan keempat tabel berhasil dibuat di database</div>
+                    </div>
+
+                    <div class="info-box green">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>Verifikasi di phpMyAdmin: pastikan tabel <strong>majors</strong>, <strong>students</strong>, <strong>subjects</strong>, dan <strong>student_subject</strong> sudah muncul dengan struktur kolom yang benar.</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 2 — Model -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">2</span>Membuat Model dengan Eloquent Relationship</div>
+                    <p>Model adalah kelas PHP yang merepresentasikan sebuah tabel database. Di sinilah kita mendefinisikan relasi antar tabel menggunakan method Eloquent. Tiga model yang dibuat: <code>Major</code>, <code>Student</code>, dan <code>Subject</code>.</p>
+
+                    <div class="sub-label">Aksi: Buat 3 File Model via Terminal</div>
+                    <p>Jalankan perintah artisan berikut satu per satu untuk menghasilkan ketiga file model.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan make:model Major/Student/Subject</span></div>
+                        <div class="img-cap">Gambar 2a – Ketiga file model berhasil digenerate di folder app/Models/</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit Model Major.php — Definisikan hasMany</div>
+                    <p>Buka <code>app/Models/Major.php</code>. Tambahkan <code>$fillable</code> dan method <code>students()</code> yang mengembalikan relasi <code>hasMany(Student::class)</code> — artinya satu jurusan memiliki banyak mahasiswa.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: Major.php dengan method hasMany students</span></div>
+                        <div class="img-cap">Gambar 2b – Model Major dengan relasi One-to-Many ke Student melalui hasMany()</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit Model Student.php — Definisikan belongsTo &amp; belongsToMany</div>
+                    <p>Buka <code>app/Models/Student.php</code>. Tambahkan method <code>major()</code> dengan <code>belongsTo(Major::class)</code> (setiap mahasiswa milik satu jurusan), dan method <code>subjects()</code> dengan <code>belongsToMany(Subject::class)</code> (mahasiswa bisa mengambil banyak mata kuliah).</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: Student.php dengan belongsTo dan belongsToMany</span></div>
+                        <div class="img-cap">Gambar 2c – Model Student dengan dua relasi: belongsTo Major dan belongsToMany Subject</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit Model Subject.php — Definisikan belongsToMany</div>
+                    <p>Buka <code>app/Models/Subject.php</code>. Tambahkan method <code>students()</code> dengan <code>belongsToMany(Student::class)</code> — mata kuliah dapat dimiliki oleh banyak mahasiswa.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: Subject.php dengan belongsToMany students</span></div>
+                        <div class="img-cap">Gambar 2d – Model Subject dengan relasi Many-to-Many ke Student</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 3 — Seeder -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">3</span>Membuat Seeder untuk Data Awal</div>
+                    <p>Seeder digunakan untuk mengisi data dummy ke database secara otomatis, sehingga tidak perlu memasukkan data manual satu per satu untuk keperluan pengujian sistem.</p>
+
+                    <div class="sub-label">Aksi: Buat 3 File Seeder via Terminal</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan make:seeder MajorSeeder/SubjectSeeder/StudentSeeder</span></div>
+                        <div class="img-cap">Gambar 3a – Tiga file seeder berhasil dibuat di folder database/seeders/</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit MajorSeeder.php</div>
+                    <p>Isi method <code>run()</code> dengan array 4 jurusan: Teknik Informatika, Sistem Informasi, Teknik Komputer, dan Manajemen Informatika. Gunakan <code>Major::create()</code> dalam loop foreach.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: MajorSeeder.php dengan 4 data jurusan</span></div>
+                        <div class="img-cap">Gambar 3b – Isi MajorSeeder dengan 4 jurusan yang akan dimasukkan ke tabel majors</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit SubjectSeeder.php</div>
+                    <p>Isi 5 mata kuliah beserta jumlah SKS-nya: Pemrograman Web (3 SKS), Database (3 SKS), Algoritma (2 SKS), Jaringan Komputer (3 SKS), dan Sistem Operasi (2 SKS).</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: SubjectSeeder.php dengan 5 mata kuliah dan SKS</span></div>
+                        <div class="img-cap">Gambar 3c – Isi SubjectSeeder dengan 5 mata kuliah beserta nilai SKS masing-masing</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Edit StudentSeeder.php</div>
+                    <p>Isi 5 data mahasiswa dan gunakan <code>$student->subjects()->attach($subjects)</code> untuk secara acak mengisi tabel pivot dengan 2–4 mata kuliah per mahasiswa. Ini sekaligus mendemonstrasikan metode <code>attach()</code> pada relasi Many-to-Many.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: StudentSeeder.php dengan attach() ke pivot table</span></div>
+                        <div class="img-cap">Gambar 3d – StudentSeeder mengisi data mahasiswa sekaligus mengisi tabel pivot secara acak</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Daftarkan Seeder ke DatabaseSeeder.php &amp; Jalankan</div>
+                    <p>Edit method <code>run()</code> di <code>DatabaseSeeder.php</code> agar memanggil ketiga seeder, lalu jalankan perintah <code>php artisan db:seed</code> di terminal.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: DatabaseSeeder.php + Terminal: php artisan db:seed sukses</span></div>
+                        <div class="img-cap">Gambar 3e – DatabaseSeeder memanggil ketiga seeder; log terminal membuktikan pengisian data berhasil</div>
+                    </div>
+
+                    <div class="info-box green">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>Verifikasi di phpMyAdmin: tabel <strong>majors</strong> berisi 4 data, <strong>subjects</strong> berisi 5 data, <strong>students</strong> berisi 5 data, dan <strong>student_subject</strong> berisi pasangan relasi acak mahasiswa–mata kuliah.</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 4 — Controller -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">4</span>Membuat StudentController (Resource CRUD)</div>
+                    <p>Controller bertanggung jawab menerima request dari pengguna, berinteraksi dengan model untuk mengambil atau menyimpan data, lalu mengirimkan data tersebut ke view untuk ditampilkan. Resource Controller secara otomatis menyediakan 7 method standar CRUD.</p>
+
+                    <div class="sub-label">Aksi: Buat StudentController via Terminal</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan make:controller StudentController</span></div>
+                        <div class="img-cap">Gambar 4a – File StudentController.php berhasil dibuat di app/Http/Controllers/</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Isi Semua Method di StudentController.php</div>
+                    <p>Isi 7 method lengkap: <code>index()</code> menggunakan <code>Student::with(['major','subjects'])->get()</code> untuk eager loading; <code>store()</code> menggunakan <code>attach()</code> untuk menyimpan relasi pivot; <code>update()</code> menggunakan <code>sync()</code> untuk memperbarui relasi; dan <code>destroy()</code> menggunakan <code>detach()</code> sebelum menghapus data.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: StudentController.php dengan 7 method CRUD lengkap</span></div>
+                        <div class="img-cap">Gambar 4b – Implementasi lengkap StudentController dengan eager loading dan pengelolaan relasi pivot</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 5 — Routes -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">5</span>Mendaftarkan Resource Route</div>
+                    <p>Laravel Route Resource menghasilkan 7 route sekaligus dengan satu baris kode: GET /students (index), GET /students/create (create), POST /students (store), GET /students/{id} (show), GET /students/{id}/edit (edit), PUT /students/{id} (update), DELETE /students/{id} (destroy). Ini sangat menghemat penulisan kode dibanding mendaftarkan satu per satu.</p>
+
+                    <div class="sub-label">Aksi: Edit File routes/web.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: routes/web.php dengan Route::resource students</span></div>
+                        <div class="img-cap">Gambar 5a – Pendaftaran Route::resource('students', StudentController::class) di web.php</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Verifikasi Route via Terminal</div>
+                    <p>Jalankan <code>php artisan route:list</code> untuk memverifikasi semua route mahasiswa sudah terdaftar dengan benar.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan route:list menampilkan 7 route students</span></div>
+                        <div class="img-cap">Gambar 5b – Output route:list menampilkan ketujuh endpoint CRUD mahasiswa yang sudah aktif</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 6 — Views -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">6</span>Membuat Semua File View Blade</div>
+                    <p>View adalah lapisan antarmuka yang menampilkan data ke pengguna. Kita menggunakan Blade Template Engine Laravel dengan sistem inheritance menggunakan <code>@extends</code> dan <code>@section</code> agar tampilan konsisten dan kode tidak berulang.</p>
+
+                    <div class="sub-label">Aksi: Buat Folder layouts/ dan students/ di resources/views/</div>
+                    <p>Buat dua folder baru: <code>resources/views/layouts/</code> untuk layout utama, dan <code>resources/views/students/</code> untuk semua view mahasiswa.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: struktur folder layouts dan students di resources/views/</span></div>
+                        <div class="img-cap">Gambar 6a – Struktur folder view yang rapi: layouts/ untuk template induk, students/ untuk halaman CRUD</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat resources/views/layouts/app.blade.php</div>
+                    <p>File ini adalah layout utama yang berisi navbar Bootstrap, container utama, penampil notifikasi flash message <code>session('success')</code>, dan directive <code>@yield('content')</code> sebagai slot untuk konten tiap halaman.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: layouts/app.blade.php dengan navbar dan @yield content</span></div>
+                        <div class="img-cap">Gambar 6b – Template layout utama dengan Bootstrap navbar dan slot @yield('content')</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat resources/views/students/index.blade.php</div>
+                    <p>Halaman utama yang menampilkan tabel daftar mahasiswa dengan kolom NIM, Nama, Jurusan, Badge Mata Kuliah, Total SKS, dan tombol aksi Detail/Edit/Hapus.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: students/index.blade.php dengan tabel dan badge mata kuliah</span></div>
+                        <div class="img-cap">Gambar 6c – View index menampilkan daftar mahasiswa dalam tabel lengkap dengan badge mata kuliah</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat resources/views/students/create.blade.php</div>
+                    <p>Form tambah mahasiswa dengan input NIM, Nama, Alamat, dropdown Jurusan, dan checkbox Mata Kuliah. Menggunakan <code>@csrf</code> untuk keamanan dan <code>@error</code> untuk menampilkan pesan validasi.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: students/create.blade.php dengan form dan checkbox matkul</span></div>
+                        <div class="img-cap">Gambar 6d – Form tambah mahasiswa dengan input lengkap, dropdown jurusan, dan checkbox mata kuliah</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat resources/views/students/edit.blade.php</div>
+                    <p>Form edit yang menampilkan nilai lama data mahasiswa menggunakan <code>old('field', $student->field)</code>. Menggunakan <code>@method('PUT')</code> untuk spoofing method HTTP karena HTML form hanya mendukung GET dan POST.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: students/edit.blade.php dengan @method PUT dan nilai lama</span></div>
+                        <div class="img-cap">Gambar 6e – Form edit dengan pre-fill nilai data lama dan PUT method spoofing</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat resources/views/students/show.blade.php</div>
+                    <p>Halaman detail mahasiswa yang menampilkan semua informasi termasuk jurusan dan daftar mata kuliah beserta SKS-nya dalam tampilan tabel informatif.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: students/show.blade.php dengan detail lengkap mahasiswa</span></div>
+                        <div class="img-cap">Gambar 6f – View detail mahasiswa menampilkan semua data termasuk jurusan dan mata kuliah</div>
+                    </div>
+                </div>
+
+                <!-- Langkah 7 — Test Akhir -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">7</span>Menjalankan dan Menguji Aplikasi di Browser</div>
+                    <p>Langkah terakhir adalah memastikan seluruh komponen yang telah dibuat — Migration, Model, Seeder, Controller, Route, dan View — terhubung dengan baik dan semua fitur CRUD berfungsi normal.</p>
+
+                    <div class="sub-label">Aksi: Buka Browser dan Akses URL Utama</div>
+                    <p>Buka browser dan akses <code>http://laravel.test/students</code> atau <code>http://localhost/laravel/public/students</code>.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: halaman index daftar mahasiswa dengan 5 data dari seeder</span></div>
+                        <div class="img-cap">Gambar 7a – Halaman utama menampilkan 5 data mahasiswa hasil seeder beserta jurusan dan badge mata kuliah</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: form tambah mahasiswa dengan dropdown dan checkbox</span></div>
+                        <div class="img-cap">Gambar 7b – Form tambah mahasiswa baru dengan dropdown jurusan dan checkbox pemilihan mata kuliah</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: halaman detail (show) mahasiswa dengan info lengkap</span></div>
+                        <div class="img-cap">Gambar 7c – Halaman detail menampilkan informasi lengkap mahasiswa beserta jurusan dan daftar mata kuliah</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: form edit mahasiswa dengan data terisi otomatis</span></div>
+                        <div class="img-cap">Gambar 7d – Form edit dengan data lama mahasiswa yang sudah terisi otomatis dan siap diperbarui</div>
+                    </div>
+
+                    <div class="info-box green">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>Jika semua tampilan muncul dengan benar dan CRUD berfungsi tanpa error, langkah praktikum utama berhasil diselesaikan.</div>
+                    </div>
+                </div>
+            </div><!-- /laprak-card IV -->
+
+            <!-- V. LATIHAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">V</span>Latihan: Query dengan Eloquent Relationship</div>
+
+                <div class="latihan-banner">
+                    <i class="bi bi-journal-code"></i>
+                    <div>
+                        <h5>Latihan 1 — Implementasi 4 Query Relationship</h5>
+                        <p>Membuat halaman-halaman terpisah yang masing-masing menampilkan hasil query menggunakan Eloquent Relationship: semua mahasiswa beserta relasinya, ranking jurusan berdasarkan jumlah mahasiswa, filter mata kuliah per mahasiswa, dan total SKS tiap mahasiswa.</p>
+                    </div>
+                </div>
+
+                <!-- Latihan Langkah 1 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">1</span>Membuat LatihanController</div>
+                    <p>Buat controller baru khusus untuk menangani keempat query latihan. Setiap method di controller ini menggunakan fitur Eloquent yang berbeda untuk mendemonstrasikan kemampuan query relationship.</p>
+
+                    <div class="sub-label">Aksi: Jalankan Artisan Make Controller</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan make:controller LatihanController</span></div>
+                        <div class="img-cap">Gambar 8a – LatihanController.php berhasil dibuat di folder app/Http/Controllers/</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Isi 4 Method di LatihanController.php</div>
+                    <p>Isi method <code>semuaMahasiswa()</code> menggunakan <code>Student::with(['major','subjects'])->get()</code>. Method <code>jurusanTerbanyak()</code> menggunakan <code>Major::withCount('students')->orderBy('students_count','desc')->get()</code>. Method <code>mataKuliahMahasiswa($id)</code> menggunakan <code>Student::with(['major','subjects'])->findOrFail($id)</code>. Method <code>totalSks()</code> menggunakan <code>Student::with('subjects')->get()</code>.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: LatihanController.php dengan 4 method query</span></div>
+                        <div class="img-cap">Gambar 8b – Implementasi 4 method query di LatihanController menggunakan fitur Eloquent yang beragam</div>
+                    </div>
+                </div>
+
+                <!-- Latihan Langkah 2 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">2</span>Menambahkan 4 Route Latihan di web.php</div>
+                    <p>Tambahkan route untuk masing-masing method latihan. Gunakan named route agar lebih mudah direferensikan di view menggunakan <code>route('nama.route')</code>.</p>
+
+                    <div class="sub-label">Aksi: Edit File routes/web.php</div>
+                    <p>Tambahkan baris <code>use App\Http\Controllers\LatihanController;</code> di bagian atas dan daftarkan keempat route GET beserta nama masing-masing.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: routes/web.php dengan 4 route latihan</span></div>
+                        <div class="img-cap">Gambar 9a – Penambahan 4 named route latihan di web.php untuk masing-masing query</div>
+                    </div>
+                </div>
+
+                <!-- Latihan Langkah 3 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">3</span>Membuat 4 File View Latihan</div>
+                    <p>Buat folder <code>resources/views/latihan/</code> dan buat keempat file view di dalamnya. Setiap view menampilkan data dalam format tabel yang informatif dan dilengkapi navigasi antar query.</p>
+
+                    <div class="sub-label">Aksi: Buat Folder latihan/ &amp; File semua_mahasiswa.blade.php</div>
+                    <p>Query 1: menampilkan tabel semua mahasiswa beserta jurusan dan badge mata kuliah yang diambil. Gunakan loop <code>@foreach($student->subjects as $subject)</code> untuk menampilkan badge tiap mata kuliah.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: latihan/semua_mahasiswa.blade.php</span></div>
+                        <div class="img-cap">Gambar 10a – View Query 1: tabel semua mahasiswa beserta jurusan dan mata kuliah yang diambil</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat File jurusan_terbanyak.blade.php</div>
+                    <p>Query 2: menampilkan ranking jurusan berdasarkan jumlah mahasiswa menggunakan data <code>$major->students_count</code> yang dihasilkan oleh <code>withCount()</code>.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: latihan/jurusan_terbanyak.blade.php dengan ranking</span></div>
+                        <div class="img-cap">Gambar 10b – View Query 2: tabel ranking jurusan dari yang terbanyak hingga tersedikit mahasiswanya</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat File matkul_mahasiswa.blade.php</div>
+                    <p>Query 3: dropdown interaktif untuk memilih mahasiswa, lalu menampilkan mata kuliah beserta total SKS mahasiswa yang dipilih. Menggunakan JavaScript sederhana untuk navigasi antar mahasiswa.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: latihan/matkul_mahasiswa.blade.php dengan dropdown</span></div>
+                        <div class="img-cap">Gambar 10c – View Query 3: dropdown pemilih mahasiswa dan tabel mata kuliah beserta total SKS</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat File total_sks.blade.php</div>
+                    <p>Query 4: menampilkan total SKS setiap mahasiswa dengan badge status Normal (≥10 SKS) atau Sedikit (&lt;10 SKS) berdasarkan kalkulasi <code>$student->subjects->sum('sks')</code>.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: latihan/total_sks.blade.php dengan badge status</span></div>
+                        <div class="img-cap">Gambar 10d – View Query 4: tabel total SKS mahasiswa dengan badge status berdasarkan jumlah SKS</div>
+                    </div>
+                </div>
+
+                <!-- Latihan Test Akhir -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">4</span>Uji Semua Halaman Latihan di Browser</div>
+                    <p>Akses keempat URL latihan secara berurutan di browser untuk memastikan semua query berjalan dan data tampil dengan benar.</p>
+
+                    <div class="sub-label">Aksi: Buka Keempat URL Latihan di Browser</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /latihan/semua-mahasiswa — tabel semua mahasiswa + matkul</span></div>
+                        <div class="img-cap">Gambar 11a – Query 1: Halaman semua mahasiswa beserta jurusan dan mata kuliah yang diambil</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /latihan/jurusan-terbanyak — tabel ranking jurusan</span></div>
+                        <div class="img-cap">Gambar 11b – Query 2: Halaman ranking jurusan berdasarkan jumlah mahasiswa (withCount)</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /latihan/matkul-mahasiswa/1 — matkul mahasiswa tertentu</span></div>
+                        <div class="img-cap">Gambar 11c – Query 3: Halaman mata kuliah mahasiswa tertentu dengan dropdown pemilih dan total SKS</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /latihan/total-sks — tabel total SKS + badge status</span></div>
+                        <div class="img-cap">Gambar 11d – Query 4: Halaman total SKS semua mahasiswa dengan badge Normal/Sedikit</div>
+                    </div>
+                </div>
+            </div><!-- /laprak-card V -->
+
+            <!-- VI. CHALLENGE -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VI</span>Challenge: Tambahkan Jadwal untuk Setiap Mata Kuliah</div>
+
+                <div class="challenge-banner">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <div>
+                        <h5>Challenge — Fitur Jadwal Mata Kuliah (Schedule)</h5>
+                        <p>Menambahkan relasi baru: setiap Mata Kuliah (<code>Subject</code>) memiliki jadwal (<code>Schedule</code>) yang berisi hari, jam mulai, jam selesai, dan ruangan. Relasi ini adalah <strong>One-to-Many</strong> antara <code>subjects</code> dan <code>schedules</code>. Jadwal juga akan ditampilkan di halaman detail mahasiswa sehingga mahasiswa dapat melihat jadwal mata kuliah yang diambilnya.</p>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 1 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">1</span>Buat Migration Tabel Schedules</div>
+                    <p>Tabel <code>schedules</code> menyimpan jadwal tiap mata kuliah. Kolom <code>subject_id</code> adalah foreign key ke tabel <code>subjects</code>. Kolom <code>hari</code> menggunakan tipe <code>enum</code> untuk membatasi input hanya pada hari yang valid (Senin–Sabtu).</p>
+
+                    <div class="sub-label">Aksi: Buat &amp; Edit Migration Tabel Schedules</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: migration create_schedules_table dengan kolom lengkap</span></div>
+                        <div class="img-cap">Gambar 12a – File migration tabel schedules dengan kolom subject_id, hari (enum), jam_mulai, jam_selesai, ruangan</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan migrate — tabel schedules berhasil dibuat</span></div>
+                        <div class="img-cap">Gambar 12b – Log terminal membuktikan tabel schedules berhasil ditambahkan ke database</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 2 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">2</span>Buat Model Schedule &amp; Update Model Subject</div>
+                    <p>Model <code>Schedule</code> mendefinisikan <code>belongsTo(Subject::class)</code> karena setiap jadwal milik satu mata kuliah. Model <code>Subject</code> perlu diperbarui dengan menambahkan method <code>schedules()</code> yang mendefinisikan <code>hasMany(Schedule::class)</code>.</p>
+
+                    <div class="sub-label">Aksi: Buat Model Schedule.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: Schedule.php dengan belongsTo Subject dan fillable</span></div>
+                        <div class="img-cap">Gambar 13a – Model Schedule dengan relasi belongsTo Subject dan properti fillable lengkap</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Perbarui Model Subject.php — Tambahkan hasMany Schedules</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: Subject.php dengan tambahan method schedules() hasMany</span></div>
+                        <div class="img-cap">Gambar 13b – Penambahan method schedules() pada model Subject untuk relasi One-to-Many ke Schedule</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 3 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">3</span>Buat ScheduleSeeder &amp; Jalankan Seeder</div>
+                    <p>Seeder ini mengisi satu jadwal untuk tiap mata kuliah (5 jadwal total), masing-masing di hari dan ruangan yang berbeda. Daftarkan <code>ScheduleSeeder</code> ke <code>DatabaseSeeder</code> lalu jalankan dengan perintah <code>db:seed --class=ScheduleSeeder</code>.</p>
+
+                    <div class="sub-label">Aksi: Edit ScheduleSeeder.php &amp; Daftarkan ke DatabaseSeeder</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: ScheduleSeeder.php dengan 5 data jadwal per matkul</span></div>
+                        <div class="img-cap">Gambar 14a – ScheduleSeeder berisi 5 jadwal mata kuliah dengan hari, jam, dan ruangan masing-masing</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Terminal: php artisan db:seed --class=ScheduleSeeder berhasil</span></div>
+                        <div class="img-cap">Gambar 14b – Seeder jadwal berhasil dijalankan; tabel schedules terisi 5 data</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 4 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">4</span>Buat ScheduleController &amp; Tambahkan Route</div>
+                    <p>ScheduleController menyediakan fitur CRUD jadwal: index menampilkan jadwal dikelompokkan per mata kuliah, create/store untuk tambah jadwal baru, edit/update untuk ubah jadwal, dan destroy untuk hapus jadwal. Route resource menghasilkan semua endpoint secara otomatis.</p>
+
+                    <div class="sub-label">Aksi: Buat &amp; Isi ScheduleController.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: ScheduleController.php dengan 5 method CRUD</span></div>
+                        <div class="img-cap">Gambar 15a – ScheduleController dengan method index, create, store, edit, update, destroy</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Tambahkan Route::resource Schedules di web.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: routes/web.php dengan Route::resource schedules</span></div>
+                        <div class="img-cap">Gambar 15b – Penambahan Route::resource('schedules', ScheduleController::class) di web.php</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 5 -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">5</span>Buat View Jadwal (Index, Create, Edit)</div>
+                    <p>Buat folder <code>resources/views/schedules/</code> dan tiga file view di dalamnya. Halaman index mengelompokkan jadwal per mata kuliah menggunakan card per subject. Halaman create dan edit menyediakan form dengan dropdown hari, input jam, dan input ruangan.</p>
+
+                    <div class="sub-label">Aksi: Buat schedules/index.blade.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: schedules/index.blade.php dengan card per mata kuliah</span></div>
+                        <div class="img-cap">Gambar 16a – View index jadwal menampilkan jadwal dikelompokkan per kartu mata kuliah</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Buat schedules/create.blade.php &amp; schedules/edit.blade.php</div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: schedules/create.blade.php dengan form jadwal lengkap</span></div>
+                        <div class="img-cap">Gambar 16b – Form tambah jadwal dengan dropdown mata kuliah, hari, input jam, dan ruangan</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Step 6 — Tampilkan Jadwal di Show Mahasiswa -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">6</span>Tampilkan Jadwal di Halaman Detail Mahasiswa</div>
+                    <p>Perbarui StudentController method <code>show()</code> untuk menggunakan eager loading <code>subjects.schedules</code> — ini memuat relasi bertingkat sekaligus: subjects dari mahasiswa, lalu schedules dari setiap subject. Perbarui view <code>students/show.blade.php</code> agar setiap card mata kuliah menampilkan tabel jadwalnya.</p>
+
+                    <div class="sub-label">Aksi: Update Method show() di StudentController</div>
+                    <p>Ubah eager loading dari <code>['major','subjects']</code> menjadi <code>['major','subjects.schedules']</code> agar jadwal ikut termuat dalam satu query efisien.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: StudentController show() dengan subjects.schedules eager loading</span></div>
+                        <div class="img-cap">Gambar 17a – Update eager loading di show() menjadi subjects.schedules untuk memuat jadwal sekaligus</div>
+                    </div>
+
+                    <div class="sub-label">Aksi: Update students/show.blade.php — Tampilkan Kartu Jadwal</div>
+                    <p>Tambahkan section di bawah tabel info mahasiswa yang menampilkan kartu per mata kuliah beserta tabel jadwalnya (hari, jam mulai, jam selesai, ruangan).</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — VS Code: students/show.blade.php dengan card jadwal per matkul</span></div>
+                        <div class="img-cap">Gambar 17b – View show yang telah diperbarui untuk menampilkan jadwal tiap mata kuliah dalam kartu terpisah</div>
+                    </div>
+                </div>
+
+                <!-- Challenge Test -->
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num challenge">7</span>Uji Fitur Challenge di Browser</div>
+                    <p>Akses halaman jadwal dan detail mahasiswa untuk memverifikasi integrasi fitur challenge berjalan sempurna.</p>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /schedules — halaman daftar jadwal per mata kuliah</span></div>
+                        <div class="img-cap">Gambar 18a – Halaman jadwal mata kuliah dengan jadwal dikelompokkan per kartu mata kuliah</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /schedules/create — form tambah jadwal</span></div>
+                        <div class="img-cap">Gambar 18b – Form tambah jadwal baru dengan pemilihan mata kuliah, hari, jam, dan ruangan</div>
+                    </div>
+
+                    <div class="img-wrap">
+                        <div class="img-placeholder"><i class="bi bi-image"></i><span>SS — Browser: /students/1 — detail mahasiswa dengan jadwal matkul tampil</span></div>
+                        <div class="img-cap">Gambar 18c – Halaman detail mahasiswa menampilkan kartu tiap mata kuliah beserta jadwal hari, jam, dan ruangannya</div>
+                    </div>
+                </div>
+            </div><!-- /laprak-card VI -->
+
+            <!-- VII. HASIL & PEMBAHASAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VII</span>Hasil &amp; Pembahasan</div>
+                <p>Melalui serangkaian langkah praktikum Pertemuan 8 ini, implementasi sistem akademik dengan Eloquent Relationship berhasil diselesaikan secara menyeluruh:</p>
+                <ul>
+                    <li><strong>Migration &amp; Foreign Key:</strong> Keempat tabel (<code>majors</code>, <code>students</code>, <code>subjects</code>, <code>student_subject</code>) berhasil dibuat dengan constraint referensial yang tepat dan cascading delete.</li>
+                    <li><strong>Eloquent Relationship:</strong> Relasi One-to-Many antara Major–Student dan Many-to-Many antara Student–Subject berhasil diimplementasikan dan berfungsi dengan benar.</li>
+                    <li><strong>Eager Loading:</strong> Penggunaan <code>with()</code> dan <code>with('subjects.schedules')</code> berhasil menghindari N+1 query problem, membuat aplikasi lebih efisien.</li>
+                    <li><strong>CRUD Lengkap:</strong> Operasi tambah, lihat, edit, dan hapus data mahasiswa berjalan dengan validasi form yang aman, termasuk pengelolaan relasi pivot menggunakan <code>attach()</code>, <code>sync()</code>, dan <code>detach()</code>.</li>
+                    <li><strong>Latihan Query:</strong> Keempat query relationship — semua mahasiswa, ranking jurusan, filter matkul per mahasiswa, dan total SKS — berhasil ditampilkan di halaman terpisah.</li>
+                    <li><strong>Challenge Jadwal:</strong> Fitur jadwal mata kuliah berhasil ditambahkan dengan relasi Schedule–Subject dan terintegrasi ke halaman detail mahasiswa melalui eager loading bertingkat.</li>
+                </ul>
+            </div>
+
+            <!-- VIII. KESIMPULAN -->
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">VIII</span>Kesimpulan</div>
+                <p>Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan, diperoleh beberapa poin kesimpulan penting:</p>
+                <ol>
+                    <li>Laravel Eloquent menyediakan sintaks relationship yang ekspresif dan mudah dipahami melalui method <strong>hasMany()</strong>, <strong>belongsTo()</strong>, dan <strong>belongsToMany()</strong> yang mengeliminasi penulisan query SQL JOIN yang panjang secara manual.</li>
+                    <li>Tabel pivot pada relasi <strong>Many-to-Many</strong> dikelola secara otomatis oleh Eloquent melalui method <strong>attach()</strong> untuk menambah, <strong>sync()</strong> untuk memperbarui, dan <strong>detach()</strong> untuk menghapus relasi.</li>
+                    <li>Teknik <strong>Eager Loading</strong> dengan metode <code>with()</code> adalah praktik terbaik yang wajib diterapkan untuk mencegah N+1 query problem pada relasi data berskala besar.</li>
+                    <li>Nested eager loading seperti <code>with('subjects.schedules')</code> memungkinkan pemuatan relasi bertingkat sekaligus dalam satu query yang sangat efisien.</li>
+                    <li>Pemahaman mendalam tentang konsep relasi database adalah fondasi yang kuat untuk membangun aplikasi web yang terstruktur, efisien, dan mudah dipelihara.</li>
+                </ol>
+
+                <div class="text-center mt-4">
+                    <a href="https://github.com/saskiaalifah/SaskiaAlifah-Laravel-PWEB" target="_blank" class="github-btn">
+                        <i class="bi bi-github me-2"></i>
+                        Lihat Repository GitHub
+                    </a>
+                </div>
+
+                <div class="nav-footer">
+                    <a href="laprak4.html">
+                        <span>Berikutnya →</span>
+                        <strong>Laprak 4</strong>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+        <div class="container">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-4 text-md-start text-center">
+                    <div class="fw-bold text-uppercase" style="color:var(--text);">Saskia Alifah</div>
+                    <div class="small mt-1" style="color:var(--muted);">Creative studio — design &amp; code</div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <nav>
+                        <ul class="list-inline mb-0" style="font-size:13px;">
+                            <li class="list-inline-item"><a href="../index.html" style="color:var(--muted);text-decoration:none;">Home</a></li>
+                            <li class="list-inline-item"><a href="../about.html" style="color:var(--muted);text-decoration:none;">About</a></li>
+                            <li class="list-inline-item"><a href="main.html" style="color:var(--muted);text-decoration:none;">Laporan</a></li>
+                            <li class="list-inline-item"><a href="../kontak.html" style="color:var(--muted);text-decoration:none;">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-4 text-md-end text-center">
+                    <div class="d-inline-flex gap-2">
+                        <a href="#" style="color:var(--muted);font-size:16px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color:var(--muted);font-size:16px;"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/saskiaalifah" target="_blank" style="color:var(--muted);font-size:16px;"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <small style="color:var(--muted);">&copy; <span id="year"></span> Saskia Alifah. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        window.addEventListener('scroll', function () {
+            document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+    </script>
+</body>
 </html>

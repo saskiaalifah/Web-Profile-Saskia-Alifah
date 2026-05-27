@@ -256,18 +256,6 @@
             font-style: italic;
             background: rgba(232,62,140,0.03);
         }
-        .img-placeholder {
-            height: 160px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--muted);
-            font-size: 13px;
-            background: rgba(255,255,255,0.01);
-        }
-        .img-placeholder i { font-size: 26px; opacity: 0.4; color: var(--accent); }
 
         /* ── Info Box ── */
         .info-box {
@@ -385,7 +373,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase" href="../index.html">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase" href="index.html">
                 <i class="bi bi-code-slash" style="color:var(--accent);"></i>
                 Saskia Alifah
             </a>
@@ -394,11 +382,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="portofolio.html">Portfolio</a></li>
                     <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kontak.html">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -485,7 +473,7 @@
                     <p>Jalankan keempat perintah artisan berikut satu per satu di terminal dari dalam folder project <code>C:/laragon/www/laravel</code>.</p>
                     
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1a.png" class="preview-target" alt="SS Terminal php artisan make:migration create_majors_table">
+                        <img src="../images/laporan/laporan3/1a.png" class="preview-target" alt="SS Terminal php artisan make:migration create_majors_table">
                         <div class="img-cap">Gambar 1a – Perintah pembuatan file migration tabel majors berhasil dijalankan</div>
                     </div>
                     
@@ -493,7 +481,7 @@
                     <p>Buka folder <code>database/migrations/</code> di VS Code, temukan file <code>xxxx_create_majors_table.php</code> and isi method <code>up()</code> dengan kolom <code>id</code>, <code>name</code>, dan <code>timestamps</code>.</p>
                     
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1b.png" class="preview-target" alt="SS VS Code isi method up majors_table">
+                        <img src="../images/laporan/laporan3/1b.png" class="preview-target" alt="SS VS Code isi method up majors_table">
                         <div class="img-cap">Gambar 1b – Definisi kolom tabel majors: id (PK auto-increment) dan name (string)</div>
                     </div>
 
@@ -501,7 +489,7 @@
                     <p>Temukan file <code>xxxx_create_students_table.php</code>. Tambahkan kolom <code>nim</code> (unique), <code>name</code>, <code>address</code>, dan <code>major_id</code> sebagai foreign key yang merujuk ke tabel <code>majors</code> dengan opsi <code>onDelete('cascade')</code>.</p>
                     
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1c.png" class="preview-target" alt="SS VS Code isi method up students_table dengan foreignId major_id">
+                        <img src="../images/laporan/laporan3/1c.png" class="preview-target" alt="SS VS Code isi method up students_table dengan foreignId major_id">
                         <div class="img-cap">Gambar 1c – Definisi kolom tabel students dengan foreign key major_id → majors.id</div>
                     </div>
 
@@ -509,15 +497,15 @@
                     <p>Temukan file <code>xxxx_create_subjects_table.php</code>. Tambahkan kolom <code>name</code> dan <code>sks</code> (integer untuk jumlah Satuan Kredit Semester).</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1d.png" class="preview-target" alt="SS VS Code isi method up subjects_table dengan kolom sks">
+                        <img src="../images/laporan/laporan3/1d.png" class="preview-target" alt="SS VS Code isi method up subjects_table dengan kolom sks">
                         <div class="img-cap">Gambar 1d – Definisi kolom tabel subjects: name (string) dan sks (integer)</div>
                     </div>
 
                     <div class="sub-label">Aksi: Edit File Migration Tabel Pivot student_subject</div>
-                    <p>Temukan file <code>xxxx_create_student_subject_table.php</code>. Tambahkan <code>student_id</code> dan <code>subject_id</code> sebagai foreign key, serta constraint <code>unique(['student_id', 'subject_id'])</code> untuk mencegah duplikasi kombinasi.</p>
+                    <p>Temukan file <code>xxxx_create_student_subject_table.php</code>. Tambahkan <code>student_id</code> and <code>subject_id</code> sebagai foreign key, serta constraint <code>unique(['student_id', 'subject_id'])</code> untuk mencegah duplikasi kombinasi.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1e.png" class="preview-target" alt="SS VS Code isi pivot table student_subject dengan 2 foreign key">
+                        <img src="../images/laporan/laporan3/1e.png" class="preview-target" alt="SS VS Code isi pivot table student_subject dengan 2 foreign key">
                         <div class="img-cap">Gambar 1e – Tabel pivot student_subject dengan dua foreign key dan unique constraint</div>
                     </div>
 
@@ -525,13 +513,13 @@
                     <p>Setelah keempat file migration terisi, jalankan perintah berikut untuk mengirim semua skema ke database MySQL. Pastikan Laragon sudah menyala dan database <code>laravel</code> sudah ada di phpMyAdmin.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss1f.png" class="preview-target" alt="SS Terminal php artisan migrate berhasil, 4 tabel terbuat">
+                        <img src="../images/laporan/laporan3/1f.png" class="preview-target" alt="SS Terminal php artisan migrate berhasil, 4 tabel terbuat">
                         <div class="img-cap">Gambar 1f – Log terminal menunjukkan keempat tabel berhasil dibuat di database</div>
                     </div>
 
                     <div class="info-box green">
                         <i class="bi bi-check-circle-fill"></i>
-                        <div>Verifikasi di phpMyAdmin: pastikan tabel <strong>majors</strong>, <strong>students</strong>, <strong>subjects</strong>, dan <strong>student_subject</strong> sudah muncul dengan struktur kolom yang benar.</div>
+                        <div>Verifikasi di phpMyAdmin: pastikan tabel <strong>majors</strong>, <strong>students</strong>, <strong>subjects</strong>, and <strong>student_subject</strong> sudah muncul dengan struktur kolom yang benar.</div>
                     </div>
                 </div>
 
@@ -544,7 +532,7 @@
                     <p>Jalankan perintah artisan berikut satu per satu untuk menghasilkan ketiga file model.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss2a.png" class="preview-target" alt="SS Terminal php artisan make:model Major/Student/Subject">
+                        <img src="../images/laporan/laporan3/2a.png" class="preview-target" alt="SS Terminal php artisan make:model Major/Student/Subject">
                         <div class="img-cap">Gambar 2a – Ketiga file model berhasil digenerate di folder app/Models/</div>
                     </div>
 
@@ -552,15 +540,15 @@
                     <p>Buka <code>app/Models/Major.php</code>. Tambahkan <code>$fillable</code> dan method <code>students()</code> yang mengembalikan relasi <code>hasMany(Student::class)</code> — artinya satu jurusan memiliki banyak mahasiswa.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss2b.png" class="preview-target" alt="SS VS Code Major.php dengan method hasMany students">
+                        <img src="../images/laporan/laporan3/2b.png" class="preview-target" alt="SS VS Code Major.php dengan method hasMany students">
                         <div class="img-cap">Gambar 2b – Model Major dengan relasi One-to-Many ke Student melalui hasMany()</div>
                     </div>
 
                     <div class="sub-label">Aksi: Edit Model Student.php — Definisikan belongsTo &amp; belongsToMany</div>
-                    <p>Buka <code>app/Models/Student.php</code>. Tambahkan method <code>major()</code> dengan <code>belongsTo(Major::class)</code> (setiap mahasiswa milik satu jurusan), dan method <code>subjects()</code> dengan <code>belongsToMany(Subject::class)</code> (mahasiswa bisa mengambil banyak mata kuliah).</p>
+                    <p>Buka <code>app/Models/Student.php</code>. Tambahkan method <code>major()</code> dengan <code>belongsTo(Major::class)</code> (setiap mahasiswa milik satu jurusan), and method <code>subjects()</code> dengan <code>belongsToMany(Subject::class)</code> (mahasiswa bisa mengambil banyak mata kuliah).</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss2c.png" class="preview-target" alt="SS VS Code Student.php dengan belongsTo dan belongsToMany">
+                        <img src="../images/laporan/laporan3/2c.png" class="preview-target" alt="SS VS Code Student.php dengan belongsTo dan belongsToMany">
                         <div class="img-cap">Gambar 2c – Model Student dengan dua relasi: belongsTo Major dan belongsToMany Subject</div>
                     </div>
 
@@ -568,7 +556,7 @@
                     <p>Buka <code>app/Models/Subject.php</code>. Tambahkan method <code>students()</code> dengan <code>belongsToMany(Student::class)</code> — mata kuliah dapat dimiliki oleh banyak mahasiswa.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss2d.png" class="preview-target" alt="SS VS Code Subject.php dengan belongsToMany students">
+                        <img src="../images/laporan/laporan3/2d.png" class="preview-target" alt="SS VS Code Subject.php dengan belongsToMany students">
                         <div class="img-cap">Gambar 2d – Model Subject dengan relasi Many-to-Many ke Student</div>
                     </div>
                 </div>
@@ -581,7 +569,7 @@
                     <div class="sub-label">Aksi: Buat 3 File Seeder via Terminal</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss3a.png" class="preview-target" alt="SS Terminal php artisan make:seeder MajorSeeder/SubjectSeeder/StudentSeeder">
+                        <img src="../images/laporan/laporan3/3a.png" class="preview-target" alt="SS Terminal php artisan make:seeder MajorSeeder/SubjectSeeder/StudentSeeder">
                         <div class="img-cap">Gambar 3a – Tiga file seeder berhasil dibuat di folder database/seeders/</div>
                     </div>
 
@@ -589,7 +577,7 @@
                     <p>Isi method <code>run()</code> dengan array 4 jurusan: Teknik Informatika, Sistem Informasi, Teknik Komputer, dan Manajemen Informatika. Gunakan <code>Major::create()</code> dalam loop foreach.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss3b.png" class="preview-target" alt="SS VS Code MajorSeeder.php dengan 4 data jurusan">
+                        <img src="../images/laporan/laporan3/3b.png" class="preview-target" alt="SS VS Code MajorSeeder.php dengan 4 data jurusan">
                         <div class="img-cap">Gambar 3b – Isi MajorSeeder dengan 4 jurusan yang akan dimasukkan ke tabel majors</div>
                     </div>
 
@@ -597,7 +585,7 @@
                     <p>Isi 5 mata kuliah beserta jumlah SKS-nya: Pemrograman Web (3 SKS), Database (3 SKS), Algoritma (2 SKS), Jaringan Komputer (3 SKS), dan Sistem Operasi (2 SKS).</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss3c.png" class="preview-target" alt="SS VS Code SubjectSeeder.php dengan 5 mata kuliah dan SKS">
+                        <img src="../images/laporan/laporan3/3c.png" class="preview-target" alt="SS VS Code SubjectSeeder.php dengan 5 mata kuliah dan SKS">
                         <div class="img-cap">Gambar 3c – Isi SubjectSeeder dengan 5 mata kuliah beserta nilai SKS masing-masing</div>
                     </div>
 
@@ -605,7 +593,7 @@
                     <p>Isi 5 data mahasiswa dan gunakan <code>$student->subjects()->attach($subjects)</code> untuk secara acak mengisi tabel pivot dengan 2–4 mata kuliah per mahasiswa. Ini sekaligus mendemonstrasikan metode <code>attach()</code> pada relasi Many-to-Many.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss3d.png" class="preview-target" alt="SS VS Code StudentSeeder.php dengan attach ke pivot table">
+                        <img src="../images/laporan/laporan3/3d.png" class="preview-target" alt="SS VS Code StudentSeeder.php dengan attach ke pivot table">
                         <div class="img-cap">Gambar 3d – StudentSeeder mengisi data mahasiswa sekaligus mengisi tabel pivot secara acak</div>
                     </div>
 
@@ -613,7 +601,7 @@
                     <p>Edit method <code>run()</code> di <code>DatabaseSeeder.php</code> agar memanggil ketiga seeder, lalu jalankan perintah <code>php artisan db:seed</code> di terminal.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss3e.png" class="preview-target" alt="SS VS Code DatabaseSeeder.php + Terminal php artisan db:seed sukses">
+                        <img src="../images/laporan/laporan3/3e.png" class="preview-target" alt="SS VS Code DatabaseSeeder.php + Terminal php artisan db:seed sukses">
                         <div class="img-cap">Gambar 3e – DatabaseSeeder memanggil ketiga seeder; log terminal membuktikan pengisian data berhasil</div>
                     </div>
 
@@ -631,7 +619,7 @@
                     <div class="sub-label">Aksi: Buat StudentController via Terminal</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss4a.png" class="preview-target" alt="SS Terminal php artisan make:controller StudentController">
+                        <img src="../images/laporan/laporan3/4a.png" class="preview-target" alt="SS Terminal php artisan make:controller StudentController">
                         <div class="img-cap">Gambar 4a – File StudentController.php berhasil dibuat di app/Http/Controllers/</div>
                     </div>
 
@@ -639,7 +627,7 @@
                     <p>Isi 7 method lengkap: <code>index()</code> menggunakan <code>Student::with(['major','subjects'])->get()</code> untuk eager loading; <code>store()</code> menggunakan <code>attach()</code> untuk menyimpan relasi pivot; <code>update()</code> menggunakan <code>sync()</code> untuk memperbarui relasi; dan <code>destroy()</code> menggunakan <code>detach()</code> sebelum menghapus data.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss4b.png" class="preview-target" alt="SS VS Code StudentController.php dengan 7 method CRUD lengkap">
+                        <img src="../images/laporan/laporan3/4b.png" class="preview-target" alt="SS VS Code StudentController.php dengan 7 method CRUD lengkap">
                         <div class="img-cap">Gambar 4b – Implementasi lengkap StudentController dengan eager loading dan pengelolaan relasi pivot</div>
                     </div>
                 </div>
@@ -652,7 +640,7 @@
                     <div class="sub-label">Aksi: Edit File routes/web.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss5a.png" class="preview-target" alt="SS VS Code routes/web.php dengan Route::resource students">
+                        <img src="../images/laporan/laporan3/5a.png" class="preview-target" alt="SS VS Code routes/web.php dengan Route::resource students">
                         <div class="img-cap">Gambar 5a – Pendaftaran Route::resource('students', StudentController::class) di web.php</div>
                     </div>
 
@@ -660,7 +648,7 @@
                     <p>Jalankan <code>php artisan route:list</code> untuk memverifikasi semua route mahasiswa sudah terdaftar dengan benar.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss5b.png" class="preview-target" alt="SS Terminal php artisan route:list menampilkan 7 route students">
+                        <img src="../images/laporan/laporan3/5b.png" class="preview-target" alt="SS Terminal php artisan route:list menampilkan 7 route students">
                         <div class="img-cap">Gambar 5b – Output route:list menampilkan ketujuh endpoint CRUD mahasiswa yang sudah aktif</div>
                     </div>
                 </div>
@@ -674,7 +662,7 @@
                     <p>Buat dua folder baru: <code>resources/views/layouts/</code> untuk layout utama, and <code>resources/views/students/</code> untuk semua view mahasiswa.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6a.png" class="preview-target" alt="SS VS Code struktur folder layouts dan students di resources/views/">
+                        <img src="../images/laporan/laporan3/6a.png" class="preview-target" alt="SS VS Code struktur folder layouts dan students di resources/views/">
                         <div class="img-cap">Gambar 6a – Struktur folder view yang rapi: layouts/ untuk template induk, students/ untuk halaman CRUD</div>
                     </div>
 
@@ -682,7 +670,7 @@
                     <p>File ini adalah layout utama yang berisi navbar Bootstrap, container utama, penampil notifikasi flash message <code>session('success')</code>, dan directive <code>@yield('content')</code> sebagai slot untuk konten tiap halaman.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6b.png" class="preview-target" alt="SS VS Code layouts/app.blade.php dengan navbar dan @yield content">
+                        <img src="../images/laporan/laporan3/6b.png" class="preview-target" alt="SS VS Code layouts/app.blade.php dengan navbar and @yield content">
                         <div class="img-cap">Gambar 6b – Template layout utama dengan Bootstrap navbar dan slot @yield('content')</div>
                     </div>
 
@@ -690,7 +678,7 @@
                     <p>Halaman utama yang menampilkan tabel daftar mahasiswa dengan kolom NIM, Nama, Jurusan, Badge Mata Kuliah, Total SKS, dan tombol aksi Detail/Edit/Hapus.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6c.png" class="preview-target" alt="SS VS Code students/index.blade.php dengan tabel dan badge mata kuliah">
+                        <img src="../images/laporan/laporan3/6c.png" class="preview-target" alt="SS VS Code students/index.blade.php dengan tabel dan badge mata kuliah">
                         <div class="img-cap">Gambar 6c – View index menampilkan daftar mahasiswa dalam tabel lengkap dengan badge mata kuliah</div>
                     </div>
 
@@ -698,7 +686,7 @@
                     <p>Form tambah mahasiswa dengan input NIM, Nama, Alamat, dropdown Jurusan, dan checkbox Mata Kuliah. Menggunakan <code>@csrf</code> untuk keamanan dan <code>@error</code> untuk menampilkan pesan validasi.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6d.png" class="preview-target" alt="SS VS Code students/create.blade.php dengan form dan checkbox matkul">
+                        <img src="../images/laporan/laporan3/6d.png" class="preview-target" alt="SS VS Code students/create.blade.php dengan form dan checkbox matkul">
                         <div class="img-cap">Gambar 6d – Form tambah mahasiswa dengan input lengkap, dropdown jurusan, dan checkbox mata kuliah</div>
                     </div>
 
@@ -706,7 +694,7 @@
                     <p>Form edit yang menampilkan nilai lama data mahasiswa menggunakan <code>old('field', $student->field)</code>. Menggunakan <code>@method('PUT')</code> untuk spoofing method HTTP karena HTML form hanya mendukung GET dan POST.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6e.png" class="preview-target" alt="SS VS Code students/edit.blade.php dengan @method PUT dan nilai lama">
+                        <img src="../images/laporan/laporan3/6e.png" class="preview-target" alt="SS VS Code students/edit.blade.php dengan @method PUT dan nilai lama">
                         <div class="img-cap">Gambar 6e – Form edit dengan pre-fill nilai data lama dan PUT method spoofing</div>
                     </div>
 
@@ -714,7 +702,7 @@
                     <p>Halaman detail mahasiswa yang menampilkan semua informasi termasuk jurusan dan daftar mata kuliah beserta SKS-nya dalam tampilan tabel informatif.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss6f.png" class="preview-target" alt="SS VS Code students/show.blade.php dengan detail lengkap mahasiswa">
+                        <img src="../images/laporan/laporan3/6f.png" class="preview-target" alt="SS VS Code students/show.blade.php dengan detail lengkap mahasiswa">
                         <div class="img-cap">Gambar 6f – View detail mahasiswa menampilkan semua data termasuk jurusan dan mata kuliah</div>
                     </div>
                 </div>
@@ -725,22 +713,22 @@
                     <p>Langkah terakhir adalah memastikan seluruh komponen yang telah dibuat — Migration, Model, Seeder, Controller, Route, dan View — terhubung dengan baik dan semua fitur CRUD berfungsi normal.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss7a.png" class="preview-target" alt="SS Browser halaman index daftar mahasiswa dengan 5 data dari seeder">
+                        <img src="../images/laporan/laporan3/7a.png" class="preview-target" alt="SS Browser halaman index daftar mahasiswa dengan 5 data dari seeder">
                         <div class="img-cap">Gambar 7a – Halaman utama menampilkan 5 data mahasiswa hasil seeder beserta jurusan dan badge mata kuliah</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss7b.png" class="preview-target" alt="SS Browser form tambah mahasiswa dengan dropdown dan checkbox">
+                        <img src="../images/laporan/laporan3/7b.png" class="preview-target" alt="SS Browser form tambah mahasiswa dengan dropdown dan checkbox">
                         <div class="img-cap">Gambar 7b – Form tambah mahasiswa baru dengan dropdown jurusan dan checkbox pemilihan mata kuliah</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss7c.png" class="preview-target" alt="SS Browser halaman detail show mahasiswa dengan info lengkap">
+                        <img src="../images/laporan/laporan3/7c.png" class="preview-target" alt="SS Browser halaman detail show mahasiswa dengan info lengkap">
                         <div class="img-cap">Gambar 7c – Halaman detail menampilkan informasi lengkap mahasiswa beserta jurusan dan daftar mata kuliah</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss7d.png" class="preview-target" alt="SS Browser form edit mahasiswa dengan data terisi otomatis">
+                        <img src="../images/laporan/laporan3/7d.png" class="preview-target" alt="SS Browser form edit mahasiswa dengan data terisi otomatis">
                         <div class="img-cap">Gambar 7d – Form edit dengan data lama mahasiswa yang sudah terisi otomatis dan siap diperbarui</div>
                     </div>
 
@@ -771,7 +759,7 @@
                     <div class="sub-label">Aksi: Jalankan Artisan Make Controller</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss8a.png" class="preview-target" alt="SS Terminal php artisan make:controller LatihanController">
+                        <img src="../images/laporan/laporan3/8a.png" class="preview-target" alt="SS Terminal php artisan make:controller LatihanController">
                         <div class="img-cap">Gambar 8a – LatihanController.php berhasil dibuat di folder app/Http/Controllers/</div>
                     </div>
 
@@ -779,7 +767,7 @@
                     <p>Isi method <code>semuaMahasiswa()</code> menggunakan <code>Student::with(['major','subjects'])->get()</code>. Method <code>jurusanTerbanyak()</code> menggunakan <code>Major::withCount('students')->orderBy('students_count','desc')->get()</code>. Method <code>mataKuliahMahasiswa($id)</code> menggunakan <code>Student::with(['major','subjects'])->findOrFail($id)</code>. Method <code>totalSks()</code> menggunakan <code>Student::with('subjects')->get()</code>.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss8b.png" class="preview-target" alt="SS VS Code LatihanController.php dengan 4 method query">
+                        <img src="../images/laporan/laporan3/8b.png" class="preview-target" alt="SS VS Code LatihanController.php dengan 4 method query">
                         <div class="img-cap">Gambar 8b – Implementasi 4 method query di LatihanController menggunakan fitur Eloquent yang beragam</div>
                     </div>
                 </div>
@@ -793,7 +781,7 @@
                     <p>Tambahkan baris <code>use App\Http\Controllers\LatihanController;</code> di bagian atas dan daftarkan keempat route GET beserta nama masing-masing.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss9a.png" class="preview-target" alt="SS VS Code routes/web.php dengan 4 route latihan">
+                        <img src="../images/laporan/laporan3/9a.png" class="preview-target" alt="SS VS Code routes/web.php dengan 4 route latihan">
                         <div class="img-cap">Gambar 9a – Penambahan 4 named route latihan di web.php untuk masing-masing query</div>
                     </div>
                 </div>
@@ -807,7 +795,7 @@
                     <p>Query 1: menampilkan tabel semua mahasiswa beserta jurusan dan badge mata kuliah yang diambil. Gunakan loop <code>@foreach($student->subjects as $subject)</code> untuk menampilkan badge tiap mata kuliah.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss10a.png" class="preview-target" alt="SS VS Code latihan/semua_mahasiswa.blade.php">
+                        <img src="../images/laporan/laporan3/10a.png" class="preview-target" alt="SS VS Code latihan/semua_mahasiswa.blade.php">
                         <div class="img-cap">Gambar 10a – View Query 1: tabel semua mahasiswa beserta jurusan dan mata kuliah yang diambil</div>
                     </div>
 
@@ -815,7 +803,7 @@
                     <p>Query 2: menampilkan ranking jurusan berdasarkan jumlah mahasiswa menggunakan data <code>$major->students_count</code> yang dihasilkan oleh <code>withCount()</code>.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss10b.png" class="preview-target" alt="SS VS Code latihan/jurusan_terbanyak.blade.php dengan ranking">
+                        <img src="../images/laporan/laporan3/10b.png" class="preview-target" alt="SS VS Code latihan/jurusan_terbanyak.blade.php dengan ranking">
                         <div class="img-cap">Gambar 10b – View Query 2: tabel ranking jurusan dari yang terbanyak hingga tersedikit mahasiswanya</div>
                     </div>
 
@@ -823,7 +811,7 @@
                     <p>Query 3: dropdown interaktif untuk memilih mahasiswa, lalu menampilkan mata kuliah beserta total SKS mahasiswa yang dipilih. Menggunakan JavaScript sederhana untuk navigasi antar mahasiswa.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss10c.png" class="preview-target" alt="SS VS Code latihan/matkul_mahasiswa.blade.php dengan dropdown">
+                        <img src="../images/laporan/laporan3/10c.png" class="preview-target" alt="SS VS Code latihan/matkul_mahasiswa.blade.php dengan dropdown">
                         <div class="img-cap">Gambar 10c – View Query 3: dropdown pemilih mahasiswa dan tabel mata kuliah beserta total SKS</div>
                     </div>
 
@@ -831,7 +819,7 @@
                     <p>Query 4: menampilkan total SKS setiap mahasiswa dengan badge status Normal (≥10 SKS) atau Sedikit (&lt;10 SKS) berdasarkan kalkulasi <code>$student->subjects->sum('sks')</code>.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss10d.png" class="preview-target" alt="SS VS Code latihan/total_sks.blade.php dengan badge status">
+                        <img src="../images/laporan/laporan3/10d.png" class="preview-target" alt="SS VS Code latihan/total_sks.blade.php dengan badge status">
                         <div class="img-cap">Gambar 10d – View Query 4: tabel total SKS mahasiswa dengan badge status berdasarkan jumlah SKS</div>
                     </div>
                 </div>
@@ -844,22 +832,22 @@
                     <div class="sub-label">Aksi: Buka Keempat URL Latihan di Browser</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss11a.png" class="preview-target" alt="SS Browser /latihan/semua-mahasiswa — tabel semua mahasiswa + matkul">
+                        <img src="../images/laporan/laporan3/11a.png" class="preview-target" alt="SS Browser /latihan/semua-mahasiswa — tabel semua mahasiswa + matkul">
                         <div class="img-cap">Gambar 11a – Query 1: Halaman semua mahasiswa beserta jurusan dan mata kuliah yang diambil</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss11b.png" class="preview-target" alt="SS Browser /latihan/jurusan-terbanyak — tabel ranking jurusan">
+                        <img src="../images/laporan/laporan3/11b.png" class="preview-target" alt="SS Browser /latihan/jurusan-terbanyak — tabel ranking jurusan">
                         <div class="img-cap">Gambar 11b – Query 2: Halaman ranking jurusan berdasarkan jumlah mahasiswa (withCount)</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss11c.png" class="preview-target" alt="SS Browser /latihan/matkul-mahasiswa/1 — matkul mahasiswa tertentu">
+                        <img src="../images/laporan/laporan3/11c.png" class="preview-target" alt="SS Browser /latihan/matkul-mahasiswa/1 — matkul mahasiswa tertentu">
                         <div class="img-cap">Gambar 11c – Query 3: Halaman mata kuliah mahasiswa tertentu dengan dropdown pemilih dan total SKS</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss11d.png" class="preview-target" alt="SS Browser /latihan/total-sks — tabel total SKS + badge status">
+                        <img src="../images/laporan/laporan3/11d.png" class="preview-target" alt="SS Browser /latihan/total-sks — tabel total SKS + badge status">
                         <div class="img-cap">Gambar 11d – Query 4: Halaman total SKS semua mahasiswa dengan badge Normal/Sedikit</div>
                     </div>
                 </div>
@@ -885,12 +873,12 @@
                     <div class="sub-label">Aksi: Buat &amp; Edit Migration Tabel Schedules</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss12a.png" class="preview-target" alt="SS VS Code migration create_schedules_table dengan kolom lengkap">
+                        <img src="../images/laporan/laporan3/12a.png" class="preview-target" alt="SS VS Code migration create_schedules_table dengan kolom lengkap">
                         <div class="img-cap">Gambar 12a – File migration tabel schedules dengan kolom subject_id, hari (enum), jam_mulai, jam_selesai, ruangan</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss12b.png" class="preview-target" alt="SS Terminal php artisan migrate — tabel schedules berhasil dibuat">
+                        <img src="../images/laporan/laporan3/12b.png" class="preview-target" alt="SS Terminal php artisan migrate — tabel schedules berhasil dibuat">
                         <div class="img-cap">Gambar 12b – Log terminal membuktikan tabel schedules berhasil ditambahkan ke database</div>
                     </div>
                 </div>
@@ -903,14 +891,14 @@
                     <div class="sub-label">Aksi: Buat Model Schedule.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss13a.png" class="preview-target" alt="SS VS Code Schedule.php dengan belongsTo Subject dan fillable">
+                        <img src="../images/laporan/laporan3/13a.png" class="preview-target" alt="SS VS Code Schedule.php dengan belongsTo Subject dan fillable">
                         <div class="img-cap">Gambar 13a – Model Schedule dengan relasi belongsTo Subject dan properti fillable lengkap</div>
                     </div>
 
                     <div class="sub-label">Aksi: Perbarui Model Subject.php — Tambahkan hasMany Schedules</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss13b.png" class="preview-target" alt="SS VS Code Subject.php dengan tambahan method schedules hasMany">
+                        <img src="../images/laporan/laporan3/13b.png" class="preview-target" alt="SS VS Code Subject.php dengan tambahan method schedules hasMany">
                         <div class="img-cap">Gambar 13b – Penambahan method schedules() pada model Subject untuk relasi One-to-Many ke Schedule</div>
                     </div>
                 </div>
@@ -923,12 +911,12 @@
                     <div class="sub-label">Aksi: Edit ScheduleSeeder.php &amp; Daftarkan ke DatabaseSeeder</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss14a.png" class="preview-target" alt="SS VS Code ScheduleSeeder.php dengan 5 data jadwal per matkul">
+                        <img src="../images/laporan/laporan3/14a.png" class="preview-target" alt="SS VS Code ScheduleSeeder.php dengan 5 data jadwal per matkul">
                         <div class="img-cap">Gambar 14a – ScheduleSeeder berisi 5 jadwal mata kuliah dengan hari, jam, dan ruangan masing-masing</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss14b.png" class="preview-target" alt="SS Terminal php artisan db:seed --class=ScheduleSeeder berhasil">
+                        <img src="../images/laporan/laporan3/14b.png" class="preview-target" alt="SS Terminal php artisan db:seed --class=ScheduleSeeder berhasil">
                         <div class="img-cap">Gambar 14b – Seeder jadwal berhasil dijalankan; tabel schedules terisi 5 data</div>
                     </div>
                 </div>
@@ -941,14 +929,14 @@
                     <div class="sub-label">Aksi: Buat &amp; Isi ScheduleController.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss15a.png" class="preview-target" alt="SS VS Code ScheduleController.php dengan 5 method CRUD">
+                        <img src="../images/laporan/laporan3/15a.png" class="preview-target" alt="SS VS Code ScheduleController.php dengan 5 method CRUD">
                         <div class="img-cap">Gambar 15a – ScheduleController dengan method index, create, store, edit, update, destroy</div>
                     </div>
 
                     <div class="sub-label">Aksi: Tambahkan Route::resource Schedules di web.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss15b.png" class="preview-target" alt="SS VS Code routes/web.php dengan Route::resource schedules">
+                        <img src="../images/laporan/laporan3/15b.png" class="preview-target" alt="SS VS Code routes/web.php dengan Route::resource schedules">
                         <div class="img-cap">Gambar 15b – Penambahan Route::resource('schedules', ScheduleController::class) di web.php</div>
                     </div>
                 </div>
@@ -961,14 +949,14 @@
                     <div class="sub-label">Aksi: Buat schedules/index.blade.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss16a.png" class="preview-target" alt="SS VS Code schedules/index.blade.php dengan card per mata kuliah">
+                        <img src="../images/laporan/laporan3/16a.png" class="preview-target" alt="SS VS Code schedules/index.blade.php dengan card per mata kuliah">
                         <div class="img-cap">Gambar 16a – View index jadwal menampilkan jadwal dikelompokkan per kartu mata kuliah</div>
                     </div>
 
                     <div class="sub-label">Aksi: Buat schedules/create.blade.php &amp; schedules/edit.blade.php</div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss16b.png" class="preview-target" alt="SS VS Code schedules/create.blade.php dengan form jadwal lengkap">
+                        <img src="../images/laporan/laporan3/16b.png" class="preview-target" alt="SS VS Code schedules/create.blade.php dengan form jadwal lengkap">
                         <div class="img-cap">Gambar 16b – Form tambah jadwal dengan dropdown mata kuliah, hari, input jam, dan ruangan</div>
                     </div>
                 </div>
@@ -982,7 +970,7 @@
                     <p>Ubah eager loading dari <code>['major','subjects']</code> menjadi <code>['major','subjects.schedules']</code> agar jadwal ikut termuat dalam satu query efisien.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss17a.png" class="preview-target" alt="SS VS Code StudentController show dengan subjects.schedules eager loading">
+                        <img src="../images/laporan/laporan3/17a.png" class="preview-target" alt="SS VS Code StudentController show dengan subjects.schedules eager loading">
                         <div class="img-cap">Gambar 17a – Update eager loading di show() menjadi subjects.schedules untuk memuat jadwal sekaligus</div>
                     </div>
 
@@ -990,7 +978,7 @@
                     <p>Tambahkan section di bawah tabel info mahasiswa yang menampilkan kartu per mata kuliah beserta tabel jadwalnya (hari, jam mulai, jam selesai, ruangan).</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss17b.png" class="preview-target" alt="SS VS Code students/show.blade.php dengan card jadwal per matkul">
+                        <img src="../images/laporan/laporan3/17b.png" class="preview-target" alt="SS VS Code students/show.blade.php dengan card jadwal per matkul">
                         <div class="img-cap">Gambar 17b – View show yang telah diperbarui untuk menampilkan jadwal tiap mata kuliah dalam kartu terpisah</div>
                     </div>
                 </div>
@@ -1001,17 +989,17 @@
                     <p>Akses halaman jadwal dan detail mahasiswa untuk memverifikasi integrasi fitur challenge berjalan sempurna.</p>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss18a.png" class="preview-target" alt="SS Browser /schedules — halaman daftar jadwal per mata kuliah">
+                        <img src="../images/laporan/laporan3/18a.png" class="preview-target" alt="SS Browser /schedules — halaman daftar jadwal per mata kuliah">
                         <div class="img-cap">Gambar 18a – Halaman jadwal mata kuliah dengan jadwal dikelompokkan per kartu mata kuliah</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss18b.png" class="preview-target" alt="SS Browser /schedules/create — form tambah jadwal">
+                        <img src="../images/laporan/laporan3/18b.png" class="preview-target" alt="SS Browser /schedules/create — form tambah jadwal">
                         <div class="img-cap">Gambar 18b – Form tambah jadwal baru dengan pemilihan mata kuliah, hari, jam, dan ruangan</div>
                     </div>
 
                     <div class="img-wrap">
-                        <img src="../images/laporan/laporan3/ss18c.png" class="preview-target" alt="SS Browser /students/1 — detail mahasiswa dengan jadwal matkul tampil">
+                        <img src="../images/laporan/laporan3/18c.png" class="preview-target" alt="SS Browser /students/1 — detail mahasiswa dengan jadwal matkul tampil">
                         <div class="img-cap">Gambar 18c – Halaman detail mahasiswa menampilkan kartu tiap mata kuliah beserta jadwal hari, jam, dan ruangannya</div>
                     </div>
                 </div>
@@ -1072,10 +1060,10 @@
                 <div class="col-md-4 text-center">
                     <nav>
                         <ul class="list-inline mb-0" style="font-size:13px;">
-                            <li class="list-inline-item"><a href="../index.html" style="color:var(--muted);text-decoration:none;">Home</a></li>
-                            <li class="list-inline-item"><a href="../about.html" style="color:var(--muted);text-decoration:none;">About</a></li>
+                            <li class="list-inline-item"><a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a></li>
+                            <li class="list-inline-item"><a href="about.html" style="color:var(--muted);text-decoration:none;">About</a></li>
                             <li class="list-inline-item"><a href="main.html" style="color:var(--muted);text-decoration:none;">Laporan</a></li>
-                            <li class="list-inline-item"><a href="../kontak.html" style="color:var(--muted);text-decoration:none;">Contact</a></li>
+                            <li class="list-inline-item"><a href="kontak.html" style="color:var(--muted);text-decoration:none;">Contact</a></li>
                         </ul>
                     </nav>
                 </div>

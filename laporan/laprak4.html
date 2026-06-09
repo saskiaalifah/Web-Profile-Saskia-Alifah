@@ -2,278 +2,1016 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Belum Tersedia</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak — Sistem Informasi (SISFO) dengan Laravel & SB Admin 2</title>
 
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
         :root {
-            --bg: #0d0d12;
-            --card: rgba(24, 24, 32, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --muted: #b7b7c9;
-            --accent: #ff5ca8;
-            --accent2: #ff8ec7;
+            --bg: #0d0d14;
+            --card: #13131f;
+            --border: rgba(255,255,255,0.07);
+            --text: #e8e8f0;
+            --muted: #8888a8;
+            --accent: #e83e8c;
+            --accent-2: #c061a0;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top right,
-                    rgba(255, 92, 168, 0.12),
-                    transparent 30%),
-                radial-gradient(circle at bottom left,
-                    rgba(255, 142, 199, 0.08),
-                    transparent 35%),
-                var(--bg);
-
             font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            background: var(--bg);
             color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .glass-nav {
+            background: rgba(13,13,20,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: box-shadow 0.3s;
+        }
+        .glass-nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+        .navbar-brand { font-size: 0.92rem; letter-spacing: 0.06em; }
+        .nav-link { color: var(--muted) !important; font-size: 0.875rem; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--accent) !important; }
+
+        /* ── Page Header ── */
+        .laprak-hero {
+            padding: 100px 0 60px;
+            position: relative;
             overflow: hidden;
         }
-
-        .glass-card {
-            width: 100%;
-            max-width: 760px;
-            position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 60px 50px;
-            text-align: center;
-            backdrop-filter: blur(18px);
-
-            box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-
-        .glass-card::before {
-            content: "";
+        .laprak-hero::before {
+            content: '';
             position: absolute;
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 92, 168, 0.08);
-            border-radius: 50%;
-            top: -120px;
-            right: -100px;
-            filter: blur(10px);
+            inset: 0;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--card) 50%, rgba(232,62,140,0.08) 100%);
+            z-index: 0;
         }
-
-        .glass-card::after {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 142, 199, 0.06);
-            border-radius: 50%;
-            bottom: -80px;
-            left: -70px;
-            filter: blur(10px);
+        .laprak-hero .container { position: relative; z-index: 1; }
+        .laprak-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.25;
         }
+        .laprak-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .laprak-hero .lead { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
 
-        .status-badge {
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232,62,140,0.1);
+            border: 1px solid rgba(232,62,140,0.25);
+            color: var(--accent-2);
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+        .btn-back-hero {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 92, 168, 0.1);
-            border: 1px solid rgba(255, 92, 168, 0.2);
-            color: var(--accent2);
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-back-hero:hover { color: var(--accent); }
+
+        /* ── Main ── */
+        main { flex: 1; padding: 48px 0 80px; background: var(--bg); }
+
+        /* ── Section Card ── */
+        .laprak-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+        .laprak-card:hover {
+            border-color: rgba(232,62,140,0.25);
+            box-shadow: 0 8px 30px rgba(232,62,140,0.08);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent-2);
+            margin-bottom: 18px;
+        }
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 22px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .section-label .num {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .laprak-card p, .laprak-card li { color: var(--muted); font-size: 14.5px; line-height: 1.85; }
+        .laprak-card ul, .laprak-card ol { padding-left: 20px; }
+        .laprak-card li { margin-bottom: 4px; }
+        .laprak-card strong { color: var(--accent-2); font-weight: 600; }
+
+        code {
+            background: rgba(232,62,140,0.12);
+            color: var(--accent-2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* ── Step Block ── */
+        .step-block {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .step-block:hover {
+            background: rgba(232,62,140,0.04);
+            border-color: rgba(232,62,140,0.2);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(232,62,140,0.4);
+        }
+        .step-block p { color: var(--muted); font-size: 14px; line-height: 1.8; margin: 0 0 10px; }
+
+        .sub-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-2);
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 28px;
+            margin: 14px 0 8px;
         }
-
-        .main-icon {
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 30px;
+        .sub-label::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--accent);
             border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Code Block ── */
+        .code-wrap {
+            background: #0a0a12;
+            border: 1px solid rgba(232,62,140,0.18);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        .code-head {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(255, 92, 168, 0.2),
-                    rgba(255, 142, 199, 0.08));
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-
-            font-size: 42px;
-            color: var(--accent);
-
-            box-shadow:
-                0 0 40px rgba(255, 92, 168, 0.18),
-                inset 0 0 20px rgba(255, 255, 255, 0.02);
+            padding: 8px 16px;
+            background: rgba(232,62,140,0.07);
+            border-bottom: 1px solid rgba(232,62,140,0.12);
         }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            margin-bottom: 18px;
-            line-height: 1.3;
+        .code-head .lang {
+            font-size: 10.5px;
             font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
         }
-
-       h1 span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-
-        .desc {
-            max-width: 580px;
-            margin: 0 auto 38px;
+        .copy-btn {
+            background: transparent;
+            border: 1px solid rgba(232,62,140,0.25);
             color: var(--muted);
-            line-height: 1.9;
-            font-size: 15px;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .copy-btn:hover { background: rgba(232,62,140,0.15); color: var(--accent-2); border-color: var(--accent); }
+        .code-wrap pre { margin: 0; padding: 16px 20px; overflow-x: auto; color: #e0c8e8; line-height: 1.75; }
+        .code-wrap pre code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            background: none;
+            color: inherit;
+            padding: 0;
         }
 
-        .bottom-info {
+        /* ── Image Styling ── */
+        .img-wrap {
+            margin: 20px auto;
+            max-width: 620px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .img-wrap:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232,62,140,0.12);
+            border-color: rgba(232,62,140,0.3);
+        }
+        .img-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            max-height: 380px;
+            background: #14141e;
+        }
+        .img-cap {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-style: italic;
+            background: rgba(232,62,140,0.03);
+        }
+
+        /* ── Info Box ── */
+        .info-box {
             display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 38px;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin: 12px 0;
         }
-
-        .info-item {
-            padding: 11px 18px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d7d7e6;
-            font-size: 14px;
+        .info-box.blue {
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            color: #93c5fd;
         }
-
-        .info-item i {
-            color: var(--accent2);
-            margin-right: 8px;
+        .info-box.green {
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.2);
+            color: #86efac;
         }
+        .info-box.yellow {
+            background: rgba(234,179,8,0.08);
+            border: 1px solid rgba(234,179,8,0.2);
+            color: #fde047;
+        }
+        .info-box i { margin-top: 1px; flex-shrink: 0; }
 
-        .btn-back {
+        /* ── Nav Footer ── */
+        .nav-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .nav-footer a {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+            text-align: right;
+            min-width: 160px;
+        }
+        .nav-footer a:hover {
+            background: rgba(232,62,140,0.15);
+            border-color: var(--accent);
+            transform: translateX(4px);
+            box-shadow: 0 6px 20px rgba(232,62,140,0.2);
+        }
+        .nav-footer a span { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+        .nav-footer a strong { font-size: 14px; color: var(--accent-2); }
+
+        /* ── GitHub Button ── */
+        .github-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            border-radius: 14px;
+            gap: 8px;
+            background: rgba(232,62,140,0.1);
+            border: 1px solid rgba(232,62,140,0.3);
+            color: var(--accent-2);
+            padding: 10px 22px;
+            border-radius: 999px;
             text-decoration: none;
-            color: white;
+            font-size: 13.5px;
             font-weight: 600;
-
-            background:
-                linear-gradient(135deg,
-                    var(--accent),
-                    var(--accent2));
-
-            transition: .25s ease;
-
-            box-shadow:
-                0 10px 30px rgba(255, 92, 168, 0.28);
+            transition: all 0.2s;
+        }
+        .github-btn:hover {
+            background: rgba(232,62,140,0.2);
+            color: var(--accent);
+            box-shadow: 0 4px 16px rgba(232,62,140,0.2);
         }
 
-        .btn-back:hover {
-            transform: translateY(-3px);
-            color: white;
-
-            box-shadow:
-                0 16px 38px rgba(255, 92, 168, 0.4);
+        /* ── Footer ── */
+        .site-footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
         }
+        .footer-brand { font-size: 0.9rem; }
 
         @media (max-width: 600px) {
-            .glass-card {
-                padding: 42px 24px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .desc {
-                font-size: 14px;
-            }
+            .laprak-card { padding: 22px 18px; }
+            .step-block { padding: 16px 16px; }
+            .img-wrap img { max-height: 260px; }
         }
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-    <div class="glass-card">
-
-        <div class="status-badge">
-            <i class="fa-solid fa-sparkles"></i>
-            Halaman Sedang Disiapkan
-        </div>
-
-        <div class="main-icon">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h1>Laporan Praktikum <span>Belum Tersedia</span></h1>
-
-        <p class="desc">
-            Konten laporan untuk praktikum ini masih dalam tahap penyusunan.
-            Pembahasan materi, dokumentasi, serta hasil praktikum akan segera
-            ditambahkan setelah proses revisi selesai.
-        </p>
-
-        <div class="bottom-info">
-
-            <div class="info-item">
-                <i class="fa-solid fa-pen-ruler"></i>
-                Sedang Direvisi
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase" href="#">
+                Saskia Alifah
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                </ul>
             </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-camera"></i>
-                Dokumentasi Menyusul
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                Akan Segera Tersedia
-            </div>
-
         </div>
+    </nav>
 
-        <a href="main.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Kembali ke Laporan
-        </a>
-
+    <div class="laprak-hero">
+        <div class="container">
+            <a href="#" class="btn-back-hero">
+                <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+            </a>
+            <h1>Laprak — <span>Sistem Informasi (SISFO): Auth, Migration, Seeder, CRUD Users, SB Admin 2</span></h1>
+            <p class="lead">Pemrograman Web · Praktikum Laravel</p>
+            <div class="badge-row">
+                <span class="badge-pill"><i class="bi bi-person-fill"></i> Saskia Alifah</span>
+                <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+                <span class="badge-pill"><i class="bi bi-calendar3"></i> Pemrograman Web</span>
+                <span class="badge-pill"><i class="bi bi-code-slash"></i> Laravel 13</span>
+            </div>
+        </div>
     </div>
 
-</body>
+    <main>
+        <div class="container" style="max-width: 860px;">
 
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">I</span>Tujuan Praktikum</div>
+                <p>Setelah menyelesaikan praktikum ini, mahasiswa diharapkan mampu:</p>
+                <ul>
+                    <li>Membangun aplikasi web sistem informasi (SISFO) berbasis Laravel dengan arsitektur <strong>MVC (Model-View-Controller)</strong> secara lengkap.</li>
+                    <li>Mengonfigurasi environment database dan menjalankan <strong>Migration</strong> untuk membuat skema tabel secara otomatis.</li>
+                    <li>Mengintegrasikan sistem autentikasi (login, logout) menggunakan paket <strong>Laravel UI</strong> dengan scaffolding Bootstrap.</li>
+                    <li>Melakukan kustomisasi tabel <code>users</code> dengan menambahkan kolom <code>username</code>, <code>level</code>, dan <code>status</code> melalui migration tambahan.</li>
+                    <li>Membuat <strong>Seeder</strong> untuk mengisi data akun admin awal ke dalam database secara otomatis.</li>
+                    <li>Mengintegrasikan template dashboard <strong>SB Admin 2</strong> sebagai tampilan antarmuka aplikasi SISFO.</li>
+                    <li>Membangun fitur manajemen pengguna (<strong>CRUD Users</strong>) lengkap dengan validasi form, DataTables, dan Select2.</li>
+                </ul>
+            </div>
+
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">II</span>Dasar Teori</div>
+                <p><strong>Konfigurasi Environment (.env):</strong> File <code>.env</code> menyimpan seluruh konfigurasi sensitif aplikasi seperti kredensial database, agar terpisah dari kode utama dan tidak ikut di-commit ke repository.</p>
+                <p><strong>Migration:</strong> Fitur version control untuk skema database di Laravel. Setiap perubahan struktur tabel didefinisikan dalam file PHP, sehingga skema dapat direproduksi secara konsisten di berbagai mesin pengembang.</p>
+                <p><strong>Seeding:</strong> Proses pengisian data awal (default/dummy) ke dalam tabel database secara otomatis menggunakan kelas Seeder, sangat berguna untuk data admin, konfigurasi, atau data uji coba.</p>
+                <p><strong>Laravel UI:</strong> Paket resmi Laravel untuk men-generate scaffold autentikasi (login, register, reset password) beserta aset frontend Bootstrap, sehingga mempercepat setup sistem login.</p>
+                <p><strong>Model (Eloquent ORM):</strong> Representasi berorientasi objek dari sebuah tabel database. Melalui Eloquent, operasi seperti menyimpan, mengambil, memperbarui, dan menghapus data dilakukan tanpa menulis SQL mentah.</p>
+                <p><strong>Resource Controller:</strong> Tipe controller Laravel yang secara otomatis menyediakan tujuh method standar CRUD (index, create, store, show, edit, update, destroy) yang terhubung dengan satu baris deklarasi <code>Route::resource</code>.</p>
+                <p><strong>Blade Template Engine:</strong> Sistem template bawaan Laravel yang mendukung inheritance layout (<code>@extends</code>, <code>@section</code>, <code>@yield</code>, <code>@include</code>) untuk membangun antarmuka yang modular dan reusable.</p>
+                <p><strong>SB Admin 2:</strong> Template dashboard Bootstrap gratis yang menyediakan komponen UI siap pakai seperti sidebar, topbar, DataTables, Select2, dan berbagai widget administrasi.</p>
+            </div>
+
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">III</span>Alat dan Bahan</div>
+                <ul>
+                    <li>Laptop / Komputer dengan sistem operasi Windows</li>
+                    <li>Laragon (Local Development Environment: Apache, MySQL, PHP)</li>
+                    <li>Visual Studio Code (Code Editor)</li>
+                    <li>Web Browser (Google Chrome / Mozilla Firefox)</li>
+                    <li>Composer (PHP Dependency Manager)</li>
+                    <li>Node.js & NPM Package Manager</li>
+                    <li>phpMyAdmin (Database Manager via Browser)</li>
+                    <li>Template SB Admin 2 (dari startbootstrap.com)</li>
+                </ul>
+            </div>
+
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">IV</span>Langkah Kerja: Setup Awal Project &amp; Database</div>
+                <p>Bagian ini mencakup pembuatan project Laravel baru, konfigurasi database, serta instalasi sistem autentikasi dasar.</p>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">1</span>Jalankan Laragon dan Buka Terminal</div>
+                    <p>Pastikan Laragon sudah berjalan dengan Apache dan MySQL aktif (indikator hijau), kemudian buka terminal Laragon untuk memulai pengerjaan project.</p>
+                    <div class="sub-label">Aksi: Buka Laragon → Start All → Buka Terminal</div>
+                    <div class="img-wrap">
+                        <img src="ss1.png" alt="Laragon berjalan">
+                        <div class="img-cap">Gambar 1 – Laragon berjalan dengan Apache dan MySQL aktif berwarna hijau</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">2</span>Buat Project Laravel Baru</div>
+                    <p>Membuat project Laravel baru bernama <code>laravel-sisfo</code> menggunakan perintah Composer dari dalam folder <code>www</code> Laragon.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah di Terminal Laragon</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>cd C:\laragon\www
+laravel new laravel-sisfo</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss2.png" alt="Pembuatan project Laravel">
+                        <div class="img-cap">Gambar 2 – Proses pembuatan project Laravel baru bernama laravel-sisfo berhasil</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">3</span>Buat Database di phpMyAdmin</div>
+                    <p>Membuat database baru bernama <code>laravel_sisfo</code> melalui antarmuka phpMyAdmin yang dapat diakses lewat browser.</p>
+                    <div class="sub-label">Aksi: Buka Browser → http://localhost/phpmyadmin → New → Buat Database</div>
+                    <div class="img-wrap">
+                        <img src="ss3.png" alt="Membuat database di phpMyAdmin">
+                        <div class="img-cap">Gambar 3 – Database laravel_sisfo berhasil dibuat di phpMyAdmin</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">4</span>Konfigurasi File .env</div>
+                    <p>Membuka file <code>.env</code> di VS Code dan mengatur kredensial koneksi database agar Laravel dapat terhubung ke database <code>laravel_sisfo</code> yang baru dibuat.</p>
+                    <div class="sub-label">Aksi: Edit File C:\laragon\www\laravel-sisfo\.env</div>
+                    <div class="img-wrap">
+                        <img src="ss4.png" alt="Konfigurasi file .env">
+                        <div class="img-cap">Gambar 4 – Konfigurasi kredensial database pada file .env berhasil diatur</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">5</span>Masuk ke Folder Project dan Jalankan Migration Awal</div>
+                    <p>Masuk ke direktori project, lalu jalankan migration pertama untuk membuat tabel-tabel default Laravel (users, password_reset_tokens, dll.) ke database.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah di Terminal</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>cd C:\laragon\www\laravel-sisfo
+php artisan migrate</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss5.png" alt="Migration awal berhasil">
+                        <div class="img-cap">Gambar 5 – Migration awal berhasil membuat tabel-tabel default Laravel di database</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">6</span>Install Paket Laravel UI</div>
+                    <p>Menginstall paket <code>laravel/ui</code> yang menyediakan scaffold autentikasi siap pakai untuk Laravel, termasuk controller login, register, dan view-nya.</p>
+                    <div class="sub-label">Aksi: Jalankan Perintah Composer</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>composer require laravel/ui</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss6.png" alt="Install Laravel UI">
+                        <div class="img-cap">Gambar 6 – Paket laravel/ui berhasil diinstall melalui Composer</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">7</span>Generate Scaffold Autentikasi Bootstrap</div>
+                    <p>Menjalankan perintah generator untuk membuat file autentikasi lengkap berbasis Bootstrap. Jika ada pertanyaan replace, jawab <code>yes</code>.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan UI Bootstrap Auth</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan ui bootstrap --auth</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss7.png" alt="Generate auth Bootstrap">
+                        <div class="img-cap">Gambar 7 – Scaffold autentikasi Bootstrap berhasil di-generate oleh Artisan</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">8</span>Install dan Compile Asset Frontend</div>
+                    <p>Menginstall dependensi Node.js, lalu mengompilasi aset CSS dan JavaScript menggunakan Vite. Tunggu hingga muncul tanda VITE ready, lalu tekan <code>Ctrl+C</code> untuk menghentikan proses dev server.</p>
+                    <div class="sub-label">Aksi: Jalankan NPM Install dan NPM Run Dev</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>npm install
+npm run dev</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss8.png" alt="npm install dan npm run dev">
+                        <div class="img-cap">Gambar 8 – Proses instalasi dependensi npm dan kompilasi aset Vite berhasil</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">9</span>Jalankan Migration Ulang</div>
+                    <p>Setelah install Laravel UI, jalankan kembali <code>php artisan migrate</code> untuk memastikan semua tabel yang dibutuhkan autentikasi sudah terbuat.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Migrate</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan migrate</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss9.png" alt="Migration ulang berhasil">
+                        <div class="img-cap">Gambar 9 – Migration ulang berhasil memastikan semua tabel autentikasi tersedia</div>
+                    </div>
+                </div>
+
+            </div><div class="laprak-card">
+                <div class="section-label"><span class="num">V</span>Langkah Kerja: Kustomisasi Tabel Users &amp; Seeder Admin</div>
+                <p>Bagian ini mencakup penambahan kolom kustom pada tabel users, pembaruan Model User, serta pembuatan seeder untuk akun admin.</p>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">10</span>Buat File Migration Custom Tabel Users</div>
+                    <p>Membuat file migration baru untuk menambahkan kolom <code>username</code>, <code>level</code>, dan <code>status</code> ke tabel <code>users</code> yang sudah ada.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Make Migration</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan make:migration custom_table_users</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss10.png" alt="Membuat file migration custom users">
+                        <div class="img-cap">Gambar 10 – File migration kustom tabel users berhasil dibuat oleh Artisan</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">11</span>Isi Method up() dan down() pada File Migration</div>
+                    <p>Membuka file migration yang baru dibuat di folder <code>database/migrations/</code>, lalu mengisi method <code>up()</code> dan <code>down()</code> untuk mendefinisikan kolom tambahan.</p>
+                    <div class="sub-label">Aksi: Edit File database/migrations/xxxx_custom_table_users.php</div>
+                    <div class="img-wrap">
+                        <img src="ss11.png" alt="Isi file migration custom users">
+                        <div class="img-cap">Gambar 11 – Method up() dan down() pada file migration custom users berhasil diisi</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">12</span>Jalankan Migration untuk Kolom Tambahan</div>
+                    <p>Mengeksekusi migration agar kolom <code>username</code>, <code>level</code>, dan <code>status</code> benar-benar ditambahkan ke tabel <code>users</code> di database MySQL.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Migrate</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan migrate</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss12.png" alt="Migration kolom tambahan berhasil">
+                        <div class="img-cap">Gambar 12 – Kolom username, level, dan status berhasil ditambahkan ke tabel users</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">13</span>Update Model User</div>
+                    <p>Membuka file <code>app/Models/User.php</code> dan mendaftarkan kolom baru (<code>username</code>, <code>level</code>, <code>status</code>) ke dalam property fillable Model.</p>
+                    <div class="sub-label">Aksi: Edit File app/Models/User.php</div>
+                    <div class="img-wrap">
+                        <img src="ss13.png" alt="Update Model User">
+                        <div class="img-cap">Gambar 13 – Model User berhasil diperbarui dengan kolom username, level, dan status</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">14</span>Buat File AdminSeeder</div>
+                    <p>Membuat file seeder khusus bernama <code>AdminSeeder</code> untuk mengisi data akun admin pertama ke dalam database secara otomatis.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Make Seeder</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan make:seeder AdminSeeder</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss14.png" alt="Membuat AdminSeeder">
+                        <div class="img-cap">Gambar 14 – File AdminSeeder.php berhasil dibuat di folder database/seeders</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">15</span>Isi Data Admin pada File AdminSeeder</div>
+                    <p>Membuka file <code>database/seeders/AdminSeeder.php</code> dan mendefinisikan data akun admin default sistem.</p>
+                    <div class="sub-label">Aksi: Edit File database/seeders/AdminSeeder.php</div>
+                    <div class="img-wrap">
+                        <img src="ss15.png" alt="Isi AdminSeeder">
+                        <div class="img-cap">Gambar 15 – Data akun admin berhasil didefinisikan dalam file AdminSeeder.php</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">16</span>Jalankan AdminSeeder</div>
+                    <p>Mengeksekusi seeder untuk memasukkan data akun admin ke dalam database. Hasil yang diharapkan adalah munculnya pesan sukses di terminal.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan db:seed</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan db:seed --class=AdminSeeder</code></pre>
+                    </div>
+                    <div class="info-box green"><i class="bi bi-check-circle-fill"></i><div>Harus muncul pesan konfirmasi seed data sukses di terminal.</div></div>
+                    <div class="img-wrap">
+                        <img src="ss16.png" alt="AdminSeeder berhasil dijalankan">
+                        <div class="img-cap">Gambar 16 – Pesan konfirmasi muncul, akun admin berhasil disimpan ke database</div>
+                    </div>
+                </div>
+
+            </div><div class="laprak-card">
+                <div class="section-label"><span class="num">VI</span>Langkah Kerja: Instalasi Template SB Admin 2 &amp; Layout</div>
+                <p>Bagian ini mencakup pemasangan template SB Admin 2 ke folder <code>public</code> dan pembuatan seluruh file layout Blade untuk tampilan aplikasi.</p>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">17</span>Download dan Pasang Template SB Admin 2</div>
+                    <p>Mengunduh template SB Admin 2 dari situs resmi, mengekstrak file ZIP, lalu menyalin seluruh isi folder hasil ekstrak ke dalam folder <code>public/sbadmin/</code> di dalam project Laravel.</p>
+                    <div class="sub-label">Aksi: Download dari startbootstrap.com → Ekstrak → Copy ke public/sbadmin/</div>
+                    <div class="info-box yellow"><i class="bi bi-exclamation-triangle-fill"></i><div>Yang dicopy adalah <strong>isi</strong> folder hasil ekstrak (css, js, vendor, img), bukan folder luarnya. Pastikan struktur folder internalnya sudah sesuai.</div></div>
+                    <div class="img-wrap">
+                        <img src="ss17.png" alt="Struktur folder SB Admin 2 yang benar">
+                        <div class="img-cap">Gambar 17 – Struktur folder public/sbadmin/ yang benar dengan folder css, js, vendor, dan img</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">18</span>Edit Layout Login — app.blade.php</div>
+                    <p>Mengganti isi file <code>resources/views/layouts/app.blade.php</code> dengan halaman login bergaya template dashboard SB Admin 2.</p>
+                    <div class="sub-label">Aksi: Edit File resources/views/layouts/app.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss18.png" alt="Edit app.blade.php">
+                        <div class="img-cap">Gambar 18 – File app.blade.php berhasil diubah menjadi tampilan halaman login SB Admin 2</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">19</span>Buat Layout Utama — main.blade.php</div>
+                    <p>Membuat file baru <code>resources/views/layouts/main.blade.php</code> sebagai layout master aplikasi yang menyertakan kerangka utama halaman admin dashboard.</p>
+                    <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/main.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss19.png" alt="Buat main.blade.php">
+                        <div class="img-cap">Gambar 19 – File main.blade.php sebagai layout master aplikasi berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">20</span>Buat Komponen Sidebar — sidebar.blade.php</div>
+                    <p>Membuat file baru <code>resources/views/layouts/sidebar.blade.php</code> yang berisi menu navigasi utama seperti Dashboard dan Manajemen Users.</p>
+                    <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/sidebar.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss20.png" alt="Buat sidebar.blade.php">
+                        <div class="img-cap">Gambar 20 – Komponen sidebar dengan menu Dashboard dan Users berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">21</span>Buat Komponen Topbar — topbar.blade.php</div>
+                    <p>Membuat file baru <code>resources/views/layouts/topbar.blade.php</code> yang berisi navbar atas, profil nama user, dan opsi menu Logout.</p>
+                    <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/topbar.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss21.png" alt="Buat topbar.blade.php">
+                        <div class="img-cap">Gambar 21 – Komponen topbar dengan nama user dan dropdown logout berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">22</span>Edit Halaman Dashboard — home.blade.php</div>
+                    <p>Mengganti file <code>resources/views/home.blade.php</code> agar extends ke layout master baru dan menampilkan kartu selamat datang user.</p>
+                    <div class="sub-label">Aksi: Edit File resources/views/home.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss22.png" alt="Edit home.blade.php">
+                        <div class="img-cap">Gambar 22 – Halaman dashboard berhasil diperbarui dengan layout main dan kartu sambutan</div>
+                    </div>
+                </div>
+
+            </div><div class="laprak-card">
+                <div class="section-label"><span class="num">VII</span>Langkah Kerja: Controller, Route, dan View CRUD Users</div>
+                <p>Bagian ini mencakup pembuatan UserController beserta logika CRUD lengkap, konfigurasi routing, serta pembuatan file view manajemen pengguna.</p>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">23</span>Buat Resource Controller untuk Users</div>
+                    <p>Membuat file controller bernama <code>UserController</code> dengan boilerplate method CRUD standar menggunakan flag resource.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Make Controller</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan make:controller UserController --resource</code></pre>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss23.png" alt="Membuat UserController">
+                        <div class="img-cap">Gambar 23 – File UserController.php dengan boilerplate method CRUD berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">24</span>Isi Logika Lengkap UserController</div>
+                    <p>Membuka file <code>app/Http/Controllers/UserController.php</code> dan menerapkan logika lengkap penanganan operasi Create, Read, Update, dan Delete data user.</p>
+                    <div class="sub-label">Aksi: Edit File app/Http/Controllers/UserController.php</div>
+                    <div class="img-wrap">
+                        <img src="ss24.png" alt="Isi UserController lengkap">
+                        <div class="img-cap">Gambar 24 – Logika CRUD lengkap dengan validasi berhasil diisi di UserController.php</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">25</span>Konfigurasi Routing — routes/web.php</div>
+                    <p>Mengubah file <code>routes/web.php</code> untuk mendaftarkan rute autentikasi bawaan serta rute resource manajemen user yang dilindungi middleware keamanan.</p>
+                    <div class="sub-label">Aksi: Edit File routes/web.php</div>
+                    <div class="img-wrap">
+                        <img src="ss25.png" alt="Konfigurasi routes/web.php">
+                        <div class="img-cap">Gambar 25 – Routing autentikasi dan resource users berhasil dikonfigurasi di web.php</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">26</span>Buat Folder dan View user/index.blade.php</div>
+                    <p>Membuat folder <code>user</code> di dalam views, lalu membuat file <code>index.blade.php</code> untuk menampilkan tabel data daftar semua user sistem.</p>
+                    <div class="sub-label">Aksi: Buat Folder resources/views/user/ → Buat File index.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss26.png" alt="View user/index.blade.php">
+                        <div class="img-cap">Gambar 26 – View index daftar users dengan DataTables dan tombol aksi berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">27</span>Buat View user/create.blade.php</div>
+                    <p>Membuat file form input <code>create.blade.php</code> yang digunakan untuk proses penambahan pengguna baru ke dalam database.</p>
+                    <div class="sub-label">Aksi: Buat File Baru resources/views/user/create.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss27.png" alt="View user/create.blade.php">
+                        <div class="img-cap">Gambar 27 – Form tambah user baru dengan Select2 multiple level berhasil dibuat</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">28</span>Buat View user/edit.blade.php</div>
+                    <p>Membuat file komponen form <code>edit.blade.php</code> untuk memfasilitasi proses pembaruan data lama milik user.</p>
+                    <div class="sub-label">Aksi: Buat File Baru resources/views/user/edit.blade.php</div>
+                    <div class="img-wrap">
+                        <img src="ss28.png" alt="View user/edit.blade.php">
+                        <div class="img-cap">Gambar 28 – Form edit user dengan data lama terisi otomatis dan password opsional berhasil dibuat</div>
+                    </div>
+                </div>
+
+            </div><div class="laprak-card">
+                <div class="section-label"><span class="num">VIII</span>Langkah Kerja: Jalankan dan Uji Aplikasi</div>
+                <p>Bagian ini adalah langkah terakhir: menjalankan server development dan menguji semua fungsionalitas aplikasi SISFO di browser.</p>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">29</span>Jalankan Server Development Laravel</div>
+                    <p>Menjalankan server bawaan Laravel agar aplikasi dapat diakses melalui browser di alamat port lokal eksekusi.</p>
+                    <div class="sub-label">Aksi: Jalankan Artisan Serve</div>
+                    <div class="code-wrap">
+                        <div class="code-head"><span class="lang">bash</span></div>
+                        <pre><code>php artisan serve</code></pre>
+                    </div>
+                    <div class="info-box blue"><i class="bi bi-info-circle-fill"></i><div>Biarkan terminal ini tetap terbuka selama pengujian aplikasi di web browser.</div></div>
+                    <div class="img-wrap">
+                        <img src="ss29.png" alt="Server Laravel berjalan">
+                        <div class="img-cap">Gambar 29 – Server development Laravel berhasil berjalan di port 8000</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">30</span>Uji Halaman Login</div>
+                    <p>Membuka browser ke alamat lokal server dan melakukan login sistem menggunakan kredensial akun administrator dari seeder data awal.</p>
+                    <div class="sub-label">Aksi: Buka Browser → Login dengan Akun Admin</div>
+                    <div class="img-wrap">
+                        <img src="ss30.png" alt="Tampilan halaman login">
+                        <div class="img-cap">Gambar 30 – Halaman login SISFO bergaya SB Admin 2 berhasil tampil di browser</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">31</span>Uji Halaman Dashboard Setelah Login</div>
+                    <p>Setelah autentikasi berhasil, pastikan halaman langsung dialihkan ke dashboard utama dengan menampilkan nama user login secara dinamis.</p>
+                    <div class="sub-label">Aksi: Verifikasi Tampilan Dashboard</div>
+                    <div class="img-wrap">
+                        <img src="ss31.png" alt="Tampilan dashboard setelah login">
+                        <div class="img-cap">Gambar 31 – Dashboard SISFO berhasil tampil dengan sidebar, topbar, dan kartu selamat datang</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">32</span>Uji Halaman Daftar Users</div>
+                    <p>Menguji tampilan halaman indeks data user. Memastikan data termuat di dalam library tabel pencarian dan pagination dengan benar.</p>
+                    <div class="sub-label">Aksi: Klik Menu Users di Sidebar</div>
+                    <div class="img-wrap">
+                        <img src="ss32.png" alt="Tampilan daftar users">
+                        <div class="img-cap">Gambar 32 – Halaman daftar users dengan DataTables berhasil menampilkan data pengguna</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">33</span>Uji Form Tambah User Baru</div>
+                    <p>Mengklik tombol tambah data, mengisi field isian form, lalu menekan simpan untuk memverifikasi fungsionalitas insert data baru ke database.</p>
+                    <div class="sub-label">Aksi: Klik Tambah User → Isi Form → Simpan</div>
+                    <div class="img-wrap">
+                        <img src="ss33.png" alt="Form tambah user">
+                        <div class="img-cap">Gambar 33 – Form tambah user baru dengan Select2 level berhasil tampil dan berfungsi</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss34.png" alt="Daftar users setelah tambah">
+                        <div class="img-cap">Gambar 34 – Notifikasi sukses muncul dan data user baru berhasil ditambahkan ke tabel</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">34</span>Uji Form Edit User</div>
+                    <p>Menguji fitur edit dengan mengubah data pengguna lama, menyimpan form, dan memeriksa apakah data pada tabel telah terupdate.</p>
+                    <div class="sub-label">Aksi: Klik Edit → Ubah Data → Simpan</div>
+                    <div class="img-wrap">
+                        <img src="ss35.png" alt="Form edit user">
+                        <div class="img-cap">Gambar 35 – Form edit user dengan data lama terisi otomatis berhasil tampil dan berfungsi</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss36.png" alt="Daftar users setelah edit">
+                        <div class="img-cap">Gambar 36 – Notifikasi sukses muncul dan data user berhasil diperbarui di tabel</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">35</span>Uji Fungsi Hapus User</div>
+                    <p>Memicu fungsi hapus pada salah satu baris user, menyetujui alert dialog konfirmasi, lalu memastikan data baris tersebut hilang dari tabel.</p>
+                    <div class="sub-label">Aksi: Klik Hapus → Konfirmasi → Verifikasi Data Terhapus</div>
+                    <div class="img-wrap">
+                        <img src="ss37.png" alt="Konfirmasi hapus user">
+                        <div class="img-cap">Gambar 37 – Dialog konfirmasi penghapusan muncul sebelum data user dihapus</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss38.png" alt="User berhasil dihapus">
+                        <div class="img-cap">Gambar 38 – Notifikasi sukses muncul dan data user berhasil dihapus dari tabel</div>
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <div class="step-title"><span class="step-num">36</span>Uji Fungsi Logout</div>
+                    <p>Mengklik opsi logout melalui menu navigasi, menyetujui modal konfirmasi keluar, dan memastikan session dihancurkan lalu halaman kembali ke login.</p>
+                    <div class="sub-label">Aksi: Klik Nama User → Logout → Konfirmasi Modal</div>
+                    <div class="img-wrap">
+                        <img src="ss39.png" alt="Modal konfirmasi logout">
+                        <div class="img-cap">Gambar 39 – Modal konfirmasi logout muncul sebelum sesi pengguna diakhiri</div>
+                    </div>
+                    <div class="img-wrap">
+                        <img src="ss40.png" alt="Kembali ke halaman login setelah logout">
+                        <div class="img-cap">Gambar 40 – Pengguna berhasil logout dan diarahkan kembali ke halaman login</div>
+                    </div>
+                </div>
+
+            </div><div class="laprak-card">
+                <div class="section-label"><span class="num">IX</span>Hasil &amp; Pembahasan</div>
+                <p>Melalui serangkaian tahapan praktikum ini, pembangunan aplikasi Sistem Informasi (SISFO) berbasis Laravel dengan arsitektur MVC berhasil diselesaikan secara penuh. Berikut ringkasan hasil yang dicapai:</p>
+                <ul>
+                    <li><strong>Konfigurasi Environment &amp; Database:</strong> Koneksi antara Laravel dan MySQL lokal berhasil dibangun melalui pengaturan file <code>.env</code>. Seluruh tabel default berhasil dibuat lewat migration awal.</li>
+                    <li><strong>Sistem Autentikasi:</strong> Fitur login dan logout berhasil berjalan menggunakan scaffold dari paket <code>laravel/ui</code>. Halaman login berhasil ditampilkan dengan template SB Admin 2 yang terintegrasi.</li>
+                    <li><strong>Kustomisasi Tabel Users:</strong> Kolom <code>username</code>, <code>level</code>, dan <code>status</code> berhasil ditambahkan ke tabel <code>users</code> melalui migration tambahan tanpa perlu mengubah tabel secara manual di phpMyAdmin.</li>
+                    <li><strong>Seeder Admin:</strong> Data akun admin berhasil dimasukkan ke database secara otomatis menggunakan <code>AdminSeeder</code>, sehingga aplikasi siap digunakan tanpa perlu membuat akun secara manual.</li>
+                    <li><strong>Template SB Admin 2:</strong> Tampilan dashboard profesional berhasil diintegrasikan dengan layout modular Blade (main, sidebar, topbar) yang reusable di seluruh halaman aplikasi.</li>
+                    <li><strong>Fungsionalitas CRUD Users:</strong> Pengujian di browser membuktikan semua operasi manajemen pengguna (tambah, lihat, edit, hapus) berjalan lancar dengan validasi form yang aman, tampilan DataTables yang responsif, dan Select2 untuk pemilihan level pengguna.</li>
+                </ul>
+            </div>
+
+            <div class="laprak-card">
+                <div class="section-label"><span class="num">X</span>Kesimpulan</div>
+                <p>Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan, diperoleh beberapa poin kesimpulan penting:</p>
+                <ol>
+                    <li>Pola arsitektur <strong>Model-View-Controller (MVC)</strong> pada Laravel mempermudah pengembangan aplikasi dengan memisahkan lapisan database (Model), tampilan antarmuka (View), dan logika pemrosesan (Controller) secara terstruktur.</li>
+                    <li>Fitur <strong>Migration</strong> memungkinkan pengelolaan skema database secara bertahap dan terdokumentasi, termasuk penambahan kolom baru tanpa mengganggu data yang sudah ada.</li>
+                    <li>Penggunaan <strong>Seeder</strong> mempercepat proses pengisian data awal seperti akun admin, sehingga aplikasi langsung siap diuji tanpa perlu input manual melalui antarmuka database.</li>
+                    <li>Integrasi <strong>Laravel UI</strong> dengan Bootstrap secara signifikan mempercepat pembangunan sistem autentikasi yang lengkap dan aman.</li>
+                    <li>Penggunaan <strong>Resource Controller</strong> dan <code>Route::resource</code> menyederhanakan pendefinisian tujuh endpoint RESTful sekaligus dalam satu baris kode, meningkatkan produktivitas pengembangan.</li>
+                    <li>Template <strong>SB Admin 2</strong> yang diintegrasikan dengan Blade Layout menunjukkan bahwa pemisahan komponen UI (sidebar, topbar) ke file terpisah meningkatkan keterbacaan dan kemudahan pemeliharaan kode.</li>
+                </ol>
+
+                <div class="text-center mt-4">
+                    <a href="https://github.com/saskiaalifah/Laravel-Sisfo-SaskiaAlifah"
+                        target="_blank"
+                        class="github-btn">
+                        <i class="bi bi-github me-2"></i>
+                        Lihat Repository GitHub
+                    </a>
+                </div>
+
+                <div class="nav-footer">
+                    <a href="#">
+                        <span>Berikutnya →</span>
+                        <strong>Laprak Selanjutnya</strong>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container py-3">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-4 text-md-start text-center">
+                    <a class="footer-brand fw-bold text-uppercase" href="#" style="text-decoration:none; color:inherit;">Saskia Alifah</a>
+                    <div class="d-block text-muted small mt-1">Creative studio — design &amp; code</div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <nav>
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Home</a></li>
+                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">About</a></li>
+                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Portfolio</a></li>
+                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Laporan</a></li>
+                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-4 text-md-end text-center">
+                    <div class="d-inline-flex gap-2">
+                        <a href="https://www.instagram.com/saskiaalifahh" class="social-icon" target="_blank" style="color:var(--muted);"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/saskia-alifah-909b2831a/" class="social-icon" target="_blank" style="color:var(--muted);"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/saskiaalifah" class="social-icon" target="_blank" style="color:var(--muted);"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 text-center">
+                    <small style="color:var(--muted);">&copy; <span id="year"></span> Saskia Alifah. All rights reserved.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        (function () {
+            const el = document.getElementById("year");
+            if (el) el.textContent = new Date().getFullYear();
+        })();
+
+        window.addEventListener('scroll', function () {
+            document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+    </script>
+</body>
 </html>

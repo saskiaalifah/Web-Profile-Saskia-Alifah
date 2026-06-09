@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -403,11 +403,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Portfolio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -415,7 +415,7 @@
 
     <div class="laprak-hero">
         <div class="container">
-            <a href="#" class="btn-back-hero">
+            <a href="main.html" class="btn-back-hero">
                 <i class="bi bi-chevron-left"></i> Kembali ke Laporan
             </a>
             <h1>Laprak — <span>Sistem Informasi (SISFO): Auth, Migration, Seeder, CRUD Users, SB Admin 2</span></h1>
@@ -481,7 +481,7 @@
                     <p>Pastikan Laragon sudah berjalan dengan Apache dan MySQL aktif (indikator hijau), kemudian buka terminal Laragon untuk memulai pengerjaan project.</p>
                     <div class="sub-label">Aksi: Buka Laragon → Start All → Buka Terminal</div>
                     <div class="img-wrap">
-                        <img src="ss1.png" alt="Laragon berjalan">
+                        <img src="../images/laporan/laporan4/ss1.png" alt="Laragon berjalan">
                         <div class="img-cap">Gambar 1 – Laragon berjalan dengan Apache dan MySQL aktif berwarna hijau</div>
                     </div>
                 </div>
@@ -496,7 +496,7 @@
 laravel new laravel-sisfo</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss2.png" alt="Pembuatan project Laravel">
+                        <img src="../images/laporan/laporan4/ss2.png" alt="Pembuatan project Laravel">
                         <div class="img-cap">Gambar 2 – Proses pembuatan project Laravel baru bernama laravel-sisfo berhasil</div>
                     </div>
                 </div>
@@ -506,7 +506,7 @@ laravel new laravel-sisfo</code></pre>
                     <p>Membuat database baru bernama <code>laravel_sisfo</code> melalui antarmuka phpMyAdmin yang dapat diakses lewat browser.</p>
                     <div class="sub-label">Aksi: Buka Browser → http://localhost/phpmyadmin → New → Buat Database</div>
                     <div class="img-wrap">
-                        <img src="ss3.png" alt="Membuat database di phpMyAdmin">
+                        <img src="../images/laporan/laporan4/ss3.png" alt="Membuat database di phpMyAdmin">
                         <div class="img-cap">Gambar 3 – Database laravel_sisfo berhasil dibuat di phpMyAdmin</div>
                     </div>
                 </div>
@@ -516,7 +516,7 @@ laravel new laravel-sisfo</code></pre>
                     <p>Membuka file <code>.env</code> di VS Code dan mengatur kredensial koneksi database agar Laravel dapat terhubung ke database <code>laravel_sisfo</code> yang baru dibuat.</p>
                     <div class="sub-label">Aksi: Edit File C:\laragon\www\laravel-sisfo\.env</div>
                     <div class="img-wrap">
-                        <img src="ss4.png" alt="Konfigurasi file .env">
+                        <img src="../images/laporan/laporan4/ss4.png" alt="Konfigurasi file .env">
                         <div class="img-cap">Gambar 4 – Konfigurasi kredensial database pada file .env berhasil diatur</div>
                     </div>
                 </div>
@@ -531,7 +531,7 @@ laravel new laravel-sisfo</code></pre>
 php artisan migrate</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss5.png" alt="Migration awal berhasil">
+                        <img src="../images/laporan/laporan4/ss5.png" alt="Migration awal berhasil">
                         <div class="img-cap">Gambar 5 – Migration awal berhasil membuat tabel-tabel default Laravel di database</div>
                     </div>
                 </div>
@@ -545,7 +545,7 @@ php artisan migrate</code></pre>
                         <pre><code>composer require laravel/ui</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss6.png" alt="Install Laravel UI">
+                        <img src="../images/laporan/laporan4/ss6.png" alt="Install Laravel UI">
                         <div class="img-cap">Gambar 6 – Paket laravel/ui berhasil diinstall melalui Composer</div>
                     </div>
                 </div>
@@ -559,7 +559,7 @@ php artisan migrate</code></pre>
                         <pre><code>php artisan ui bootstrap --auth</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss7.png" alt="Generate auth Bootstrap">
+                        <img src="../images/laporan/laporan4/ss7.png" alt="Generate auth Bootstrap">
                         <div class="img-cap">Gambar 7 – Scaffold autentikasi Bootstrap berhasil di-generate oleh Artisan</div>
                     </div>
                 </div>
@@ -574,7 +574,7 @@ php artisan migrate</code></pre>
 npm run dev</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss8.png" alt="npm install dan npm run dev">
+                        <img src="../images/laporan/laporan4/ss8.png" alt="npm install dan npm run dev">
                         <div class="img-cap">Gambar 8 – Proses instalasi dependensi npm dan kompilasi aset Vite berhasil</div>
                     </div>
                 </div>
@@ -588,7 +588,7 @@ npm run dev</code></pre>
                         <pre><code>php artisan migrate</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss9.png" alt="Migration ulang berhasil">
+                        <img src="../images/laporan/laporan4/ss9.png" alt="Migration ulang berhasil">
                         <div class="img-cap">Gambar 9 – Migration ulang berhasil memastikan semua tabel autentikasi tersedia</div>
                     </div>
                 </div>
@@ -606,7 +606,7 @@ npm run dev</code></pre>
                         <pre><code>php artisan make:migration custom_table_users</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss10.png" alt="Membuat file migration custom users">
+                        <img src="../images/laporan/laporan4/ss10.png" alt="Membuat file migration custom users">
                         <div class="img-cap">Gambar 10 – File migration kustom tabel users berhasil dibuat oleh Artisan</div>
                     </div>
                 </div>
@@ -616,7 +616,7 @@ npm run dev</code></pre>
                     <p>Membuka file migration yang baru dibuat di folder <code>database/migrations/</code>, lalu mengisi method <code>up()</code> dan <code>down()</code> untuk mendefinisikan kolom tambahan.</p>
                     <div class="sub-label">Aksi: Edit File database/migrations/xxxx_custom_table_users.php</div>
                     <div class="img-wrap">
-                        <img src="ss11.png" alt="Isi file migration custom users">
+                        <img src="../images/laporan/laporan4/ss11.png" alt="Isi file migration custom users">
                         <div class="img-cap">Gambar 11 – Method up() dan down() pada file migration custom users berhasil diisi</div>
                     </div>
                 </div>
@@ -630,7 +630,7 @@ npm run dev</code></pre>
                         <pre><code>php artisan migrate</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss12.png" alt="Migration kolom tambahan berhasil">
+                        <img src="../images/laporan/laporan4/ss12.png" alt="Migration kolom tambahan berhasil">
                         <div class="img-cap">Gambar 12 – Kolom username, level, dan status berhasil ditambahkan ke tabel users</div>
                     </div>
                 </div>
@@ -640,7 +640,7 @@ npm run dev</code></pre>
                     <p>Membuka file <code>app/Models/User.php</code> dan mendaftarkan kolom baru (<code>username</code>, <code>level</code>, <code>status</code>) ke dalam property fillable Model.</p>
                     <div class="sub-label">Aksi: Edit File app/Models/User.php</div>
                     <div class="img-wrap">
-                        <img src="ss13.png" alt="Update Model User">
+                        <img src="../images/laporan/laporan4/ss13.png" alt="Update Model User">
                         <div class="img-cap">Gambar 13 – Model User berhasil diperbarui dengan kolom username, level, dan status</div>
                     </div>
                 </div>
@@ -654,7 +654,7 @@ npm run dev</code></pre>
                         <pre><code>php artisan make:seeder AdminSeeder</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss14.png" alt="Membuat AdminSeeder">
+                        <img src="../images/laporan/laporan4/ss14.png" alt="Membuat AdminSeeder">
                         <div class="img-cap">Gambar 14 – File AdminSeeder.php berhasil dibuat di folder database/seeders</div>
                     </div>
                 </div>
@@ -664,7 +664,7 @@ npm run dev</code></pre>
                     <p>Membuka file <code>database/seeders/AdminSeeder.php</code> dan mendefinisikan data akun admin default sistem.</p>
                     <div class="sub-label">Aksi: Edit File database/seeders/AdminSeeder.php</div>
                     <div class="img-wrap">
-                        <img src="ss15.png" alt="Isi AdminSeeder">
+                        <img src="../images/laporan/laporan4/ss15.png" alt="Isi AdminSeeder">
                         <div class="img-cap">Gambar 15 – Data akun admin berhasil didefinisikan dalam file AdminSeeder.php</div>
                     </div>
                 </div>
@@ -679,7 +679,7 @@ npm run dev</code></pre>
                     </div>
                     <div class="info-box green"><i class="bi bi-check-circle-fill"></i><div>Harus muncul pesan konfirmasi seed data sukses di terminal.</div></div>
                     <div class="img-wrap">
-                        <img src="ss16.png" alt="AdminSeeder berhasil dijalankan">
+                        <img src="../images/laporan/laporan4/ss16.png" alt="AdminSeeder berhasil dijalankan">
                         <div class="img-cap">Gambar 16 – Pesan konfirmasi muncul, akun admin berhasil disimpan ke database</div>
                     </div>
                 </div>
@@ -694,7 +694,7 @@ npm run dev</code></pre>
                     <div class="sub-label">Aksi: Download dari startbootstrap.com → Ekstrak → Copy ke public/sbadmin/</div>
                     <div class="info-box yellow"><i class="bi bi-exclamation-triangle-fill"></i><div>Yang dicopy adalah <strong>isi</strong> folder hasil ekstrak (css, js, vendor, img), bukan folder luarnya. Pastikan struktur folder internalnya sudah sesuai.</div></div>
                     <div class="img-wrap">
-                        <img src="ss17.png" alt="Struktur folder SB Admin 2 yang benar">
+                        <img src="../images/laporan/laporan4/ss17.png" alt="Struktur folder SB Admin 2 yang benar">
                         <div class="img-cap">Gambar 17 – Struktur folder public/sbadmin/ yang benar dengan folder css, js, vendor, dan img</div>
                     </div>
                 </div>
@@ -704,7 +704,7 @@ npm run dev</code></pre>
                     <p>Mengganti isi file <code>resources/views/layouts/app.blade.php</code> dengan halaman login bergaya template dashboard SB Admin 2.</p>
                     <div class="sub-label">Aksi: Edit File resources/views/layouts/app.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss18.png" alt="Edit app.blade.php">
+                        <img src="../images/laporan/laporan4/ss18.png" alt="Edit app.blade.php">
                         <div class="img-cap">Gambar 18 – File app.blade.php berhasil diubah menjadi tampilan halaman login SB Admin 2</div>
                     </div>
                 </div>
@@ -714,7 +714,7 @@ npm run dev</code></pre>
                     <p>Membuat file baru <code>resources/views/layouts/main.blade.php</code> sebagai layout master aplikasi yang menyertakan kerangka utama halaman admin dashboard.</p>
                     <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/main.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss19.png" alt="Buat main.blade.php">
+                        <img src="../images/laporan/laporan4/ss19.png" alt="Buat main.blade.php">
                         <div class="img-cap">Gambar 19 – File main.blade.php sebagai layout master aplikasi berhasil dibuat</div>
                     </div>
                 </div>
@@ -724,7 +724,7 @@ npm run dev</code></pre>
                     <p>Membuat file baru <code>resources/views/layouts/sidebar.blade.php</code> yang berisi menu navigasi utama seperti Dashboard dan Manajemen Users.</p>
                     <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/sidebar.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss20.png" alt="Buat sidebar.blade.php">
+                        <img src="../images/laporan/laporan4/ss20.png" alt="Buat sidebar.blade.php">
                         <div class="img-cap">Gambar 20 – Komponen sidebar dengan menu Dashboard dan Users berhasil dibuat</div>
                     </div>
                 </div>
@@ -734,7 +734,7 @@ npm run dev</code></pre>
                     <p>Membuat file baru <code>resources/views/layouts/topbar.blade.php</code> yang berisi navbar atas, profil nama user, dan opsi menu Logout.</p>
                     <div class="sub-label">Aksi: Buat File Baru resources/views/layouts/topbar.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss21.png" alt="Buat topbar.blade.php">
+                        <img src="../images/laporan/laporan4/ss21.png" alt="Buat topbar.blade.php">
                         <div class="img-cap">Gambar 21 – Komponen topbar dengan nama user dan dropdown logout berhasil dibuat</div>
                     </div>
                 </div>
@@ -744,7 +744,7 @@ npm run dev</code></pre>
                     <p>Mengganti file <code>resources/views/home.blade.php</code> agar extends ke layout master baru dan menampilkan kartu selamat datang user.</p>
                     <div class="sub-label">Aksi: Edit File resources/views/home.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss22.png" alt="Edit home.blade.php">
+                        <img src="../images/laporan/laporan4/ss22.png" alt="Edit home.blade.php">
                         <div class="img-cap">Gambar 22 – Halaman dashboard berhasil diperbarui dengan layout main dan kartu sambutan</div>
                     </div>
                 </div>
@@ -762,7 +762,7 @@ npm run dev</code></pre>
                         <pre><code>php artisan make:controller UserController --resource</code></pre>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss23.png" alt="Membuat UserController">
+                        <img src="../images/laporan/laporan4/ss23.png" alt="Membuat UserController">
                         <div class="img-cap">Gambar 23 – File UserController.php dengan boilerplate method CRUD berhasil dibuat</div>
                     </div>
                 </div>
@@ -772,7 +772,7 @@ npm run dev</code></pre>
                     <p>Membuka file <code>app/Http/Controllers/UserController.php</code> dan menerapkan logika lengkap penanganan operasi Create, Read, Update, dan Delete data user.</p>
                     <div class="sub-label">Aksi: Edit File app/Http/Controllers/UserController.php</div>
                     <div class="img-wrap">
-                        <img src="ss24.png" alt="Isi UserController lengkap">
+                        <img src="../images/laporan/laporan4/ss24.png" alt="Isi UserController lengkap">
                         <div class="img-cap">Gambar 24 – Logika CRUD lengkap dengan validasi berhasil diisi di UserController.php</div>
                     </div>
                 </div>
@@ -782,7 +782,7 @@ npm run dev</code></pre>
                     <p>Mengubah file <code>routes/web.php</code> untuk mendaftarkan rute autentikasi bawaan serta rute resource manajemen user yang dilindungi middleware keamanan.</p>
                     <div class="sub-label">Aksi: Edit File routes/web.php</div>
                     <div class="img-wrap">
-                        <img src="ss25.png" alt="Konfigurasi routes/web.php">
+                        <img src="../images/laporan/laporan4/ss25.png" alt="Konfigurasi routes/web.php">
                         <div class="img-cap">Gambar 25 – Routing autentikasi dan resource users berhasil dikonfigurasi di web.php</div>
                     </div>
                 </div>
@@ -792,7 +792,7 @@ npm run dev</code></pre>
                     <p>Membuat folder <code>user</code> di dalam views, lalu membuat file <code>index.blade.php</code> untuk menampilkan tabel data daftar semua user sistem.</p>
                     <div class="sub-label">Aksi: Buat Folder resources/views/user/ → Buat File index.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss26.png" alt="View user/index.blade.php">
+                        <img src="../images/laporan/laporan4/ss26.png" alt="View user/index.blade.php">
                         <div class="img-cap">Gambar 26 – View index daftar users dengan DataTables dan tombol aksi berhasil dibuat</div>
                     </div>
                 </div>
@@ -802,7 +802,7 @@ npm run dev</code></pre>
                     <p>Membuat file form input <code>create.blade.php</code> yang digunakan untuk proses penambahan pengguna baru ke dalam database.</p>
                     <div class="sub-label">Aksi: Buat File Baru resources/views/user/create.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss27.png" alt="View user/create.blade.php">
+                        <img src="../images/laporan/laporan4/ss27.png" alt="View user/create.blade.php">
                         <div class="img-cap">Gambar 27 – Form tambah user baru dengan Select2 multiple level berhasil dibuat</div>
                     </div>
                 </div>
@@ -812,7 +812,7 @@ npm run dev</code></pre>
                     <p>Membuat file komponen form <code>edit.blade.php</code> untuk memfasilitasi proses pembaruan data lama milik user.</p>
                     <div class="sub-label">Aksi: Buat File Baru resources/views/user/edit.blade.php</div>
                     <div class="img-wrap">
-                        <img src="ss28.png" alt="View user/edit.blade.php">
+                        <img src="../images/laporan/laporan4/ss28.png" alt="View user/edit.blade.php">
                         <div class="img-cap">Gambar 28 – Form edit user dengan data lama terisi otomatis dan password opsional berhasil dibuat</div>
                     </div>
                 </div>
@@ -831,7 +831,7 @@ npm run dev</code></pre>
                     </div>
                     <div class="info-box blue"><i class="bi bi-info-circle-fill"></i><div>Biarkan terminal ini tetap terbuka selama pengujian aplikasi di web browser.</div></div>
                     <div class="img-wrap">
-                        <img src="ss29.png" alt="Server Laravel berjalan">
+                        <img src="../images/laporan/laporan4/ss29.png" alt="Server Laravel berjalan">
                         <div class="img-cap">Gambar 29 – Server development Laravel berhasil berjalan di port 8000</div>
                     </div>
                 </div>
@@ -841,7 +841,7 @@ npm run dev</code></pre>
                     <p>Membuka browser ke alamat lokal server dan melakukan login sistem menggunakan kredensial akun administrator dari seeder data awal.</p>
                     <div class="sub-label">Aksi: Buka Browser → Login dengan Akun Admin</div>
                     <div class="img-wrap">
-                        <img src="ss30.png" alt="Tampilan halaman login">
+                        <img src="../images/laporan/laporan4/ss30.png" alt="Tampilan halaman login">
                         <div class="img-cap">Gambar 30 – Halaman login SISFO bergaya SB Admin 2 berhasil tampil di browser</div>
                     </div>
                 </div>
@@ -851,7 +851,7 @@ npm run dev</code></pre>
                     <p>Setelah autentikasi berhasil, pastikan halaman langsung dialihkan ke dashboard utama dengan menampilkan nama user login secara dinamis.</p>
                     <div class="sub-label">Aksi: Verifikasi Tampilan Dashboard</div>
                     <div class="img-wrap">
-                        <img src="ss31.png" alt="Tampilan dashboard setelah login">
+                        <img src="../images/laporan/laporan4/ss31.png" alt="Tampilan dashboard setelah login">
                         <div class="img-cap">Gambar 31 – Dashboard SISFO berhasil tampil dengan sidebar, topbar, dan kartu selamat datang</div>
                     </div>
                 </div>
@@ -861,7 +861,7 @@ npm run dev</code></pre>
                     <p>Menguji tampilan halaman indeks data user. Memastikan data termuat di dalam library tabel pencarian dan pagination dengan benar.</p>
                     <div class="sub-label">Aksi: Klik Menu Users di Sidebar</div>
                     <div class="img-wrap">
-                        <img src="ss32.png" alt="Tampilan daftar users">
+                        <img src="../images/laporan/laporan4/ss32.png" alt="Tampilan daftar users">
                         <div class="img-cap">Gambar 32 – Halaman daftar users dengan DataTables berhasil menampilkan data pengguna</div>
                     </div>
                 </div>
@@ -871,11 +871,11 @@ npm run dev</code></pre>
                     <p>Mengklik tombol tambah data, mengisi field isian form, lalu menekan simpan untuk memverifikasi fungsionalitas insert data baru ke database.</p>
                     <div class="sub-label">Aksi: Klik Tambah User → Isi Form → Simpan</div>
                     <div class="img-wrap">
-                        <img src="ss33.png" alt="Form tambah user">
+                        <img src="../images/laporan/laporan4/ss33.png" alt="Form tambah user">
                         <div class="img-cap">Gambar 33 – Form tambah user baru dengan Select2 level berhasil tampil dan berfungsi</div>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss34.png" alt="Daftar users setelah tambah">
+                        <img src="../images/laporan/laporan4/ss34.png" alt="Daftar users setelah tambah">
                         <div class="img-cap">Gambar 34 – Notifikasi sukses muncul dan data user baru berhasil ditambahkan ke tabel</div>
                     </div>
                 </div>
@@ -885,11 +885,11 @@ npm run dev</code></pre>
                     <p>Menguji fitur edit dengan mengubah data pengguna lama, menyimpan form, dan memeriksa apakah data pada tabel telah terupdate.</p>
                     <div class="sub-label">Aksi: Klik Edit → Ubah Data → Simpan</div>
                     <div class="img-wrap">
-                        <img src="ss35.png" alt="Form edit user">
+                        <img src="../images/laporan/laporan4/ss35.png" alt="Form edit user">
                         <div class="img-cap">Gambar 35 – Form edit user dengan data lama terisi otomatis berhasil tampil dan berfungsi</div>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss36.png" alt="Daftar users setelah edit">
+                        <img src="../images/laporan/laporan4/ss36.png" alt="Daftar users setelah edit">
                         <div class="img-cap">Gambar 36 – Notifikasi sukses muncul dan data user berhasil diperbarui di tabel</div>
                     </div>
                 </div>
@@ -899,11 +899,11 @@ npm run dev</code></pre>
                     <p>Memicu fungsi hapus pada salah satu baris user, menyetujui alert dialog konfirmasi, lalu memastikan data baris tersebut hilang dari tabel.</p>
                     <div class="sub-label">Aksi: Klik Hapus → Konfirmasi → Verifikasi Data Terhapus</div>
                     <div class="img-wrap">
-                        <img src="ss37.png" alt="Konfirmasi hapus user">
+                        <img src="../images/laporan/laporan4/ss37.png" alt="Konfirmasi hapus user">
                         <div class="img-cap">Gambar 37 – Dialog konfirmasi penghapusan muncul sebelum data user dihapus</div>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss38.png" alt="User berhasil dihapus">
+                        <img src="../images/laporan/laporan4/ss38.png" alt="User berhasil dihapus">
                         <div class="img-cap">Gambar 38 – Notifikasi sukses muncul dan data user berhasil dihapus dari tabel</div>
                     </div>
                 </div>
@@ -913,11 +913,11 @@ npm run dev</code></pre>
                     <p>Mengklik opsi logout melalui menu navigasi, menyetujui modal konfirmasi keluar, dan memastikan session dihancurkan lalu halaman kembali ke login.</p>
                     <div class="sub-label">Aksi: Klik Nama User → Logout → Konfirmasi Modal</div>
                     <div class="img-wrap">
-                        <img src="ss39.png" alt="Modal konfirmasi logout">
+                        <img src="../images/laporan/laporan4/ss39.png" alt="Modal konfirmasi logout">
                         <div class="img-cap">Gambar 39 – Modal konfirmasi logout muncul sebelum sesi pengguna diakhiri</div>
                     </div>
                     <div class="img-wrap">
-                        <img src="ss40.png" alt="Kembali ke halaman login setelah logout">
+                        <img src="../images/laporan/laporan4/ss40.png" alt="Kembali ke halaman login setelah logout">
                         <div class="img-cap">Gambar 40 – Pengguna berhasil logout dan diarahkan kembali ke halaman login</div>
                     </div>
                 </div>
@@ -957,7 +957,7 @@ npm run dev</code></pre>
                 </div>
 
                 <div class="nav-footer">
-                    <a href="#">
+                    <a href="laprak5.html">
                         <span>Berikutnya →</span>
                         <strong>Laprak Selanjutnya</strong>
                     </a>
@@ -971,17 +971,17 @@ npm run dev</code></pre>
         <div class="container py-3">
             <div class="row align-items-center gy-3">
                 <div class="col-md-4 text-md-start text-center">
-                    <a class="footer-brand fw-bold text-uppercase" href="#" style="text-decoration:none; color:inherit;">Saskia Alifah</a>
+                    <a class="footer-brand fw-bold text-uppercase" href="../index.html" style="text-decoration:none; color:inherit;">Saskia Alifah</a>
                     <div class="d-block text-muted small mt-1">Creative studio — design &amp; code</div>
                 </div>
                 <div class="col-md-4 text-center">
                     <nav>
                         <ul class="list-inline mb-0">
-                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Home</a></li>
-                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">About</a></li>
-                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Portfolio</a></li>
-                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Laporan</a></li>
-                            <li class="list-inline-item"><a href="#" style="color:var(--muted); text-decoration:none;">Contact</a></li>
+                            <li class="list-inline-item"><a href="../index.html" style="color:var(--muted); text-decoration:none;">Home</a></li>
+                            <li class="list-inline-item"><a href="../about.html" style="color:var(--muted); text-decoration:none;">About</a></li>
+                            <li class="list-inline-item"><a href="../portofolio.html" style="color:var(--muted); text-decoration:none;">Portfolio</a></li>
+                            <li class="list-inline-item"><a href="main.html" style="color:var(--muted); text-decoration:none;">Laporan</a></li>
+                            <li class="list-inline-item"><a href="../kontak.html" style="color:var(--muted); text-decoration:none;">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -1001,7 +1001,7 @@ npm run dev</code></pre>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         (function () {

@@ -1,279 +1,2324 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 3 — Input Widgets dan Basic Form (Flutter)</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Belum Tersedia</title>
-
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <style>
-        :root {
-            --bg: #0d0d12;
-            --card: rgba(24, 24, 32, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --muted: #b7b7c9;
-            --accent: #ff5ca8;
-            --accent2: #ff8ec7;
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY (nempel selama kolom konten masih berjalan) ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
         }
+      }
 
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top right,
-                    rgba(255, 92, 168, 0.12),
-                    transparent 30%),
-                radial-gradient(circle at bottom left,
-                    rgba(255, 142, 199, 0.08),
-                    transparent 35%),
-                var(--bg);
-
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            color: var(--text);
-            overflow: hidden;
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
         }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
 
-        .glass-card {
-            width: 100%;
-            max-width: 760px;
-            position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 60px 50px;
-            text-align: center;
-            backdrop-filter: blur(18px);
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
 
-            box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.latihan {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+      .sub-label.test-label.fail {
+        color: #f2a65a;
+      }
+      .sub-label.test-label.fail::before {
+        background: #f2a65a;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan untuk pengujian (pass/fail) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Latihan Banner ── */
+      .latihan-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .latihan-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .latihan-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .latihan-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block (paragraf + poin) ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
         }
-
-        .glass-card::before {
-            content: "";
-            position: absolute;
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 92, 168, 0.08);
-            border-radius: 50%;
-            top: -120px;
-            right: -100px;
-            filter: blur(10px);
+        .step-block {
+          padding: 16px 16px;
         }
-
-        .glass-card::after {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 142, 199, 0.06);
-            border-radius: 50%;
-            bottom: -80px;
-            left: -70px;
-            filter: blur(10px);
+        .img-wrap img {
+          max-height: 240px;
         }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 92, 168, 0.1);
-            border: 1px solid rgba(255, 92, 168, 0.2);
-            color: var(--accent2);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 28px;
-        }
-
-        .main-icon {
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(255, 92, 168, 0.2),
-                    rgba(255, 142, 199, 0.08));
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-
-            font-size: 42px;
-            color: var(--accent);
-
-            box-shadow:
-                0 0 40px rgba(255, 92, 168, 0.18),
-                inset 0 0 20px rgba(255, 255, 255, 0.02);
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            margin-bottom: 18px;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-     h1 span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-
-        .desc {
-            max-width: 580px;
-            margin: 0 auto 38px;
-            color: var(--muted);
-            line-height: 1.9;
-            font-size: 15px;
-        }
-
-        .bottom-info {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 38px;
-        }
-
-        .info-item {
-            padding: 11px 18px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d7d7e6;
-            font-size: 14px;
-        }
-
-        .info-item i {
-            color: var(--accent2);
-            margin-right: 8px;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            border-radius: 14px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-
-            background:
-                linear-gradient(135deg,
-                    var(--accent),
-                    var(--accent2));
-
-            transition: .25s ease;
-
-            box-shadow:
-                0 10px 30px rgba(255, 92, 168, 0.28);
-        }
-
-        .btn-back:hover {
-            transform: translateY(-3px);
-            color: white;
-
-            box-shadow:
-                0 16px 38px rgba(255, 92, 168, 0.4);
-        }
-
-        @media (max-width: 600px) {
-            .glass-card {
-                padding: 42px 24px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .desc {
-                font-size: 14px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
-    <div class="glass-card">
-
-        <div class="status-badge">
-            <i class="fa-solid fa-sparkles"></i>
-            Halaman Sedang Disiapkan
-        </div>
-
-        <div class="main-icon">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h1>Laporan Praktikum <span>Belum Tersedia</span></h1>
-
-        <p class="desc">
-            Konten laporan untuk praktikum ini masih dalam tahap penyusunan.
-            Pembahasan materi, dokumentasi, serta hasil praktikum akan segera
-            ditambahkan setelah proses revisi selesai.
-        </p>
-
-        <div class="bottom-info">
-
-            <div class="info-item">
-                <i class="fa-solid fa-pen-ruler"></i>
-                Sedang Direvisi
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-camera"></i>
-                Dokumentasi Menyusul
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                Akan Segera Tersedia
-            </div>
-
-        </div>
-
-        <a href="main.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Kembali ke Laporan
+  <body class="d-flex flex-column min-vh-100">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase"
+          href="index.html"
+        >
+          <i class="bi bi-code-slash" style="color: var(--accent)"></i>
+          Saskia Alifah
         </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kontak.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
+    <!-- PAGE HERO -->
+    <div class="laprak-hero">
+      <div class="container">
+        <a href="main.html" class="btn-back-hero">
+          <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+        </a>
+        <h1>Laprak 3 — <span>Input Widgets dan Basic Form (Flutter)</span></h1>
+        <p class="lead">Aplikasi Mobile · Praktikum 3</p>
+        <div class="badge-row">
+          <span class="badge-pill"
+            ><i class="bi bi-person-fill"></i> Saskia Alifah</span
+          >
+          <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+          <span class="badge-pill"
+            ><i class="bi bi-calendar3"></i> Aplikasi Mobile</span
+          >
+          <span class="badge-pill"><i class="bi bi-phone"></i> Flutter</span>
+          <span class="badge-pill"
+            ><i class="bi bi-ui-checks"></i> Basic Form &amp; Input
+            Widgets</span
+          >
+        </div>
+      </div>
     </div>
 
-</body>
+    <!-- TOC MOBILE (offcanvas) -->
+    <button
+      class="toc-fab"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#tocOffcanvas"
+      aria-controls="tocOffcanvas"
+    >
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="tocOffcanvas"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">
+          <i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="toc-list">
+          <li>
+            <a href="#tujuan" data-bs-dismiss="offcanvas"
+              >A. Tujuan Praktikum</a
+            >
+          </li>
+          <li>
+            <a href="#teori" data-bs-dismiss="offcanvas">B. Dasar Teori</a>
+          </li>
+          <li>
+            <a href="#alat" data-bs-dismiss="offcanvas">C. Alat dan Bahan</a>
+          </li>
+          <li>
+            <a href="#langkah" data-bs-dismiss="offcanvas"
+              >D. Langkah Praktikum</a
+            >
+            <ul>
+              <li>
+                <a href="#langkah-textfield" data-bs-dismiss="offcanvas"
+                  >form_textfield.dart</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-textformfield" data-bs-dismiss="offcanvas"
+                  >form_textformfield.dart</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#latihan" data-bs-dismiss="offcanvas">E. Latihan</a>
+            <ul>
+              <li>
+                <a href="#latihan-kalkulator" data-bs-dismiss="offcanvas"
+                  >kalkulator_kabataku.dart</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#hasil" data-bs-dismiss="offcanvas"
+              >F. Hasil dan Pembahasan</a
+            >
+          </li>
+          <li>
+            <a href="#kesimpulan" data-bs-dismiss="offcanvas">G. Kesimpulan</a>
+          </li>
+          <li>
+            <a href="#repo" data-bs-dismiss="offcanvas">H. Repository Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
+    <!-- MAIN -->
+    <main>
+      <div class="layout-wrap">
+        <!-- TOC DESKTOP — KIRI -->
+        <div class="toc-col">
+          <aside class="toc-sidebar">
+            <div class="toc-title">
+              <i class="bi bi-list-ul"></i> Daftar Isi
+            </div>
+            <ul class="toc-list">
+              <li><a href="#tujuan">A. Tujuan Praktikum</a></li>
+              <li><a href="#teori">B. Dasar Teori</a></li>
+              <li><a href="#alat">C. Alat dan Bahan</a></li>
+              <li>
+                <a href="#langkah">D. Langkah Praktikum</a>
+                <ul>
+                  <li><a href="#langkah-textfield">form_textfield.dart</a></li>
+                  <li>
+                    <a href="#langkah-textformfield">form_textformfield.dart</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#latihan">E. Latihan</a>
+                <ul>
+                  <li>
+                    <a href="#latihan-kalkulator">kalkulator_kabataku.dart</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#hasil">F. Hasil dan Pembahasan</a></li>
+              <li><a href="#kesimpulan">G. Kesimpulan</a></li>
+              <li><a href="#repo">H. Repository Github</a></li>
+            </ul>
+          </aside>
+        </div>
+
+        <!-- KONTEN -->
+        <div class="content-col">
+          <!-- A. TUJUAN -->
+          <div class="laprak-card" id="tujuan">
+            <div class="section-label">
+              <span class="num">A</span>Tujuan Praktikum
+            </div>
+            <p>
+              Praktikum ini bertujuan supaya mahasiswa mampu membuat basic form
+              pada Flutter untuk menerima inputan dari keyboard sekaligus
+              mengelola nilai inputan tersebut. Secara lebih rinci, setelah
+              menyelesaikan praktikum ini mahasiswa diharapkan mampu memahami
+              perbedaan penggunaan widget <code>TextField</code> dan
+              <code>TextFormField</code>, mengelola nilai inputan pengguna
+              menggunakan <strong>TextEditingController</strong>, serta
+              menerapkan validasi form menggunakan properti
+              <code>validator</code> bersama
+              <code>GlobalKey&lt;FormState&gt;</code>.
+            </p>
+            <p>
+              Selain itu, konsep basic form yang dipelajari juga diterapkan
+              langsung pada studi kasus nyata berupa aplikasi kalkulator
+              sederhana yang menjalankan operasi kabataku (kali, bagi, tambah,
+              kurang), sehingga mahasiswa terbiasa menghubungkan input,
+              validasi, logika perhitungan, dan tampilan hasil dalam satu alur
+              yang utuh.
+            </p>
+          </div>
+
+          <!-- B. DASAR TEORI -->
+          <div class="laprak-card" id="teori">
+            <div class="section-label">
+              <span class="num">B</span>Dasar Teori
+            </div>
+
+            <p>
+              <strong>Basic Form</strong> adalah kumpulan widget input pada
+              Flutter yang berfungsi menerima nilai dari pengguna, seperti
+              <code>TextField</code>, <code>TextFormField</code>,
+              <code>CheckBox</code>, <code>Switch</code>, <code>Dropdown</code>,
+              <code>Radio</code>, <code>Dialog</code>, <code>DatePicker</code>,
+              <code>BottomSheet</code>, dan <code>Snackbar</code>. Alur kerjanya
+              diawali dengan menampilkan field inputan, memeriksa apakah nilai
+              yang dimasukkan sudah sesuai aturan atau format yang ditetapkan,
+              lalu mengambil nilai tersebut setelah proses pengecekan selesai
+              dilakukan.
+            </p>
+
+            <p>
+              <strong>TextField</strong> adalah widget dasar untuk menerima
+              masukan teks dari keyboard, umum dipakai pada form login maupun
+              pencarian. Widget ini memiliki properti <code>decoration</code>,
+              <code>controller</code>, dan <code>keyboardType</code> yang
+              lengkap, serta dapat dipantau perubahannya melalui
+              <code>onChanged</code>. Karena tidak memiliki mekanisme validasi
+              bawaan, nilai yang diketik hanya dikelola melalui
+              <strong>TextEditingController</strong> tanpa pengecekan aturan
+              tertentu.
+            </p>
+
+            <p>
+              <strong>TextFormField</strong> merupakan versi lengkap dari
+              <code>TextField</code> yang sudah terintegrasi dengan logika
+              validasi dan manajemen state sebuah <code>Form</code>. Widget ini
+              memiliki properti <code>validator</code> untuk memeriksa
+              kesesuaian input terhadap aturan yang ditentukan, akan menampilkan
+              pesan error secara otomatis di bawah field jika validasi gagal,
+              dan dapat divalidasi secara kolektif melalui
+              <code>FormState</code>.
+            </p>
+
+            <p>
+              Agar validasi banyak field bisa dijalankan sekaligus dari satu
+              titik, Flutter menyediakan
+              <strong>GlobalKey&lt;FormState&gt;</strong>, yaitu objek key unik
+              yang dipakai untuk mengakses state suatu widget secara global dari
+              widget lain — misalnya memanggil method
+              <code>validate()</code> dari luar widget <code>Form</code> pada
+              <code>onPressed</code> sebuah <code>ElevatedButton</code>. Ketika
+              <code>_formKey.currentState!.validate()</code> dipanggil, Flutter
+              akan mengecek setiap <code>TextFormField</code> yang terikat pada
+              <code>Form</code> tersebut dan menjalankan fungsi
+              <code>validator</code> masing-masing; jika ada validator yang
+              mengembalikan <code>String</code> pesan error, proses dihentikan
+              dan <code>validate()</code> mengembalikan
+              <code>false</code> sekaligus menampilkan pesan tersebut, sedangkan
+              jika seluruh validator mengembalikan <code>null</code> maka
+              <code>validate()</code> mengembalikan <code>true</code>.
+            </p>
+
+            <p>
+              Perubahan data pada <code>StatefulWidget</code> tidak akan
+              langsung terlihat di layar tanpa memanggil
+              <strong>setState()</strong>, sebuah method yang memberitahu
+              Flutter bahwa state telah berubah sehingga widget terkait perlu
+              dibangun ulang (rebuild). Sebaliknya, untuk widget yang nilainya
+              tidak pernah berubah, <strong>kata kunci const</strong> dipakai
+              agar widget tersebut dijadikan konstanta pada saat kompilasi —
+              hanya dibangun sekali dan disimpan di memori, sehingga tidak perlu
+              di-build ulang setiap kali terjadi perubahan state pada widget
+              lain dan proses reload menjadi lebih cepat.
+            </p>
+          </div>
+
+          <!-- C. ALAT DAN BAHAN -->
+          <div class="laprak-card" id="alat">
+            <div class="section-label">
+              <span class="num">C</span>Alat dan Bahan
+            </div>
+            <ul>
+              <li>Laptop / Komputer dengan Flutter SDK dan Dart terinstall</li>
+              <li>
+                Visual Studio Code (Code Editor) dengan ekstensi Flutter &amp;
+                Dart
+              </li>
+              <li>
+                Chrome Browser / Android Emulator sebagai target device untuk
+                menjalankan aplikasi
+              </li>
+              <li>
+                Modul Praktikum Aplikasi Mobile — Praktikum 3: Input Widgets dan
+                Basic Form
+              </li>
+            </ul>
+          </div>
+
+          <!-- D. LANGKAH PRAKTIKUM -->
+          <div class="laprak-card" id="langkah">
+            <div class="section-label">
+              <span class="num">D</span>Langkah Praktikum
+            </div>
+            <p>
+              Praktikum ini terdiri dari dua file basic form yang dibuat secara
+              terpisah di dalam folder <code>lib</code>, yaitu
+              <code>form_textfield.dart</code> yang memakai widget
+              <code>TextField</code> polos tanpa validasi, dan
+              <code>form_textformfield.dart</code> yang memakai widget
+              <code>TextFormField</code> lengkap dengan validasi. Kedua file
+              dikerjakan satu per satu secara berurutan, mulai dari struktur
+              dasar hingga pengujian, sebelum berpindah ke file berikutnya.
+            </p>
+
+            <!-- D.1 form_textfield.dart -->
+            <div class="sub-section-title" id="langkah-textfield">
+              D.1 <span class="file-badge">form_textfield.dart</span>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat Struktur Dasar Aplikasi
+              </div>
+              <p>
+                Langkah pertama adalah membuat file dart baru dengan nama
+                <code>form_textfield.dart</code> di dalam folder
+                <code>lib</code>, lalu membangun kerangka aplikasi.
+                <code>MyApp</code> dijadikan root widget yang mengembalikan
+                <code>MaterialApp</code> berisi <code>Scaffold</code> dengan
+                <code>AppBar</code> berjudul "Basic Form" dan body berupa widget
+                <code>MyForm</code> yang akan diisi form input pada langkah
+                selanjutnya.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Jalankan main.dart dan Lihat Struktur Awal
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d1-1a.png"
+                  alt="SS VS Code struktur MyApp, MaterialApp, Scaffold pada form_textfield.dart"
+                />
+                <div class="img-cap">
+                  Gambar D.1a – Struktur dasar MyApp dengan Scaffold, AppBar
+                  "Basic Form", dan body MyForm
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>void main() =&gt; runApp(const MyApp())</code> adalah
+                  titik masuk aplikasi yang langsung menjalankan widget
+                  <code>MyApp</code>. Widget ini berupa
+                  <code>StatelessWidget</code> karena tampilan awalnya tidak
+                  perlu berubah, dan cukup mengembalikan
+                  <code>MaterialApp</code> sebagai pembungkus utama seluruh
+                  aplikasi Flutter.
+                </p>
+                <p>
+                  Di dalam <code>MaterialApp</code>, properti
+                  <code>home</code> diisi <code>Scaffold</code> yang menyediakan
+                  struktur halaman standar Material Design.
+                  <code>AppBar(title: const Text('Basic Form'))</code>
+                  menampilkan judul "Basic Form" di bagian atas layar, sedangkan
+                  <code>body: const MyForm()</code> memanggil widget form yang
+                  isinya akan dilengkapi pada langkah berikutnya.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membuat StatefulWidget MyForm dan
+                TextEditingController
+              </div>
+              <p>
+                <code>MyForm</code> dibuat sebagai
+                <code>StatefulWidget</code> karena nilai inputan dapat berubah
+                seiring interaksi pengguna. Di dalam <code>_MyFormState</code>,
+                dideklarasikan sebuah <code>TextEditingController</code> untuk
+                mengambil dan mengelola teks yang diketik pengguna, lengkap
+                dengan method <code>dispose()</code> untuk membersihkan
+                controller saat widget dihancurkan agar tidak terjadi kebocoran
+                memori.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan Controller dan Method dispose()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d1-2a.png"
+                  alt="SS VS Code deklarasi TextEditingController dan method dispose"
+                />
+                <div class="img-cap">
+                  Gambar D.1b – Deklarasi _textEditingController dan method
+                  dispose() pada _MyFormState
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code
+                    >final TextEditingController _textEditingController =
+                    TextEditingController();</code
+                  >
+                  membuat variabel controller yang bertugas mengambil apa pun
+                  yang diketik user pada field. Controller inilah yang nantinya
+                  dihubungkan ke widget <code>TextField</code> lewat properti
+                  <code>controller</code>.
+                </p>
+                <ul>
+                  <li>
+                    <code>@override void dispose()</code> — method siklus hidup
+                    widget yang otomatis dipanggil saat widget dihapus dari
+                    tree.
+                  </li>
+                  <li>
+                    <code>_textEditingController.dispose();</code> —
+                    membersihkan resource controller.
+                  </li>
+                  <li>
+                    <code>super.dispose();</code> — memastikan proses dispose
+                    bawaan dari <code>State</code> tetap berjalan.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Menambahkan Widget TextField
+                dengan Property Lengkap
+              </div>
+              <p>
+                Tampilan form dibungkus <code>Padding</code> dan
+                <code>Column</code>, berisi <code>Text</code> label,
+                <code>SizedBox</code> sebagai jarak, lalu widget
+                <code>TextField</code> yang dilengkapi <code>decoration</code>,
+                <code>controller</code>, <code>keyboardType</code>, dan
+                <code>onChanged</code> agar setiap ketikan pengguna dapat
+                dipantau.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan Property decoration, controller, keyboardType,
+                dan onChanged pada TextField
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d1-3a.png"
+                  alt="SS VS Code widget TextField dengan decoration labelText hintText border prefixIcon"
+                />
+                <div class="img-cap">
+                  Gambar D.1c – Widget TextField dengan InputDecoration
+                  (labelText, hintText, border, prefixIcon), controller, dan
+                  onChanged
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Properti
+                  <code>decoration: InputDecoration(...)</code> mengatur
+                  tampilan field: <code>labelText: 'Nama Lengkap'</code> sebagai
+                  label mengambang,
+                  <code>hintText: 'Misalnya masnoer'</code> sebagai contoh teks
+                  placeholder, <code>border: OutlineInputBorder()</code> memberi
+                  garis tepi kotak, dan
+                  <code>prefixIcon: Icon(Icons.person)</code> menambah ikon
+                  orang di sisi kiri field.
+                </p>
+                <p>
+                  Selanjutnya
+                  <code>controller: _textEditingController</code> menghubungkan
+                  field dengan controller yang sudah dibuat sebelumnya,
+                  sementara
+                  <code>keyboardType: TextInputType.text</code> menentukan
+                  keyboard yang muncul berupa keyboard teks biasa. Terakhir,
+                  <code
+                    >onChanged: (text) { print('Sedang mengetik teks : $text');
+                    }</code
+                  >
+                  adalah event listener yang berjalan setiap kali teks berubah —
+                  dipakai di sini untuk mencetak teks yang sedang diketik ke
+                  console sebagai bukti bahwa perubahan input benar-benar
+                  terpantau secara realtime.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>Menambahkan ElevatedButton untuk
+                Menampilkan Input
+              </div>
+              <p>
+                Setelah field inputan, ditambahkan
+                <code>ElevatedButton</code> berlabel "Tampilkan nama" yang
+                ketika ditekan akan mengambil nilai dari controller dan
+                menampilkannya melalui <code>SnackBar</code> di bagian bawah
+                layar.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Isi onPressed dengan Pengambilan Nilai Controller dan
+                SnackBar
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d1-4a.png"
+                  alt="SS VS Code ElevatedButton onPressed showSnackBar menampilkan nama"
+                />
+                <div class="img-cap">
+                  Gambar D.1d – ElevatedButton mengambil nilai
+                  _textEditingController.text dan menampilkannya lewat
+                  ScaffoldMessenger SnackBar
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Saat tombol ditekan, baris
+                  <code>String inputText = _textEditingController.text;</code>
+                  mengambil nilai terakhir yang tersimpan pada controller dan
+                  menampungnya ke variabel <code>inputText</code>. Nilai ini
+                  kemudian ditampilkan lewat
+                  <code
+                    >ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
+                    Text('Nama anda adalah $inputText')))</code
+                  >, yang memunculkan notifikasi singkat di bagian bawah layar
+                  berisi gabungan teks statis dan nilai inputan.
+                </p>
+                <p>
+                  Tampilan tombol sendiri diatur lewat
+                  <code
+                    >ElevatedButton.styleFrom(backgroundColor: Colors.amber,
+                    foregroundColor: Colors.black)</code
+                  >
+                  sehingga warna latarnya amber dengan teks berwarna hitam.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>Menjalankan dan Menguji Aplikasi
+              </div>
+              <p>
+                Setelah seluruh kode selesai, aplikasi dijalankan (RUN) untuk
+                memastikan alur kerja TextField berjalan sesuai rencana: teks
+                yang diketik harus benar-benar sama dengan teks yang muncul di
+                SnackBar setelah tombol ditekan.
+              </p>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian: Input Diisi
+                  lalu Tombol Ditekan
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Ketik Nama, Tekan "Tampilkan nama"
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/d1-5a.png"
+                    alt="SS hasil running form_textfield.dart dengan nama terisi dan SnackBar tampil"
+                  />
+                  <div class="img-cap">
+                    Gambar D.1e – Nama yang diketik pada field berhasil
+                    ditangkap dan ditampilkan lewat SnackBar "Nama anda adalah
+                    ..." setelah tombol ditekan
+                  </div>
+                </div>
+                <p>
+                  Karena <code>TextField</code> tidak memiliki validator,
+                  aplikasi ini tidak menolak input apa pun — termasuk field yang
+                  dibiarkan kosong. Menekan tombol pada kondisi field kosong
+                  tetap memunculkan SnackBar, hanya saja dengan nilai
+                  <code>inputText</code> berupa string kosong, yang memang
+                  menjadi perilaku normal dari <code>TextField</code> tanpa
+                  validasi.
+                </p>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  SnackBar berhasil menampilkan nama yang sama dengan yang
+                  diketik pada TextField, menandakan
+                  <code>form_textfield.dart</code> telah berjalan dengan benar.
+                </div>
+              </div>
+            </div>
+
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke File Berikutnya</span>
+              <div class="line"></div>
+            </div>
+
+            <!-- D.2 form_textformfield.dart -->
+            <div class="sub-section-title" id="langkah-textformfield">
+              D.2 <span class="file-badge">form_textformfield.dart</span>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat Struktur Dasar dan
+                GlobalKey&lt;FormState&gt;
+              </div>
+              <p>
+                File baru <code>form_textformfield.dart</code> dibuat dengan
+                struktur <code>MyApp</code> dan <code>Scaffold</code> yang
+                serupa dengan file sebelumnya. Bedanya, widget
+                <code>MyFormText</code> kali ini dilengkapi
+                <code>_formKey</code> bertipe
+                <code>GlobalKey&lt;FormState&gt;</code> agar validasi dapat
+                dipanggil dari luar widget <code>Form</code>, ditambah dua
+                controller terpisah untuk field nama dan email.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan _formKey, _nameController, _emailController, dan
+                dispose()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d2-1a.png"
+                  alt="SS VS Code deklarasi _formKey GlobalKey FormState dan dua controller pada form_textformfield.dart"
+                />
+                <div class="img-cap">
+                  Gambar D.2a – Deklarasi _formKey, _nameController,
+                  _emailController, dan method dispose() pada _MyFormTextState
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code>final _formKey = GlobalKey&lt;FormState&gt;();</code>
+                  membuat key unik yang menjadi jembatan untuk mengakses
+                  <code>FormState</code> dari luar widget <code>Form</code> —
+                  nantinya key inilah yang dipanggil dari
+                  <code>onPressed</code> tombol Submit untuk menjalankan
+                  validasi. Dua baris berikutnya,
+                  <code>final _nameController = TextEditingController();</code>
+                  dan
+                  <code>final _emailController = TextEditingController();</code
+                  >, menyiapkan controller terpisah untuk masing-masing field
+                  nama dan email, sedangkan method
+                  <code>dispose()</code> membersihkan keduanya ketika state
+                  dihancurkan.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membungkus Tampilan dengan Widget
+                Form
+              </div>
+              <p>
+                Seluruh tampilan dibungkus widget <code>Form</code> dengan
+                properti <code>key: _formKey</code>, sehingga status validasi
+                seluruh <code>TextFormField</code> di dalamnya dapat dikelola
+                dan dipanggil bersama-sama melalui
+                <code>_formKey.currentState</code>.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Bungkus Column dengan Widget Form dan key: _formKey
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d2-2a.png"
+                  alt="SS VS Code widget Form key _formKey membungkus Padding Column"
+                />
+                <div class="img-cap">
+                  Gambar D.2b – Widget Form dengan key: _formKey membungkus
+                  Padding dan Column berisi field-field input
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>Form(key: _formKey, child: ...)</code> mendaftarkan
+                  seluruh <code>TextFormField</code> di dalam child sebagai satu
+                  kesatuan yang statusnya dipegang oleh <code>_formKey</code>.
+                  Struktur di dalamnya tetap memakai <code>Padding</code> dan
+                  <code>Column</code> seperti biasa agar tata letak antar field
+                  tetap rapi dengan jarak <code>SizedBox</code> di antaranya.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>TextFormField Nama dengan
+                Validator
+              </div>
+              <p>
+                Field pertama menggunakan <code>TextFormField</code> yang
+                dihubungkan ke <code>_nameController</code> dan diberi fungsi
+                <code>validator</code> untuk memastikan nama tidak boleh
+                dikosongkan.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Isi TextFormField Nama beserta Fungsi Validator
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d2-3a.png"
+                  alt="SS VS Code TextFormField nama dengan validator cek kosong"
+                />
+                <div class="img-cap">
+                  Gambar D.2c – TextFormField untuk nama dengan validator yang
+                  mengembalikan pesan error jika kosong
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Selain <code>controller: _nameController</code> yang
+                  menghubungkan field dengan controller nama dan
+                  <code>decoration</code> yang mengatur label serta garis tepi,
+                  bagian terpenting ada pada fungsi
+                  <code
+                    >validator: (value) { if (value == null || value.isEmpty) {
+                    return 'Masukkan nama anda'; } return null; }</code
+                  >. Fungsi ini mengembalikan pesan error saat field masih
+                  kosong, dan mengembalikan <code>null</code> — yang berarti
+                  tidak ada error — ketika sudah terisi.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>TextFormField Email dengan
+                Validator Ganda
+              </div>
+              <p>
+                Field kedua menggunakan <code>TextFormField</code> yang
+                dihubungkan ke <code>_emailController</code> dengan validasi
+                bertingkat: pertama memeriksa apakah field kosong, kemudian
+                memeriksa apakah teks yang dimasukkan mengandung karakter
+                <code>@</code> sebagai syarat format email yang wajar.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Isi TextFormField Email dengan Dua Kondisi Validasi
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d2-4a.png"
+                  alt="SS VS Code TextFormField email dengan validator cek kosong dan cek karakter @"
+                />
+                <div class="img-cap">
+                  Gambar D.2d – TextFormField untuk email dengan dua kondisi
+                  validator: kosong dan format tanpa "@"
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Kondisi pertama,
+                  <code
+                    >if (value == null || value.isEmpty) { return 'Masukkan
+                    email anda '; }</code
+                  >, menolak field yang masih kosong. Jika field sudah terisi,
+                  barulah kondisi kedua dicek:
+                  <code
+                    >if (!value.contains('@')) { return 'Email tidak valid';
+                    }</code
+                  >
+                  menolak input yang tidak mengandung karakter <code>@</code>,
+                  sebagai pengecekan format email sederhana. Apabila kedua
+                  kondisi ini terlewati tanpa masalah, fungsi mengembalikan
+                  <code>null</code> yang menandakan email dianggap valid.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>Membuat Method _submitForm() dan
+                Tombol Submit
+              </div>
+              <p>
+                Method <code>_submitForm()</code> memanggil
+                <code>_formKey.currentState!.validate()</code> untuk menjalankan
+                seluruh validator sekaligus. Jika hasilnya <code>true</code>,
+                nilai <code>_nameController</code> dan
+                <code>_emailController</code> diambil lalu ditampilkan melalui
+                <code>SnackBar</code>. Method ini dihubungkan ke
+                <code>onPressed</code> pada
+                <code>ElevatedButton</code> "Submit".
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Method _submitForm() dan Panggil pada onPressed
+                ElevatedButton
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/d2-5a.png"
+                  alt="SS VS Code method _submitForm validate dan ElevatedButton Submit"
+                />
+                <div class="img-cap">
+                  Gambar D.2e – Method _submitForm() menjalankan validate() dan
+                  menampilkan hasil lewat SnackBar; ElevatedButton Submit
+                  memanggil _submitForm
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code>if (_formKey.currentState!.validate())</code>
+                  menjalankan validasi seluruh field dalam
+                  <code>Form</code> sekaligus; tanda seru memastikan
+                  <code>currentState</code> tidak bernilai <code>null</code>.
+                  Apabila validasi lolos,
+                  <code>String name = _nameController.text;</code> dan
+                  <code>String email = _emailController.text;</code> mengambil
+                  nilai terakhir dari masing-masing controller, lalu ditampilkan
+                  lewat
+                  <code
+                    >SnackBar(content: Text('Validasi $name, $email
+                    Berhasil'))</code
+                  >.
+                </p>
+                <p>
+                  Agar tombol memenuhi lebar layar, dipakai
+                  <code
+                    >SizedBox(width: double.infinity, child:
+                    ElevatedButton(onPressed: _submitForm, child: const
+                    Text('Submit')))</code
+                  >
+                  — tombol ini memanggil <code>_submitForm</code> setiap kali
+                  ditekan.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">6</span>Menjalankan dan Menguji Validasi
+              </div>
+              <p>
+                Aplikasi dijalankan dan diuji dengan beberapa skenario untuk
+                membuktikan bahwa validator benar-benar bekerja: kondisi field
+                masih kosong, kondisi email tanpa karakter <code>@</code>, dan
+                kondisi seluruh input sudah valid.
+              </p>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 1: Submit
+                  Ditekan saat Field Masih Kosong
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Tekan Submit Tanpa Mengisi Apa Pun
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/d2-6a.png"
+                    alt="SS hasil running form_textformfield.dart menampilkan pesan error validasi field kosong"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2f – Pesan "Masukkan nama anda" dan "Masukkan email
+                    anda" muncul otomatis di bawah masing-masing field saat
+                    Submit ditekan dalam kondisi kosong
+                  </div>
+                </div>
+                <p>
+                  Hasil ini membuktikan bahwa <code>validate()</code> berhasil
+                  menjalankan validator pada kedua field sekaligus dan
+                  menghentikan proses submit karena keduanya mengembalikan pesan
+                  error.
+                </p>
+              </div>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 2: Email Diisi
+                  tanpa Karakter "@"
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Nama Diisi, Email Diisi "gmailcom" (Tanpa @)
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/d2-6b.png"
+                    alt="SS hasil running form_textformfield.dart pesan Email tidak valid karena tanpa karakter @"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2g – Field nama lolos validasi, namun field email
+                    menampilkan pesan "Email tidak valid" karena teks yang
+                    diketik tidak mengandung karakter "@"
+                  </div>
+                </div>
+                <p>
+                  Skenario ini secara khusus membuktikan kondisi kedua pada
+                  validator email, yaitu <code>if (!value.contains('@'))</code>.
+                  Meski field email sudah tidak kosong, validasi tetap
+                  menolaknya karena format yang dimasukkan belum menyerupai
+                  alamat email.
+                </p>
+              </div>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 3: Seluruh
+                  Input Terisi dengan Format Benar
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Nama dan Email (dengan "@") Diisi Benar, lalu
+                  Submit
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/d2-6c.png"
+                    alt="SS hasil running form_textformfield.dart validasi berhasil dan SnackBar muncul"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2h – Validasi berhasil, SnackBar menampilkan
+                    "Validasi [nama], [email] Berhasil"
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Ketiga skenario pengujian berjalan sesuai ekspektasi,
+                  menandakan <code>validator</code> dan
+                  <code>GlobalKey&lt;FormState&gt;</code> pada
+                  <code>form_textformfield.dart</code> berfungsi dengan benar,
+                  baik untuk menolak input kosong, menolak format email yang
+                  salah, maupun menerima input yang sudah valid.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /laprak-card D -->
+
+          <!-- E. LATIHAN -->
+          <div class="laprak-card" id="latihan">
+            <div class="section-label">
+              <span class="num">E</span>Latihan: Kalkulator Kabataku
+            </div>
+
+            <div class="latihan-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Latihan — Aplikasi Kalkulator Operasi Kabataku</h5>
+                <p>
+                  Membuat aplikasi kalkulator yang dapat menjalankan operasi
+                  kabataku (kali, bagi, tambah, kurang) menggunakan 2 buah
+                  widget inputan angka, ElevatedButton untuk mengeksekusi tiap
+                  operasi, dan widget Text untuk menampilkan hasil.
+                </p>
+              </div>
+            </div>
+
+            <!-- E.1 kalkulator_kabataku.dart -->
+            <div class="sub-section-title" id="latihan-kalkulator">
+              E.1 <span class="file-badge">kalkulator_kabataku.dart</span>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">1</span>Membuat Struktur Dasar
+                KalkulatorForm
+              </div>
+              <p>
+                File <code>kalkulator_kabataku.dart</code> dibuat dengan
+                kerangka <code>MyApp</code> yang me-render
+                <code>Scaffold</code> berjudul "Kalkulator Kabataku" dan body
+                <code>KalkulatorForm</code>, sebuah
+                <code>StatefulWidget</code> yang menjadi wadah seluruh logika
+                kalkulator.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat MyApp dan KalkulatorForm sebagai StatefulWidget
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-1a.png"
+                  alt="SS VS Code struktur MyApp Scaffold Kalkulator Kabataku dan KalkulatorForm StatefulWidget"
+                />
+                <div class="img-cap">
+                  Gambar E.1a – Struktur dasar MyApp dengan AppBar "Kalkulator
+                  Kabataku" dan body KalkulatorForm
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>AppBar(title: const Text('Kalkulator Kabataku'))</code>
+                  menampilkan judul aplikasi di bagian atas layar, sedangkan
+                  <code>KalkulatorForm</code> sengaja dideklarasikan sebagai
+                  <code>StatefulWidget</code> karena hasil perhitungan perlu
+                  diperbarui secara dinamis (rebuild) setiap kali salah satu
+                  operasi dijalankan.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">2</span>Deklarasi Controller,
+                Variable Hasil, dan GlobalKey
+              </div>
+              <p>
+                Di dalam <code>_KalkulatorFormState</code> dideklarasikan
+                <code>_formKey</code> untuk validasi, dua controller
+                <code>_angka1Controller</code> dan
+                <code>_angka2Controller</code> untuk menampung kedua inputan
+                angka, serta variable <code>_hasil</code> bertipe
+                <code>String</code> untuk menyimpan teks hasil operasi yang akan
+                ditampilkan pada layar.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan _formKey, Dua Controller, dan Variable _hasil
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-2a.png"
+                  alt="SS VS Code deklarasi formKey angka1Controller angka2Controller dan variable hasil"
+                />
+                <div class="img-cap">
+                  Gambar E.1b – Deklarasi _formKey, _angka1Controller,
+                  _angka2Controller, variable _hasil, dan method dispose()
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Sama seperti pada <code>form_textformfield.dart</code>,
+                  <code>_formKey</code> di sini berfungsi memanggil
+                  <code>validate()</code> dari luar Form. Yang membedakan adalah
+                  variabel
+                  <code>String _hasil = 'Hasil akan tampil di sini';</code>,
+                  yaitu nilai awal teks hasil sebelum operasi apa pun dijalankan
+                  — variabel inilah yang akan diperbarui lewat
+                  <code>setState()</code> setiap kali tombol operasi ditekan.
+                  Method <code>dispose()</code> tetap disertakan untuk
+                  membersihkan kedua controller angka.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">3</span>Membuat TextFormField
+                Angka dengan Validator Numerik
+              </div>
+              <p>
+                Kedua field angka menggunakan <code>TextFormField</code> dengan
+                <code
+                  >keyboardType: TextInputType.numberWithOptions(decimal:
+                  true)</code
+                >
+                agar keyboard yang muncul adalah keyboard angka, serta validator
+                bersama <code>_validasiAngka</code> yang memeriksa field tidak
+                kosong dan berupa angka yang valid.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Fungsi _validasiAngka dan Dua TextFormField Angka
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-3a.png"
+                  alt="SS VS Code dua TextFormField angka pertama dan kedua dengan validasiAngka"
+                />
+                <div class="img-cap">
+                  Gambar E.1c – TextFormField Angka Pertama dan Angka Kedua,
+                  keduanya memakai validator _validasiAngka
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Fungsi
+                  <code>String? _validasiAngka(String? value)</code> sengaja
+                  dipisah agar dapat dipakai bersama oleh kedua field. Fungsi
+                  ini mengembalikan pesan <code>'Masukkan angka'</code> jika
+                  field kosong, mengembalikan
+                  <code>'Harus berupa angka'</code> jika
+                  <code>double.tryParse(value)</code> gagal mengonversi teks
+                  menjadi angka, atau mengembalikan <code>null</code> jika input
+                  sudah valid.
+                </p>
+                <ul>
+                  <li>
+                    <code
+                      >keyboardType: const
+                      TextInputType.numberWithOptions(decimal: true)</code
+                    >
+                    — menampilkan keyboard numerik dengan dukungan angka
+                    desimal.
+                  </li>
+                  <li>
+                    <code>prefixIcon: Icon(Icons.numbers)</code> — ikon angka di
+                    depan tiap field sebagai penanda visual.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">4</span>Membuat Method _hitung()
+                dengan Switch-Case Operasi Kabataku
+              </div>
+              <p>
+                Method <code>_hitung(String operator)</code> pertama-tama
+                menjalankan <code>_formKey.currentState!.validate()</code>, lalu
+                mengonversi teks dari kedua controller menjadi
+                <code>double</code> menggunakan <code>double.parse()</code>.
+                Operasi yang dijalankan ditentukan lewat
+                <code>switch</code> berdasarkan parameter <code>operator</code>,
+                mencakup <code>tambah</code>, <code>kurang</code>,
+                <code>kali</code>, dan <code>bagi</code>, dengan penanganan
+                khusus untuk kasus pembagian dengan nol.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Method _hitung() dengan Switch-Case dan Penanganan
+                Bagi Nol
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-4a.png"
+                  alt="SS VS Code method hitung switch case tambah kurang kali bagi dan cek pembagian nol"
+                />
+                <div class="img-cap">
+                  Gambar E.1d – Method _hitung() dengan switch-case empat
+                  operasi kabataku dan pengecekan pembagian dengan nol
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code
+                    >if (!_formKey.currentState!.validate()) { return; }</code
+                  >
+                  menghentikan proses lebih awal apabila ada field yang belum
+                  valid, sehingga perhitungan tidak akan dijalankan pada data
+                  yang salah. Setelah lolos validasi,
+                  <code
+                    >double angka1 = double.parse(_angka1Controller.text);</code
+                  >
+                  dan baris serupa untuk angka2 mengubah teks inputan menjadi
+                  tipe numerik agar dapat dihitung.
+                </p>
+                <p>
+                  Struktur <code>switch (operator)</code> kemudian menentukan
+                  rumus dan simbol berdasarkan tombol yang ditekan:
+                  <code>tambah</code> (+), <code>kurang</code> (−),
+                  <code>kali</code> (×), dan <code>bagi</code> (÷). Khusus pada
+                  case <code>'bagi'</code>, terdapat pengecekan tambahan
+                  <code>if (angka2 == 0)</code> yang langsung memanggil
+                  <code>setState()</code> untuk menampilkan pesan "Tidak bisa
+                  membagi dengan nol" dan menghentikan proses, sehingga hasil
+                  <code>infinity</code> dapat dicegah. Di akhir method,
+                  <code
+                    >setState(() { _hasil = '$angka1 $simbol $angka2 =
+                    $hasilOperasi'; });</code
+                  >
+                  memperbarui tampilan dengan hasil operasi yang baru saja
+                  dihitung.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">5</span>Membuat Empat Tombol
+                Operasi dengan Row dan Expanded
+              </div>
+              <p>
+                Empat tombol operasi (Kali, Bagi, Tambah, Kurang) disusun dalam
+                dua baris <code>Row</code> dengan
+                <code>mainAxisAlignment: MainAxisAlignment.spaceBetween</code>,
+                masing-masing tombol dibungkus <code>Expanded</code> agar lebar
+                tombol merata. Setiap tombol diberi warna berbeda dan memanggil
+                <code>_hitung()</code> dengan parameter operator yang sesuai.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Baris Tombol Kali &amp; Bagi, dilanjutkan Tambah
+                &amp; Kurang
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-5a.png"
+                  alt="SS VS Code Row Expanded ElevatedButton Kali Bagi Tambah Kurang dengan warna berbeda"
+                />
+                <div class="img-cap">
+                  Gambar E.1e – Dua baris ElevatedButton (Kali/Bagi berwarna
+                  biru & hijau, Tambah/Kurang berwarna oranye & merah)
+                  masing-masing memanggil _hitung()
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Setiap tombol memakai
+                  <code>onPressed: () =&gt; _hitung('kali')</code> dan
+                  sejenisnya, meneruskan string operator berbeda ke method
+                  <code>_hitung()</code> yang sama, sehingga logika perhitungan
+                  tidak perlu ditulis ulang untuk tiap tombol. Supaya keempat
+                  tombol memenuhi ruang secara merata, masing-masing dibungkus
+                  <code>Expanded(child: Padding(...))</code> dengan padding
+                  horizontal 4.0 sebagai jarak antar tombol, lalu diberi warna
+                  berbeda lewat
+                  <code>ElevatedButton.styleFrom(backgroundColor: ...)</code> —
+                  Kali biru, Bagi hijau, Tambah oranye, dan Kurang merah — agar
+                  mudah dibedakan secara visual.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">6</span>Menampilkan Hasil pada
+                Container
+              </div>
+              <p>
+                Hasil operasi ditampilkan menggunakan widget
+                <code>Text</code> yang dibungkus <code>Container</code> berlatar
+                abu-abu dengan sudut membulat, sehingga tampil sebagai kotak
+                hasil yang jelas terpisah dari area input dan tombol.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Container Hasil dengan BoxDecoration
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="screenshots/e1-6a.png"
+                  alt="SS VS Code Container hasil dengan BoxDecoration grey rounded dan Text _hasil"
+                />
+                <div class="img-cap">
+                  Gambar E.1f – Container hasil dengan latar abu-abu, sudut
+                  membulat, menampilkan variable _hasil di tengah
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code
+                    >Container(padding: const EdgeInsets.all(16.0), decoration:
+                    BoxDecoration(color: Colors.grey.shade200, borderRadius:
+                    BorderRadius.circular(8.0)), child: Text(_hasil, ...))</code
+                  >
+                  membungkus teks hasil dengan padding, warna latar abu-abu
+                  muda, dan sudut membulat agar tampil rapi. Teksnya sendiri
+                  diatur rata tengah lewat
+                  <code>textAlign: TextAlign.center</code> dengan gaya
+                  <code
+                    >TextStyle(fontSize: 16, fontWeight: FontWeight.bold)</code
+                  >
+                  agar mudah dibaca.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">7</span>Menjalankan dan Menguji
+                Setiap Operasi
+              </div>
+              <p>
+                Aplikasi dijalankan lalu diuji dengan beberapa skenario: keempat
+                operasi hitung dengan angka valid, kondisi field angka masih
+                kosong atau bukan angka, serta kondisi khusus pembagian dengan
+                nol — untuk membuktikan bahwa validasi dan logika perhitungan
+                berjalan sesuai rancangan.
+              </p>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 1: Keempat
+                  Operasi dengan Angka Valid
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Isi Angka Pertama &amp; Kedua, Uji Tambah, Kurang,
+                  Kali, Bagi
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/e1-7a.png"
+                    alt="SS hasil running kalkulator_kabataku.dart dengan hasil operasi tambah kurang kali bagi"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1g – Hasil pengujian operasi kabataku menampilkan
+                    perhitungan yang benar pada Container hasil, contoh:
+                    penjumlahan dan perkalian dua angka
+                  </div>
+                </div>
+              </div>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 2: Field
+                  Dikosongkan atau Diisi Bukan Angka
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Tekan Salah Satu Tombol Operasi Tanpa Mengisi Angka
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/e1-7b.png"
+                    alt="SS hasil running kalkulator_kabataku.dart pesan Masukkan angka atau Harus berupa angka"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1h – Pesan "Masukkan angka" muncul di bawah field
+                    yang kosong, membuktikan validator _validasiAngka bekerja
+                    sebelum proses hitung dijalankan
+                  </div>
+                </div>
+                <p>
+                  Skenario ini membuktikan baris
+                  <code
+                    >if (!_formKey.currentState!.validate()) { return; }</code
+                  >
+                  pada method <code>_hitung()</code> benar-benar mencegah
+                  perhitungan berjalan ketika input belum valid, sehingga hasil
+                  pada Container tidak berubah dari kondisi sebelumnya.
+                </p>
+              </div>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 3: Pembagian
+                  dengan Nol
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Angka Kedua Diisi 0, lalu Tekan Tombol "Bagi"
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="screenshots/e1-7c.png"
+                    alt="SS hasil running kalkulator_kabataku.dart pesan Tidak bisa membagi dengan nol"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1i – Pesan "Tidak bisa membagi dengan nol" tampil
+                    pada Container hasil saat Angka Kedua bernilai 0 pada
+                    operasi Bagi
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Ketiga skenario pengujian berjalan sesuai ekspektasi: keempat
+                  operasi menghitung dengan benar, validator angka mencegah
+                  perhitungan pada input kosong/bukan angka, dan pembagian
+                  dengan nol berhasil dicegah — menandakan
+                  <code>kalkulator_kabataku.dart</code> telah berfungsi dengan
+                  baik.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /laprak-card E -->
+
+          <!-- F. HASIL DAN PEMBAHASAN -->
+          <div class="laprak-card" id="hasil">
+            <div class="section-label">
+              <span class="num">F</span>Hasil dan Pembahasan
+            </div>
+            <p>
+              Melalui serangkaian langkah pada Praktikum 3 ini, implementasi
+              input widgets dan basic form pada Flutter berhasil diselesaikan
+              secara menyeluruh, mulai dari widget input paling sederhana hingga
+              studi kasus yang melibatkan validasi dan logika perhitungan.
+            </p>
+            <p>
+              Pada <code>form_textfield.dart</code>, widget
+              <code>TextField</code> terbukti mampu menerima inputan dari
+              keyboard dan mengelolanya lewat
+              <code>TextEditingController</code>, kemudian menampilkannya
+              kembali melalui <code>SnackBar</code> ketika tombol ditekan —
+              namun karena tidak memiliki validator, field kosong pun tetap
+              diterima tanpa penolakan. Sebaliknya, pada
+              <code>form_textformfield.dart</code>, penerapan
+              <code>GlobalKey&lt;FormState&gt;</code> beserta
+              <code>validate()</code> terbukti berhasil menahan proses submit
+              ketika field masih kosong maupun ketika email tidak mengandung
+              karakter "@", dan baru meloloskan proses ketika seluruh input
+              sudah sesuai aturan.
+            </p>
+            <p>
+              Konsep <code>const</code> untuk widget statis dan
+              <code>setState()</code> untuk memperbarui tampilan juga terbukti
+              berjalan sesuai teori, begitu pula method
+              <code>dispose()</code> yang secara konsisten membersihkan seluruh
+              controller di setiap file. Pada bagian latihan, aplikasi
+              kalkulator kabataku berhasil menjalankan keempat operasi (tambah,
+              kurang, kali, bagi) menggunakan dua
+              <code>TextFormField</code> angka yang tervalidasi, empat
+              <code>ElevatedButton</code> operasi, serta menampilkan hasil lewat
+              widget <code>Text</code> di dalam <code>Container</code> — lengkap
+              dengan penanganan kasus input kosong/bukan angka dan pembagian
+              dengan nol yang keduanya terbukti berhasil dicegah pada tahap
+              pengujian.
+            </p>
+          </div>
+
+          <!-- G. KESIMPULAN -->
+          <div class="laprak-card" id="kesimpulan">
+            <div class="section-label">
+              <span class="num">G</span>Kesimpulan
+            </div>
+            <p>
+              Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan,
+              diperoleh beberapa poin kesimpulan penting:
+            </p>
+            <ol>
+              <li>
+                <code>TextField</code> cocok digunakan untuk input sederhana
+                tanpa kebutuhan validasi kompleks, sedangkan
+                <code>TextFormField</code> lebih sesuai untuk form yang
+                membutuhkan pengecekan aturan input seperti pendaftaran atau
+                login.
+              </li>
+              <li>
+                <strong>TextEditingController</strong> adalah komponen kunci
+                untuk mengambil, memantau, dan pada akhirnya membersihkan nilai
+                inputan pengguna, dan wajib di-<code>dispose()</code> untuk
+                mencegah kebocoran memori.
+              </li>
+              <li>
+                <strong>GlobalKey&lt;FormState&gt;</strong> beserta method
+                <code>validate()</code> memungkinkan validasi banyak field
+                dijalankan sekaligus dari satu titik, terbukti dari pengujian
+                yang berhasil menahan submit pada field kosong maupun format
+                email yang salah, sehingga kode lebih terstruktur dibanding
+                validasi manual per field.
+              </li>
+              <li>
+                <strong>setState()</strong> adalah mekanisme wajib pada
+                <code>StatefulWidget</code> agar perubahan data seperti hasil
+                perhitungan kalkulator benar-benar tercermin pada tampilan.
+              </li>
+              <li>
+                Studi kasus kalkulator kabataku membuktikan bahwa kombinasi
+                <code>TextFormField</code>, <code>validator</code>, dan
+                <code>ElevatedButton</code> dapat diterapkan pada kasus nyata
+                yang melibatkan logika perhitungan dan penanganan kondisi khusus
+                seperti pembagian dengan nol.
+              </li>
+            </ol>
+          </div>
+
+          <!-- H. REPOSITORY GITHUB -->
+          <div class="laprak-card" id="repo">
+            <div class="section-label">
+              <span class="num">H</span>Repository Github
+            </div>
+            <p>
+              Seluruh source code praktikum ini dapat diakses pada repository
+              Github berikut:
+            </p>
+            <div class="text-center mt-4">
+              <a
+                href="https://github.com/saskiaalifah/AppMobile_2411531002_SaskiaAlifah/tree/main"
+                target="_blank"
+                class="github-btn"
+              >
+                <i class="bi bi-github me-2"></i>
+                Lihat Repository GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /content-col -->
+      </div>
+      <!-- /layout-wrap -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-4 text-md-start text-center">
+            <div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+            <div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <nav>
+              <ul class="list-inline mb-0" style="font-size: 13px">
+                <li class="list-inline-item">
+                  <a
+                    href="index.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Home</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="about.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >About</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="main.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Laporan</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="kontak.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-flex gap-2">
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://github.com/saskiaalifah"
+                target="_blank"
+                style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-github"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <small style="color: var(--muted)"
+            >&copy; <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+  </body>
 </html>

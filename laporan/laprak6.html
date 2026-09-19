@@ -1,279 +1,2249 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 2 — Widgets, Layouting &amp; Styling (Flutter)</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Belum Tersedia</title>
-
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <style>
-        :root {
-            --bg: #0d0d12;
-            --card: rgba(24, 24, 32, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --muted: #b7b7c9;
-            --accent: #ff5ca8;
-            --accent2: #ff8ec7;
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
         }
+      }
 
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top right,
-                    rgba(255, 92, 168, 0.12),
-                    transparent 30%),
-                radial-gradient(circle at bottom left,
-                    rgba(255, 142, 199, 0.08),
-                    transparent 35%),
-                var(--bg);
-
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            color: var(--text);
-            overflow: hidden;
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
         }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
 
-        .glass-card {
-            width: 100%;
-            max-width: 760px;
-            position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 60px 50px;
-            text-align: center;
-            backdrop-filter: blur(18px);
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
 
-            box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.tugas {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan (mis. before/after) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Tugas Banner ── */
+      .tugas-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .tugas-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .tugas-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .tugas-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Modul Divider besar ── */
+      .modul-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 8px 0 26px;
+      }
+      .modul-divider .line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          rgba(232, 62, 140, 0.35),
+          transparent
+        );
+      }
+      .modul-divider span {
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
         }
-
-        .glass-card::before {
-            content: "";
-            position: absolute;
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 92, 168, 0.08);
-            border-radius: 50%;
-            top: -120px;
-            right: -100px;
-            filter: blur(10px);
+        .step-block {
+          padding: 16px 16px;
         }
-
-        .glass-card::after {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 142, 199, 0.06);
-            border-radius: 50%;
-            bottom: -80px;
-            left: -70px;
-            filter: blur(10px);
+        .img-wrap img {
+          max-height: 240px;
         }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 92, 168, 0.1);
-            border: 1px solid rgba(255, 92, 168, 0.2);
-            color: var(--accent2);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 28px;
-        }
-
-        .main-icon {
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(255, 92, 168, 0.2),
-                    rgba(255, 142, 199, 0.08));
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-
-            font-size: 42px;
-            color: var(--accent);
-
-            box-shadow:
-                0 0 40px rgba(255, 92, 168, 0.18),
-                inset 0 0 20px rgba(255, 255, 255, 0.02);
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            margin-bottom: 18px;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-     h1 span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-
-        .desc {
-            max-width: 580px;
-            margin: 0 auto 38px;
-            color: var(--muted);
-            line-height: 1.9;
-            font-size: 15px;
-        }
-
-        .bottom-info {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 38px;
-        }
-
-        .info-item {
-            padding: 11px 18px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d7d7e6;
-            font-size: 14px;
-        }
-
-        .info-item i {
-            color: var(--accent2);
-            margin-right: 8px;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            border-radius: 14px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-
-            background:
-                linear-gradient(135deg,
-                    var(--accent),
-                    var(--accent2));
-
-            transition: .25s ease;
-
-            box-shadow:
-                0 10px 30px rgba(255, 92, 168, 0.28);
-        }
-
-        .btn-back:hover {
-            transform: translateY(-3px);
-            color: white;
-
-            box-shadow:
-                0 16px 38px rgba(255, 92, 168, 0.4);
-        }
-
-        @media (max-width: 600px) {
-            .glass-card {
-                padding: 42px 24px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .desc {
-                font-size: 14px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
-    <div class="glass-card">
-
-        <div class="status-badge">
-            <i class="fa-solid fa-sparkles"></i>
-            Halaman Sedang Disiapkan
-        </div>
-
-        <div class="main-icon">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h1>Laporan Praktikum <span>Belum Tersedia</span></h1>
-
-        <p class="desc">
-            Konten laporan untuk praktikum ini masih dalam tahap penyusunan.
-            Pembahasan materi, dokumentasi, serta hasil praktikum akan segera
-            ditambahkan setelah proses revisi selesai.
-        </p>
-
-        <div class="bottom-info">
-
-            <div class="info-item">
-                <i class="fa-solid fa-pen-ruler"></i>
-                Sedang Direvisi
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-camera"></i>
-                Dokumentasi Menyusul
-            </div>
-
-            <div class="info-item">
-                <i class="fa-solid fa-clock"></i>
-                Akan Segera Tersedia
-            </div>
-
-        </div>
-
-        <a href="main.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Kembali ke Laporan
+  <body class="d-flex flex-column min-vh-100">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase"
+          href="index.html"
+        >
+          <i class="bi bi-code-slash" style="color: var(--accent)"></i>
+          Saskia Alifah
         </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kontak.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
+    <!-- PAGE HERO -->
+    <div class="laprak-hero">
+      <div class="container">
+        <a href="main.html" class="btn-back-hero">
+          <i class="bi bi-chevron-left"></i> Kembali ke Laporan
+        </a>
+        <h1>
+          Laprak 2 —
+          <span>Widgets, Layouting &amp; Styling (Flutter)</span>
+        </h1>
+        <p class="lead">Aplikasi Mobile · Pertemuan 2</p>
+        <div class="badge-row">
+          <span class="badge-pill"
+            ><i class="bi bi-person-fill"></i> Saskia Alifah</span
+          >
+          <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+          <span class="badge-pill"
+            ><i class="bi bi-calendar3"></i> Aplikasi Mobile</span
+          >
+          <span class="badge-pill"><i class="bi bi-phone"></i> Flutter</span>
+          <span class="badge-pill"
+            ><i class="bi bi-columns-gap"></i> Row, Column, Container &amp;
+            ListTile</span
+          >
+        </div>
+      </div>
     </div>
 
-</body>
+    <!-- TOC MOBILE (offcanvas) -->
+    <button
+      class="toc-fab"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#tocOffcanvas"
+      aria-controls="tocOffcanvas"
+    >
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="tocOffcanvas"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">
+          <i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="toc-list">
+          <li>
+            <a href="#tujuan" data-bs-dismiss="offcanvas"
+              >A. Tujuan Praktikum</a
+            >
+          </li>
+          <li>
+            <a href="#teori" data-bs-dismiss="offcanvas">B. Dasar Teori</a>
+          </li>
+          <li>
+            <a href="#alat" data-bs-dismiss="offcanvas">C. Alat dan Bahan</a>
+          </li>
+          <li>
+            <a href="#modul1" data-bs-dismiss="offcanvas"
+              >D. Modul 1: Pengenalan Widgets</a
+            >
+            <ul>
+              <li>
+                <a href="#modul1-langkah" data-bs-dismiss="offcanvas"
+                  >D.1 Langkah Praktikum</a
+                >
+              </li>
+              <li>
+                <a href="#modul1-tugas" data-bs-dismiss="offcanvas"
+                  >D.2 Tugas Praktikum 1</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#modul2" data-bs-dismiss="offcanvas"
+              >E. Modul 2: Layouting &amp; Styling</a
+            >
+            <ul>
+              <li>
+                <a href="#modul2-langkah" data-bs-dismiss="offcanvas"
+                  >E.1 Langkah Praktikum</a
+                >
+              </li>
+              <li>
+                <a href="#modul2-tugas" data-bs-dismiss="offcanvas"
+                  >E.2 Tugas Praktikum 2</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#hasil" data-bs-dismiss="offcanvas"
+              >F. Hasil dan Pembahasan</a
+            >
+          </li>
+          <li>
+            <a href="#kesimpulan" data-bs-dismiss="offcanvas">G. Kesimpulan</a>
+          </li>
+          <li>
+            <a href="#repo" data-bs-dismiss="offcanvas">H. Repository Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
+    <!-- MAIN -->
+    <main>
+      <div class="layout-wrap">
+        <!-- TOC DESKTOP — KIRI -->
+        <div class="toc-col">
+          <aside class="toc-sidebar">
+            <div class="toc-title">
+              <i class="bi bi-list-ul"></i> Daftar Isi
+            </div>
+            <ul class="toc-list">
+              <li><a href="#tujuan">A. Tujuan Praktikum</a></li>
+              <li><a href="#teori">B. Dasar Teori</a></li>
+              <li><a href="#alat">C. Alat dan Bahan</a></li>
+              <li>
+                <a href="#modul1">D. Modul 1: Pengenalan Widgets</a>
+                <ul>
+                  <li><a href="#modul1-langkah">D.1 Langkah Praktikum</a></li>
+                  <li><a href="#modul1-tugas">D.2 Tugas Praktikum 1</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#modul2">E. Modul 2: Layouting &amp; Styling</a>
+                <ul>
+                  <li><a href="#modul2-langkah">E.1 Langkah Praktikum</a></li>
+                  <li><a href="#modul2-tugas">E.2 Tugas Praktikum 2</a></li>
+                </ul>
+              </li>
+              <li><a href="#hasil">F. Hasil dan Pembahasan</a></li>
+              <li><a href="#kesimpulan">G. Kesimpulan</a></li>
+              <li><a href="#repo">H. Repository Github</a></li>
+            </ul>
+          </aside>
+        </div>
+
+        <!-- KONTEN -->
+        <div class="content-col">
+          <!-- A. TUJUAN -->
+          <div class="laprak-card" id="tujuan">
+            <div class="section-label">
+              <span class="num">A</span>Tujuan Praktikum
+            </div>
+            <p>
+              Pertemuan ini terdiri dari dua modul yang saling berkelanjutan.
+              Modul 1 bertujuan agar mahasiswa memahami kerangka dasar aplikasi
+              Flutter melalui <code>MaterialApp</code> dan
+              <code>Scaffold</code>, mampu membedakan penggunaan
+              <code>StatelessWidget</code> dan <code>StatefulWidget</code>,
+              serta mampu menerapkan fungsi <code>setState()</code> untuk
+              membangun UI yang interaktif — dicontohkan lewat kartu saldo yang
+              dapat disembunyikan dan ditampilkan kembali.
+            </p>
+            <p>
+              Modul 2 melanjutkan dashboard yang sudah dibuat pada Modul 1
+              dengan menambahkan kemampuan layouting yang lebih kompleks:
+              menerapkan widget <code>Row</code> untuk menyusun deretan tombol
+              aksi, menerapkan widget <code>Column</code> untuk menyusun daftar
+              transaksi menggunakan <code>ListTile</code>, serta mengatur
+              padding, margin, dan warna pada <code>Container</code> agar
+              tampilan lebih rapi dan enak dilihat.
+            </p>
+          </div>
+
+          <!-- B. DASAR TEORI -->
+          <div class="laprak-card" id="teori">
+            <div class="section-label">
+              <span class="num">B</span>Dasar Teori
+            </div>
+
+            <p>
+              <strong>Stateless Widget</strong> adalah widget statis yang
+              tampilannya tidak pernah berubah setelah dirender di layar, karena
+              tidak memiliki data internal (state) yang dapat berubah. Widget
+              jenis ini lebih ringan dan cepat, dan cocok dipakai untuk elemen
+              seperti label teks, ikon, atau gambar statis — contohnya
+              <code>GreetingWidget</code> pada dashboard ini.
+            </p>
+
+            <p>
+              <strong>Stateful Widget</strong> sebaliknya adalah widget dinamis
+              yang tampilannya dapat berubah sebagai respons terhadap interaksi
+              pengguna atau data baru. Widget ini menyimpan objek data internal
+              (<em>State</em>) dan dapat merender ulang UI melalui
+              <code>setState()</code>. Untuk membuatnya, dibutuhkan dua
+              <em>class</em>: satu yang meng-<em>extend</em>
+              <code>StatefulWidget</code> dan satu lagi yang meng-<em
+                >extend</em
+              >
+              <code>State&lt;T&gt;</code>, tempat seluruh logika dan variabel
+              state sebenarnya disimpan.
+            </p>
+
+            <p>
+              <strong>setState()</strong> adalah method yang memberi tahu
+              Flutter bahwa ada perubahan data pada state, sehingga
+              <code>build()</code> perlu dipanggil ulang agar tampilan
+              disinkronkan dengan data terbaru. Tanpa memanggil
+              <code>setState()</code>, perubahan pada variabel biasa tidak akan
+              pernah terlihat di layar meskipun nilainya sudah berubah di balik
+              layar.
+            </p>
+
+            <p>
+              <strong>Row</strong> dan <strong>Column</strong> adalah dua widget
+              layouting dasar pada Flutter. <code>Row</code> menyusun elemen
+              anaknya secara horizontal (menyamping kiri ke kanan), sedangkan
+              <code>Column</code> menyusun elemen anaknya secara vertikal
+              (menurun atas ke bawah). Properti
+              <code>mainAxisAlignment</code> mengatur jarak antar elemen pada
+              sumbu utama — misalnya nilai <code>spaceEvenly</code> membagi
+              ruang kosong yang tersisa secara merata di antara dan di sekitar
+              setiap elemen.
+            </p>
+
+            <p>
+              <strong>Container</strong> adalah widget serbaguna yang berfungsi
+              sebagai "kotak" pembungkus, dilengkapi properti
+              <code>padding</code> (jarak dari tepi kotak ke isinya),
+              <code>margin</code> (jarak dari kotak ke elemen di luarnya), serta
+              <code>decoration</code> untuk mengatur warna latar, sudut
+              membulat, hingga border.
+            </p>
+
+            <p>
+              <strong>ListTile</strong> adalah widget bawaan Material Design
+              yang memudahkan pembuatan baris daftar secara instan tanpa perlu
+              menyusun Row/Column manual. ListTile memiliki tiga slot utama:
+              <code>leading</code> untuk elemen paling kiri (biasanya ikon atau
+              avatar), <code>title</code> untuk judul utama baris, dan
+              <code>trailing</code> untuk elemen paling kanan (biasanya nominal
+              atau tombol) — kombinasi inilah yang dipakai untuk menampilkan
+              tiap baris pada daftar "Transaksi Terakhir".
+            </p>
+          </div>
+
+          <!-- C. ALAT DAN BAHAN -->
+          <div class="laprak-card" id="alat">
+            <div class="section-label">
+              <span class="num">C</span>Alat dan Bahan
+            </div>
+            <ul>
+              <li>Laptop / Komputer dengan Flutter SDK dan Dart terinstall</li>
+              <li>
+                Visual Studio Code (Code Editor) dengan ekstensi Flutter &amp;
+                Dart
+              </li>
+              <li>
+                Chrome Browser / Android Emulator sebagai target device untuk
+                menjalankan aplikasi
+              </li>
+              <li>
+                Modul Praktikum Aplikasi Mobile — Praktikum 1: Pengenalan
+                Widgets dan Praktikum 2: Layouting &amp; Styling
+              </li>
+            </ul>
+          </div>
+
+          <!-- ══════════════ MODUL 1 ══════════════ -->
+          <div class="modul-divider">
+            <div class="line"></div>
+            <span>Modul 1</span>
+            <div class="line"></div>
+          </div>
+
+          <div class="laprak-card" id="modul1">
+            <div class="section-label">
+              <span class="num">D</span>Modul 1: Pengenalan Widgets
+            </div>
+            <p>
+              Modul 1 membangun dashboard versi awal berisi dua widget:
+              <code>GreetingWidget</code> sebagai sapaan pengguna (Stateless)
+              dan <code>BalanceCardWidget</code> sebagai kartu saldo yang bisa
+              disembunyikan/ditampilkan (Stateful).
+            </p>
+
+            <!-- D.1 Langkah Praktikum -->
+            <div class="sub-section-title" id="modul1-langkah">
+              D.1 <span class="file-badge">lib/main.dart</span> — Langkah
+              Praktikum
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membangun Struktur Dasar Aplikasi
+              </div>
+              <p>
+                Langkah pertama adalah membangun kerangka aplikasi.
+                <code>MyApp</code> dijadikan root widget berupa
+                <code>StatelessWidget</code> yang mengembalikan
+                <code>MaterialApp</code> dengan tema warna
+                <code>Colors.blue</code>, lalu
+                <code>DashboardScreen</code> menyediakan
+                <code>Scaffold</code> berisi <code>AppBar</code>
+                berjudul "Praktikum 1: Widgets" dan body berupa
+                <code>Padding</code> + <code>Column</code> yang akan diisi
+                <code>GreetingWidget</code> dan <code>BalanceCardWidget</code>.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Jalankan main.dart dan Lihat Struktur Awal
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss1.png"
+                  alt="SS VS Code struktur MyApp, MaterialApp, Scaffold pada main.dart Modul 1"
+                />
+                <div class="img-cap">
+                  Gambar D.1a – Struktur dasar MyApp dengan tema Colors.blue dan
+                  Scaffold berjudul "Praktikum 1: Widgets"
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>void main() =&gt; runApp(const MyApp())</code> adalah
+                  titik masuk aplikasi. <code>MyApp</code> cukup mengembalikan
+                  <code
+                    >MaterialApp(theme: ThemeData(primarySwatch: Colors.blue),
+                    home: const DashboardScreen())</code
+                  >, sehingga seluruh komponen Material Design pada aplikasi
+                  mengikuti palet warna biru secara konsisten.
+                </p>
+                <p>
+                  Pada <code>DashboardScreen</code>, body dibungkus
+                  <code>Padding(padding: EdgeInsets.all(16.0))</code> agar
+                  konten tidak menempel ke tepi layar, lalu
+                  <code
+                    >Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [GreetingWidget(), SizedBox(height: 20),
+                    BalanceCardWidget()])</code
+                  >
+                  menyusun kedua widget secara vertikal dengan jarak 20 piksel
+                  di antaranya.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membuat GreetingWidget
+                (Stateless)
+              </div>
+              <p>
+                <code>GreetingWidget</code> dibuat sebagai
+                <code>StatelessWidget</code> karena tampilan sapaan tidak pernah
+                berubah. Widget ini memakai <code>Row</code> untuk meletakkan
+                <code>CircleAvatar</code> berisi ikon orang di sisi kiri, lalu
+                <code>Column</code> di sebelahnya untuk menumpuk dua baris teks:
+                nama pengguna dan sub-teks sapaan.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Susun Row + CircleAvatar + Column pada GreetingWidget
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss2.png"
+                  alt="SS VS Code widget GreetingWidget dengan Row CircleAvatar dan Column teks sapaan"
+                />
+                <div class="img-cap">
+                  Gambar D.1b – GreetingWidget menyusun CircleAvatar dan Column
+                  teks "Halo, Budi" / "Selamat datang kembali!" dalam satu Row
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code
+                    >CircleAvatar(radius: 24, backgroundColor:
+                    Colors.blueAccent, child: Icon(Icons.person, ...))</code
+                  >
+                  membuat lingkaran avatar berwarna biru berisi ikon orang.
+                  <code>SizedBox(width: 12)</code> memberi jarak horizontal ke
+                  teks di sebelahnya, lalu
+                  <code
+                    >Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text('Halo, Budi', ...), Text('Selamat datang
+                    kembali!', ...)])</code
+                  >
+                  menumpuk dua teks rata kiri — nama dengan font tebal berukuran
+                  20, dan sub-teks berwarna abu-abu berukuran 14.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Mendeklarasikan BalanceCardWidget
+                sebagai Stateful
+              </div>
+              <p>
+                Karena kartu saldo harus bisa bereaksi saat ikon mata ditekan,
+                <code>BalanceCardWidget</code> wajib dibuat sebagai
+                <code>StatefulWidget</code>. Class
+                <code>_BalanceCardWidgetState</code> menyimpan variabel
+                <code>bool _isBalanceVisible = true</code> sebagai status sensor
+                saldo, beserta method <code>_toggleVisibility()</code>
+                yang akan membalik nilai boolean tersebut.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat StatefulWidget dan Variabel _isBalanceVisible
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss3.png"
+                  alt="SS VS Code deklarasi StatefulWidget BalanceCardWidget dan variabel isBalanceVisible"
+                />
+                <div class="img-cap">
+                  Gambar D.1c – Deklarasi class BalanceCardWidget beserta
+                  _BalanceCardWidgetState dan variabel _isBalanceVisible
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code
+                    >State&lt;BalanceCardWidget&gt; createState() =&gt;
+                    _BalanceCardWidgetState();</code
+                  >
+                  menghubungkan widget dengan class state-nya. Di dalam
+                  <code>_BalanceCardWidgetState</code>, variabel
+                  <code>_isBalanceVisible</code> bertindak sebagai penanda
+                  apakah nominal saldo sedang ditampilkan (<code>true</code>)
+                  atau disensor (<code>false</code>), sedangkan
+                  <code>_toggleVisibility()</code> memanggil
+                  <code
+                    >setState(() { _isBalanceVisible = !_isBalanceVisible;
+                    })</code
+                  >
+                  untuk membalik nilainya sekaligus memberi tahu Flutter agar
+                  merender ulang widget.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>Menyusun Card dan Baris Atas
+                (Saldo Utama + Tombol Mata)
+              </div>
+              <p>
+                Isi kartu dibungkus <code>Card</code> berwarna
+                <code>Colors.blueAccent</code> dengan sudut membulat, lalu di
+                dalamnya <code>Padding</code> dan <code>Column</code> menyusun
+                baris atas berupa <code>Row</code> dengan
+                <code>mainAxisAlignment: MainAxisAlignment.spaceBetween</code>
+                agar teks "Saldo Utama" menempel kiri dan
+                <code>IconButton</code> ikon mata menempel kanan.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Susun Card, Row spaceBetween, dan IconButton
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss4.png"
+                  alt="SS VS Code Card BalanceCardWidget dengan Row spaceBetween teks Saldo Utama dan IconButton"
+                />
+                <div class="img-cap">
+                  Gambar D.1d – Card biru dengan Row spaceBetween berisi teks
+                  "Saldo Utama" dan IconButton ikon mata
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code
+                    >IconButton(icon: Icon(_isBalanceVisible ? Icons.visibility
+                    : Icons.visibility_off, color: Colors.white), onPressed:
+                    _toggleVisibility)</code
+                  >
+                  menampilkan ikon mata terbuka saat saldo terlihat dan ikon
+                  mata tercoret saat saldo disensor, memakai
+                  <em>ternary operator</em> untuk memilih ikon secara dinamis
+                  berdasarkan nilai <code>_isBalanceVisible</code>. Setiap
+                  tombol ditekan, <code>onPressed</code> memanggil
+                  <code>_toggleVisibility</code> yang sudah dibuat pada langkah
+                  sebelumnya.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>Menampilkan Nominal Saldo dengan
+                setState() &amp; Ternary
+              </div>
+              <p>
+                Nominal saldo ditampilkan lewat
+                <code
+                  >Text(_isBalanceVisible ? 'Rp 5.000.000' : 'Rp *********',
+                  ...)</code
+                >. Setiap kali <code>_toggleVisibility()</code> dipanggil dan
+                <code>setState()</code> dijalankan, Flutter merender ulang
+                <code>build()</code> sehingga teks ini otomatis berpindah antara
+                nominal asli dan versi tersensor tanpa perlu logika tambahan.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan Text Ternary untuk Nominal Saldo
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss5.png"
+                  alt="SS VS Code Text ternary menampilkan Rp 5.000.000 atau Rp sensor pada BalanceCardWidget"
+                />
+                <div class="img-cap">
+                  Gambar D.1e – Kode Text dengan ternary operator yang berpindah
+                  antara nominal saldo asli dan versi tersensor
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Logika <em>ternary</em>
+                  <code>kondisi ? nilaiJikaTrue : nilaiJikaFalse</code>
+                  dipakai di sini sebagai cara singkat menulis if-else dalam
+                  satu baris ekspresi, cocok dipakai langsung di dalam widget
+                  <code>Text</code> tanpa perlu variabel tambahan atau method
+                  terpisah.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">6</span>Menjalankan dan Menguji Toggle
+                Visibilitas Saldo
+              </div>
+              <p>
+                Aplikasi dijalankan lalu diuji dengan menekan ikon mata pada
+                kartu saldo untuk membuktikan bahwa <code>setState()</code>
+                benar-benar memicu perubahan tampilan secara langsung
+                (realtime), baik pada teks nominal maupun ikon itu sendiri.
+              </p>
+
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian: Tekan Ikon
+                  Mata untuk Menyembunyikan dan Menampilkan Saldo
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Kondisi Awal (Saldo Terlihat) vs Setelah Ikon Mata
+                  Ditekan (Saldo Disensor)
+                </div>
+                <div class="img-pair">
+                  <div class="img-wrap">
+                    <img
+                      src="../images/laporan/laporan6/ss6.png"
+                      alt="SS hasil running main.dart Modul 1 saldo terlihat Rp 5.000.000 ikon mata terbuka"
+                    />
+                    <div class="img-cap">
+                      Gambar D.1f – Kondisi awal: saldo tampil "Rp 5.000.000"
+                      dengan ikon mata terbuka (Icons.visibility)
+                    </div>
+                  </div>
+                  <div class="img-wrap">
+                    <img
+                      src="../images/laporan/laporan6/ss7.png"
+                      alt="SS hasil running main.dart Modul 1 saldo tersensor Rp bintang ikon mata tercoret setelah ditekan"
+                    />
+                    <div class="img-cap">
+                      Gambar D.1g – Setelah ikon mata ditekan: saldo berubah
+                      menjadi "Rp *********" dan ikon berubah jadi tercoret
+                      (Icons.visibility_off)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Ikon mata berhasil membalik status sensor saldo setiap kali
+                  ditekan berulang kali secara bolak-balik, menandakan
+                  <code>setState()</code> pada BalanceCardWidget berjalan dengan
+                  benar.
+                </div>
+              </div>
+            </div>
+
+            <!-- D.2 Tugas Praktikum 1 -->
+            <div class="sub-section-title" id="modul1-tugas">
+              D.2 Tugas Praktikum 1
+            </div>
+
+            <div class="tugas-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Tugas 1 &amp; 2 — Modul 1</h5>
+                <p>
+                  Tugas 1 (Styling): mengubah warna tema BalanceCard dari biru
+                  (Colors.blueAccent) menjadi hijau emerald (Colors.teal). Tugas
+                  2 (Modifikasi UI): menambahkan teks statis "No. Rekening:
+                  1234-5678" di bagian bawah nominal saldo di dalam kartu.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num tugas">1</span>Tugas 1: Mengganti Warna
+                Tema BalanceCard menjadi Teal
+              </div>
+              <p>
+                Warna <code>Colors.blueAccent</code> pada
+                <code>Card</code> diganti menjadi gradasi
+                <code>Colors.teal</code>. Agar transisi warnanya lebih halus
+                dibanding warna solid, <code>Card</code> dibungkus tambahan
+                <code>Container</code> dengan
+                <code
+                  >BoxDecoration(gradient: LinearGradient(colors:
+                  [Colors.teal.shade400, Colors.teal.shade700]))</code
+                >, serta <code>ThemeData(primarySwatch: Colors.teal)</code> pada
+                <code>MyApp</code> agar warna AppBar ikut menyesuaikan.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Ganti primarySwatch dan Warna Card menjadi Teal (Gradient)
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss8.png"
+                  alt="SS VS Code kode LinearGradient Colors.teal menggantikan Colors.blueAccent pada Card BalanceCardWidget"
+                />
+                <div class="img-cap">
+                  Gambar D.2a – BoxDecoration dengan LinearGradient
+                  Colors.teal.shade400 ke Colors.teal.shade700 menggantikan
+                  warna solid blueAccent
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <strong>Sebelum:</strong> <code>Card</code> langsung diberi
+                  <code>color: Colors.blueAccent</code> sebagai warna solid, dan
+                  tema aplikasi pada <code>MyApp</code> memakai
+                  <code>ThemeData(primarySwatch: Colors.blue)</code>.
+                </p>
+                <p>
+                  <strong>Sesudah:</strong> properti <code>color</code> pada
+                  <code>Card</code> dihapus, lalu <code>Card</code> diberi
+                  <code>child: Container(...)</code> tambahan dengan
+                  <code
+                    >decoration: BoxDecoration(gradient: LinearGradient(begin:
+                    Alignment.topLeft, end: Alignment.bottomRight, colors:
+                    [Colors.teal.shade400, Colors.teal.shade700]))</code
+                  >, sehingga kartu tampil gradasi dari teal muda ke teal tua,
+                  bukan lagi warna solid tunggal. Dua penyesuaian lain juga
+                  ditambahkan agar warna konsisten di seluruh aplikasi:
+                </p>
+                <ul>
+                  <li>
+                    <code>ThemeData(primarySwatch: Colors.blue)</code> diubah
+                    menjadi
+                    <code>ThemeData(primarySwatch: Colors.teal)</code> pada
+                    <code>MyApp</code>, sehingga AppBar dan komponen Material
+                    lain ikut berubah ke teal.
+                  </li>
+                  <li>
+                    <code>shadowColor: Colors.teal.withOpacity(0.4)</code>
+                    ditambahkan pada <code>Card</code> agar bayangan yang
+                    dihasilkan senada dengan warna kartu, bukan lagi bayangan
+                    abu-abu default.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Tampilan Card Berubah Warna Menjadi Teal
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss9.png"
+                  alt="SS hasil running Tugas 1 Modul 1 kartu saldo berwarna gradasi teal"
+                />
+                <div class="img-cap">
+                  Gambar D.2b – Kartu saldo tampil dengan gradasi warna teal
+                  menggantikan warna biru solid sebelumnya, membuktikan
+                  perubahan pada BoxDecoration dan primarySwatch berhasil
+                  diterapkan
+                </div>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num tugas">2</span>Tugas 2: Menambahkan Teks
+                Nomor Rekening
+              </div>
+              <p>
+                Di bawah nominal saldo, ditambahkan
+                <code>Divider</code> tipis sebagai pemisah, lalu
+                <code>Row</code> berisi <code>Icon(Icons.credit_card)</code> dan
+                <code>Text('No. Rekening: 1234-5678')</code> memakai variabel
+                <code>final String _noRekening = '1234-5678'</code>
+                yang disisipkan lewat string interpolation
+                <code>'No. Rekening: $_noRekening'</code>.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan Divider, Icon, dan Text Nomor Rekening
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss10.png"
+                  alt="SS VS Code Row Icon credit_card dan Text No Rekening 1234-5678 ditambahkan di bawah nominal saldo"
+                />
+                <div class="img-cap">
+                  Gambar D.2c – Divider, Icon credit_card, dan Text "No.
+                  Rekening: 1234-5678" ditambahkan di bagian bawah nominal saldo
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <strong>Sebelum:</strong> Column pada BalanceCardWidget
+                  berhenti setelah widget <code>Text</code> nominal saldo —
+                  tidak ada elemen lain di bawahnya.
+                </p>
+                <p>
+                  <strong>Sesudah:</strong> ditambahkan dua variabel baru pada
+                  <code>_BalanceCardWidgetState</code>, yaitu
+                  <code>final String _balance = 'Rp 5.000.000'</code> dan
+                  <code>final String _noRekening = '1234-5678'</code>, lalu di
+                  bawah <code>Text</code> nominal saldo ditambahkan empat widget
+                  baru secara berurutan:
+                </p>
+                <ul>
+                  <li>
+                    <code>SizedBox(height: 12)</code> — jarak vertikal tambahan
+                    dari nominal saldo.
+                  </li>
+                  <li>
+                    <code>Divider(color: Colors.white24, height: 1)</code> —
+                    garis pemisah tipis semi-transparan.
+                  </li>
+                  <li>
+                    <code
+                      >Row(children: [Icon(Icons.credit_card, ...),
+                      SizedBox(width: 6), Text('No. Rekening: $_noRekening',
+                      ...)])</code
+                    >
+                    — baris berisi ikon kartu kredit dan teks nomor rekening,
+                    dengan nilai <code>_noRekening</code> disisipkan lewat
+                    string interpolation.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Nomor Rekening Tampil di Bawah Nominal Saldo
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss11.png"
+                  alt="SS hasil running Tugas 2 Modul 1 teks No Rekening 1234-5678 tampil pada kartu saldo teal"
+                />
+                <div class="img-cap">
+                  Gambar D.2d – Teks "No. Rekening: 1234-5678" berhasil tampil
+                  di bawah nominal saldo, sesuatu yang sebelumnya tidak ada pada
+                  versi Card
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Kedua tugas berjalan sesuai ekspektasi: warna kartu sepenuhnya
+                  berpindah ke teal dan teks nomor rekening tampil statis tanpa
+                  mengganggu fungsi toggle visibilitas saldo yang sudah dibuat
+                  sebelumnya.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /laprak-card D -->
+
+          <!-- ══════════════ MODUL 2 ══════════════ -->
+          <div class="modul-divider">
+            <div class="line"></div>
+            <span>Modul 2</span>
+            <div class="line"></div>
+          </div>
+
+          <div class="laprak-card" id="modul2">
+            <div class="section-label">
+              <span class="num">E</span>Modul 2: Layouting &amp; Styling
+            </div>
+            <p>
+              Modul 2 melanjutkan dashboard dari Modul 1 (lengkap dengan hasil
+              Tugas 1 &amp; 2 di atas) dengan menambahkan
+              <code>ActionButtonsWidget</code> (Row) dan
+              <code>RecentTransactionsWidget</code> (Column + ListTile), lalu
+              membungkus seluruh dashboard dengan
+              <code>SingleChildScrollView</code> agar layar tidak
+              <em>overflow</em> saat daftar transaksi bertambah panjang.
+            </p>
+
+            <!-- E.1 Langkah Praktikum -->
+            <div class="sub-section-title" id="modul2-langkah">
+              E.1 <span class="file-badge">lib/main.dart</span> — Langkah
+              Praktikum
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Menyusun Tombol Aksi dengan Row
+              </div>
+              <p>
+                <code>ActionButtonsWidget</code> dibuat sebagai
+                <code>StatelessWidget</code> yang mengembalikan
+                <code>Row</code> berisi tiga tombol aksi: Pemasukan,
+                Pengeluaran, dan Transfer, disusun sejajar secara horizontal
+                menggunakan
+                <code>mainAxisAlignment: MainAxisAlignment.spaceEvenly</code>
+                agar jarak dan ruang kosong di sekitar ketiganya terbagi rata.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat ActionButtonsWidget dengan Row spaceEvenly
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss12.png"
+                  alt="SS VS Code class ActionButtonsWidget Row mainAxisAlignment spaceEvenly tiga tombol aksi"
+                />
+                <div class="img-cap">
+                  Gambar E.1a – Class ActionButtonsWidget dengan Row spaceEvenly
+                  memanggil _buildActionButton untuk Pemasukan, Pengeluaran, dan
+                  Transfer
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Ketiga tombol dibuat lewat method pembantu
+                  <code
+                    >_buildActionButton(IconData icon, String label, Color
+                    color)</code
+                  >
+                  agar kode tidak berulang tiga kali dengan struktur yang sama —
+                  cukup mengganti ikon, label, dan warna saja untuk setiap
+                  tombolnya (hijau untuk Pemasukan, merah untuk Pengeluaran,
+                  biru untuk Transfer).
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Mendesain Tombol dengan Container
+                (Padding, Margin, Warna)
+              </div>
+              <p>
+                Di dalam <code>_buildActionButton</code>, setiap ikon dibungkus
+                <code>Container</code> yang diberi <code>padding</code> agar
+                ikon tidak menempel tepi kotak,
+                <code
+                  >decoration: BoxDecoration(color: color.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12))</code
+                >
+                untuk warna latar transparan dan sudut membulat, lalu
+                <code>Column</code> menumpuk <code>Container</code> ikon
+                tersebut dengan label teks di bawahnya.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Susun Container (padding, decoration) di dalam
+                _buildActionButton
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss13.png"
+                  alt="SS VS Code method buildActionButton Container padding decoration BoxDecoration warna transparan"
+                />
+                <div class="img-cap">
+                  Gambar E.1b – Method _buildActionButton dengan Container
+                  ber-padding dan BoxDecoration warna transparan sesuai
+                  parameter color
+                </div>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Tiga Tombol Aksi Tampil Sejajar
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss14.png"
+                  alt="SS hasil running ActionButtonsWidget tiga tombol Pemasukan Pengeluaran Transfer sejajar"
+                />
+                <div class="img-cap">
+                  Gambar E.1c – Tiga tombol aksi (Pemasukan, Pengeluaran,
+                  Transfer) tampil sejajar horizontal dengan jarak merata
+                </div>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Menyusun Riwayat Transaksi dengan
+                Column + ListTile
+              </div>
+              <p>
+                Karena daftar transaksi harus mengurut ke bawah,
+                <code>RecentTransactionsWidget</code> memakai
+                <code>Column</code> untuk menumpuk judul "Transaksi Terakhir" di
+                atas sebuah <code>Card</code> yang membungkus beberapa
+                <code>ListTile</code> berturut-turut, masing-masing dipisahkan
+                <code>Divider</code> tipis.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat RecentTransactionsWidget dengan Column, Card, dan
+                Beberapa ListTile
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss15.png"
+                  alt="SS VS Code class RecentTransactionsWidget Column Card ListTile leading title trailing"
+                />
+                <div class="img-cap">
+                  Gambar E.1d – Class RecentTransactionsWidget dengan Column
+                  membungkus Card berisi tiga ListTile (Makan Siang, Gaji
+                  Bulanan, Isi Bensin)
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Setiap <code>ListTile</code> memakai
+                  <code>leading: CircleAvatar(child: Icon(...))</code> untuk
+                  ikon kategori transaksi di sisi kiri,
+                  <code>title: Text(...)</code> untuk nama transaksi,
+                  <code>subtitle: Text(...)</code> untuk tanggal, dan
+                  <code>trailing: Text(...)</code> untuk nominal — persis
+                  mengikuti tiga slot leading/title/trailing yang dijelaskan
+                  pada dasar teori.
+                </p>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Daftar Tiga Transaksi Tampil Rapi dalam Card
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss16.png"
+                  alt="SS hasil running RecentTransactionsWidget daftar tiga transaksi Makan Siang Gaji Bulanan Isi Bensin"
+                />
+                <div class="img-cap">
+                  Gambar E.1e – Daftar "Transaksi Terakhir" menampilkan tiga
+                  ListTile: Makan Siang (−Rp 50.000), Gaji Bulanan (+Rp
+                  5.000.000), dan Isi Bensin (−Rp 150.000)
+                </div>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>Mengintegrasikan Dashboard dengan
+                SingleChildScrollView
+              </div>
+              <p>
+                Langkah terakhir menggabungkan seluruh komponen dari Modul 1
+                (<code>GreetingWidget</code>, <code>BalanceCardWidget</code>)
+                dan Modul 2 (<code>ActionButtonsWidget</code>,
+                <code>RecentTransactionsWidget</code>) ke dalam satu
+                <code>Column</code>, lalu membungkus body
+                <code>Scaffold</code> dengan
+                <code>SingleChildScrollView</code> agar seluruh dashboard dapat
+                di-scroll vertikal dan tidak overflow ketika daftar transaksi
+                bertambah panjang.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Bungkus body Scaffold dengan SingleChildScrollView
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss17.png"
+                  alt="SS VS Code body Scaffold dibungkus SingleChildScrollView Padding Column empat widget dashboard"
+                />
+                <div class="img-cap">
+                  Gambar E.1f – Body Scaffold dibungkus SingleChildScrollView,
+                  Padding, dan Column berisi GreetingWidget, BalanceCardWidget,
+                  ActionButtonsWidget, dan RecentTransactionsWidget
+                </div>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Dashboard Lengkap dan Dapat Di-scroll
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss18.png"
+                  alt="SS hasil running dashboard lengkap Modul 1 dan Modul 2 dapat discroll tanpa overflow"
+                />
+                <div class="img-cap">
+                  Gambar E.1g – Dashboard lengkap menampilkan sapaan, kartu
+                  saldo, tombol aksi, dan riwayat transaksi tanpa error overflow
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Dashboard berhasil menggabungkan empat widget dari dua modul
+                  sekaligus, dan SingleChildScrollView terbukti mencegah
+                  overflow ketika konten pada layar melebihi tinggi viewport.
+                </div>
+              </div>
+            </div>
+
+            <!-- E.2 Tugas Praktikum 2 -->
+            <div class="sub-section-title" id="modul2-tugas">
+              E.2 Tugas Praktikum 2
+            </div>
+
+            <div class="tugas-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Tugas 1 &amp; 2 — Modul 2</h5>
+                <p>
+                  Tugas 1 (Styling): pada widget Daftar Transaksi (ListTile),
+                  ubah warna trailing text pengeluaran menjadi merah dan text
+                  pemasukan menjadi hijau. Tugas 2 (Tambah Data): tambahkan 2
+                  transaksi fiktif baru ke dalam daftar "Transaksi Terakhir" di
+                  bawah kode yang sudah ada.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num tugas">1</span>Tugas 1: Styling Warna
+                Trailing Berdasarkan Jenis Transaksi
+              </div>
+              <p>
+                Alih-alih menulis warna merah/hijau secara manual pada setiap
+                ListTile, dibuat method pembantu
+                <code
+                  >_buildTransactionTile({..., required bool isIncome})</code
+                >
+                yang menentukan warna dan tanda trailing secara otomatis:
+                <code>isIncome == true</code> menghasilkan warna
+                <code>Colors.green</code> dengan tanda "+", sedangkan
+                <code>isIncome == false</code> menghasilkan warna
+                <code>Colors.red</code> dengan tanda "−". Pendekatan ini membuat
+                styling konsisten di seluruh item tanpa risiko lupa mengganti
+                warna satu per satu.
+              </p>
+
+              <div class="sub-label">
+                Aksi: Buat Helper _buildTransactionTile dengan Parameter
+                isIncome
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss19.png"
+                  alt="SS VS Code method buildTransactionTile parameter isIncome menentukan warna trailing merah hijau"
+                />
+                <div class="img-cap">
+                  Gambar E.2a – Method _buildTransactionTile menentukan
+                  trailingColor dan prefix ("+"/"−") berdasarkan parameter
+                  isIncome
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <strong>Sebelum:</strong> setiap <code>ListTile</code>
+                  ditulis manual dan berulang, dengan warna trailing di-hardcode
+                  langsung per item, misalnya
+                  <code
+                    >trailing: Text('- Rp 50.000', style: TextStyle(color:
+                    Colors.red, ...))</code
+                  >
+                  pada item pengeluaran dan
+                  <code
+                    >trailing: Text('+ Rp 5.000.000', style: TextStyle(color:
+                    Colors.green, ...))</code
+                  >
+                  pada item pemasukan — sehingga bila lupa mengganti warna, item
+                  baru bisa salah warna.
+                </p>
+                <p>
+                  <strong>Sesudah:</strong> seluruh <code>ListTile</code>
+                  diganti menjadi pemanggilan satu method
+                  <code
+                    >_buildTransactionTile({..., required bool isIncome})</code
+                  >. Di dalamnya:
+                </p>
+                <ul>
+                  <li>
+                    <code
+                      >final Color trailingColor = isIncome ? Colors.green :
+                      Colors.red;</code
+                    >
+                    — warna ditentukan otomatis dari parameter
+                    <code>isIncome</code>, bukan ditulis manual lagi.
+                  </li>
+                  <li>
+                    <code>final String prefix = isIncome ? '+ ' : '- ';</code>
+                    — tanda "+"/"−" juga mengikuti jenis transaksi secara
+                    otomatis.
+                  </li>
+                  <li>
+                    <code
+                      >trailing: Text('$prefix$amount', style: TextStyle(color:
+                      trailingColor, ...))</code
+                    >
+                    — trailing text kini dibangun dari dua variabel di atas,
+                    sehingga warna dijamin selalu konsisten dengan jenis
+                    transaksinya.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Warna Trailing Konsisten (Merah untuk Pengeluaran, Hijau
+                untuk Pemasukan)
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss20.png"
+                  alt="SS hasil running Tugas 1 Modul 2 warna trailing merah pengeluaran hijau pemasukan pada ListTile"
+                />
+                <div class="img-cap">
+                  Gambar E.2b – Setiap ListTile tetap menampilkan trailing merah
+                  untuk pengeluaran dan hijau untuk pemasukan, kini dihasilkan
+                  otomatis lewat helper alih-alih ditulis manual per item
+                </div>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num tugas">2</span>Tugas 2: Menambahkan 2
+                Transaksi Fiktif Baru
+              </div>
+              <p>
+                Dua pemanggilan <code>_buildTransactionTile(...)</code> baru
+                ditambahkan di bawah tiga transaksi lama, masing-masing
+                dipisahkan <code>Divider</code>: "Belanja Bulanan" senilai Rp
+                320.000 sebagai transaksi pengeluaran (<code
+                  >isIncome: false</code
+                >), dan "Bonus Proyek" senilai Rp 750.000 sebagai transaksi
+                pemasukan (<code>isIncome: true</code>).
+              </p>
+
+              <div class="sub-label">
+                Aksi: Tambahkan Dua Pemanggilan _buildTransactionTile Baru
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss21.png"
+                  alt="SS VS Code dua pemanggilan buildTransactionTile baru Belanja Bulanan dan Bonus Proyek"
+                />
+                <div class="img-cap">
+                  Gambar E.2c – Dua transaksi baru, "Belanja Bulanan" (−Rp
+                  320.000) dan "Bonus Proyek" (+Rp 750.000), ditambahkan di
+                  bawah daftar transaksi lama
+                </div>
+              </div>
+
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <strong>Sebelum:</strong> Column di dalam <code>Card</code>
+                  hanya berisi tiga pemanggilan
+                  <code>_buildTransactionTile(...)</code> yang dipisahkan dua
+                  <code>Divider</code> — Makan Siang, Gaji Bulanan, dan Isi
+                  Bensin.
+                </p>
+                <p>
+                  <strong>Sesudah:</strong> ditambahkan satu
+                  <code>Divider(height: 1)</code> lagi, diikuti dua pemanggilan
+                  <code>_buildTransactionTile(...)</code> baru di urutan paling
+                  bawah:
+                </p>
+                <ul>
+                  <li>
+                    <code
+                      >_buildTransactionTile(icon: Icons.shopping_cart,
+                      iconColor: Colors.orange, title: 'Belanja Bulanan', date:
+                      '08 Sep 2026', amount: 'Rp 320.000', isIncome:
+                      false)</code
+                    >
+                    — transaksi pengeluaran baru, trailing otomatis berwarna
+                    merah lewat helper dari Tugas 1.
+                  </li>
+                  <li>
+                    <code
+                      >_buildTransactionTile(icon: Icons.card_giftcard,
+                      iconColor: Colors.purple, title: 'Bonus Proyek', date: '05
+                      Sep 2026', amount: 'Rp 750.000', isIncome: true)</code
+                    >
+                    — transaksi pemasukan baru, trailing otomatis berwarna
+                    hijau.
+                  </li>
+                </ul>
+                <p>
+                  Karena kedua item baru ini memakai helper
+                  <code>_buildTransactionTile</code> yang sama, tidak diperlukan
+                  penulisan <code>ListTile</code> manual maupun pengaturan warna
+                  trailing tambahan — cukup mengisi parameter
+                  <code>isIncome</code> yang sesuai.
+                </p>
+              </div>
+
+              <div class="sub-label test-label">
+                Hasil: Daftar Transaksi Bertambah Menjadi Lima Item
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan6/ss22.png"
+                  alt="SS hasil running Tugas 2 Modul 2 daftar lima transaksi lengkap termasuk Belanja Bulanan dan Bonus Proyek"
+                />
+                <div class="img-cap">
+                  Gambar E.2d – Daftar "Transaksi Terakhir" bertambah dari tiga
+                  menjadi lima item, dengan "Belanja Bulanan" dan "Bonus Proyek"
+                  tampil di bagian bawah sebagai transaksi baru
+                </div>
+              </div>
+
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Kedua tugas Modul 2 berjalan sesuai ekspektasi: warna trailing
+                  konsisten mengikuti jenis transaksi, dan dua transaksi baru
+                  berhasil tampil tanpa mengubah struktur ListTile yang sudah
+                  ada sebelumnya.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /laprak-card E -->
+
+          <!-- F. HASIL DAN PEMBAHASAN -->
+          <div class="laprak-card" id="hasil">
+            <div class="section-label">
+              <span class="num">F</span>Hasil dan Pembahasan
+            </div>
+            <p>
+              Melalui dua modul pada pertemuan ini, dashboard "Expense Tracker"
+              berhasil dibangun secara bertahap: dimulai dari pengenalan
+              <code>StatelessWidget</code> dan <code>StatefulWidget</code> pada
+              Modul 1, hingga penerapan layouting yang lebih kompleks dengan
+              <code>Row</code>, <code>Column</code>, <code>Container</code>, dan
+              <code>ListTile</code> pada Modul 2.
+            </p>
+            <p>
+              Pada Modul 1, perbedaan paling mencolok antara
+              <code>GreetingWidget</code> (Stateless) dan
+              <code>BalanceCardWidget</code> (Stateful) terlihat jelas dari
+              pengujian toggle visibilitas saldo: menekan ikon mata langsung
+              mengubah teks nominal dari "Rp 5.000.000" menjadi "Rp *********"
+              beserta perubahan ikon dari <code>Icons.visibility</code> menjadi
+              <code>Icons.visibility_off</code>, membuktikan bahwa
+              <code>setState()</code> benar-benar memicu rebuild pada widget
+              terkait. Kedua tugas Modul 1 — pergantian warna tema ke teal dan
+              penambahan teks nomor rekening — juga berhasil diterapkan tanpa
+              mengganggu fungsi toggle tersebut.
+            </p>
+            <p>
+              Pada Modul 2, penggunaan <code>Row</code> dengan
+              <code>mainAxisAlignment.spaceEvenly</code> terbukti efektif
+              menyusun tiga tombol aksi dengan jarak yang seimbang, sementara
+              kombinasi <code>Column</code> dan <code>ListTile</code> berhasil
+              menampilkan daftar transaksi secara rapi lewat tiga slot
+              leading/title/trailing. Pembungkusan seluruh dashboard dengan
+              <code>SingleChildScrollView</code> juga terbukti mencegah overflow
+              ketika daftar transaksi bertambah panjang pada Tugas 2, di mana
+              dua transaksi fiktif baru berhasil ditambahkan tanpa masalah
+              tampilan, dan warna trailing (merah/hijau) tetap konsisten berkat
+              helper method <code>_buildTransactionTile</code> yang dibuat pada
+              Tugas 1.
+            </p>
+          </div>
+
+          <!-- G. KESIMPULAN -->
+          <div class="laprak-card" id="kesimpulan">
+            <div class="section-label">
+              <span class="num">G</span>Kesimpulan
+            </div>
+            <p>
+              Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan,
+              diperoleh beberapa poin kesimpulan penting:
+            </p>
+            <ol>
+              <li>
+                <code>StatelessWidget</code> cocok untuk tampilan yang tidak
+                pernah berubah seperti <code>GreetingWidget</code>, sedangkan
+                <code>StatefulWidget</code> wajib dipakai ketika tampilan perlu
+                merespons interaksi pengguna, seperti toggle visibilitas saldo
+                pada <code>BalanceCardWidget</code>.
+              </li>
+              <li>
+                <strong>setState()</strong> adalah mekanisme inti yang
+                menghubungkan perubahan data pada state dengan pembaruan
+                tampilan (rebuild) di layar; tanpa memanggilnya, perubahan
+                variabel tidak akan pernah terlihat oleh pengguna.
+              </li>
+              <li>
+                <strong>Row</strong> dan <strong>Column</strong> adalah pasangan
+                widget layouting dasar yang saling melengkapi — Row untuk
+                susunan horizontal seperti deretan tombol aksi, Column untuk
+                susunan vertikal seperti daftar transaksi yang terus bertambah
+                ke bawah.
+              </li>
+              <li>
+                <strong>ListTile</strong> mempercepat pembuatan baris daftar
+                yang konsisten lewat tiga slot leading/title/trailing, dibanding
+                menyusun Row/Column manual untuk setiap barisnya.
+              </li>
+              <li>
+                Membungkus konten dengan
+                <strong>SingleChildScrollView</strong> adalah praktik penting
+                pada dashboard yang kontennya dapat bertambah panjang, agar
+                aplikasi tidak mengalami error overflow ketika data bertambah.
+              </li>
+              <li>
+                Memisahkan logika berulang ke dalam method pembantu (seperti
+                <code>_buildActionButton</code> dan
+                <code>_buildTransactionTile</code>) terbukti membuat kode lebih
+                ringkas, konsisten, dan mudah dikembangkan — terlihat jelas
+                ketika menambahkan dua transaksi baru pada Tugas 2 hanya
+                membutuhkan dua pemanggilan method tanpa menulis ulang struktur
+                ListTile dari awal.
+              </li>
+            </ol>
+          </div>
+
+          <!-- H. REPOSITORY GITHUB -->
+          <div class="laprak-card" id="repo">
+            <div class="section-label">
+              <span class="num">H</span>Repository Github
+            </div>
+            <p>
+              Seluruh source code praktikum ini (Modul 1 dan Modul 2, beserta
+              hasil tugas keduanya) dapat diakses pada branch
+              <code>pertemuan2</code> repository Github berikut:
+            </p>
+            <div class="text-center mt-4">
+              <a
+                href="https://github.com/saskiaalifah/AppMobile_2411531002_SaskiaAlifah/tree/pertemuan2"
+                target="_blank"
+                class="github-btn"
+              >
+                <i class="bi bi-github me-2"></i>
+                Lihat Repository GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /content-col -->
+      </div>
+      <!-- /layout-wrap -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-4 text-md-start text-center">
+            <div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+            <div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <nav>
+              <ul class="list-inline mb-0" style="font-size: 13px">
+                <li class="list-inline-item">
+                  <a
+                    href="index.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Home</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="about.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >About</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="main.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Laporan</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="kontak.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-flex gap-2">
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://github.com/saskiaalifah"
+                target="_blank"
+                style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-github"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <small style="color: var(--muted)"
+            >&copy; <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+  </body>
 </html>

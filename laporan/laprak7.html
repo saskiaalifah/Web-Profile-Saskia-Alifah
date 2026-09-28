@@ -1,0 +1,1853 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 3 — Input Widgets &amp; Forms (Flutter)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY (nempel selama kolom konten masih berjalan) ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
+        }
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
+        }
+      }
+
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
+        }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.latihan {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+      .sub-label.test-label.fail {
+        color: #f2a65a;
+      }
+      .sub-label.test-label.fail::before {
+        background: #f2a65a;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan untuk pengujian (pass/fail) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Latihan Banner ── */
+      .latihan-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .latihan-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .latihan-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .latihan-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block (paragraf + poin) ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
+        }
+        .step-block {
+          padding: 16px 16px;
+        }
+        .img-wrap img {
+          max-height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase"
+          href="index.html"
+          ><i class="bi bi-code-slash" style="color: var(--accent)"></i> Saskia
+          Alifah</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kontak.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="laprak-hero">
+      <div class="container">
+        <a href="main.html" class="btn-back-hero"
+          ><i class="bi bi-chevron-left"></i> Kembali ke Laporan</a
+        >
+        <h1>Laprak 3 — <span>Input Widgets &amp; Forms (Flutter)</span></h1>
+        <p class="lead">
+          Aplikasi Mobile · Praktikum III · Menangkap Data, Dropdown, dan
+          Validasi
+        </p>
+        <div class="badge-row">
+          <span class="badge-pill"
+            ><i class="bi bi-person-fill"></i> Saskia Alifah</span
+          ><span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+          <span class="badge-pill"
+            ><i class="bi bi-calendar3"></i> Aplikasi Mobile</span
+          ><span class="badge-pill"><i class="bi bi-phone"></i> Flutter</span>
+          <span class="badge-pill"
+            ><i class="bi bi-ui-checks"></i> Form, Dropdown &amp; Validasi</span
+          >
+        </div>
+      </div>
+    </div>
+    <button
+      class="toc-fab"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#tocOffcanvas"
+      aria-controls="tocOffcanvas"
+    >
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="tocOffcanvas"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">
+          <i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="toc-list">
+          <li>
+            <a href="#tujuan" data-bs-dismiss="offcanvas"
+              >A. Tujuan Praktikum</a
+            >
+          </li>
+          <li>
+            <a href="#teori" data-bs-dismiss="offcanvas">B. Dasar Teori</a>
+          </li>
+          <li>
+            <a href="#alat" data-bs-dismiss="offcanvas">C. Alat dan Bahan</a>
+          </li>
+          <li>
+            <a href="#langkah" data-bs-dismiss="offcanvas"
+              >D. Langkah Praktikum</a
+            >
+            <ul>
+              <li>
+                <a href="#langkah-transaksi" data-bs-dismiss="offcanvas"
+                  >add_transaction_screen.dart</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-main" data-bs-dismiss="offcanvas"
+                  >main.dart</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#latihan" data-bs-dismiss="offcanvas">E. Latihan</a>
+            <ul>
+              <li>
+                <a href="#latihan-tanggal" data-bs-dismiss="offcanvas"
+                  >Input Tanggal Transaksi</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#hasil" data-bs-dismiss="offcanvas"
+              >F. Hasil dan Pembahasan</a
+            >
+          </li>
+          <li>
+            <a href="#kesimpulan" data-bs-dismiss="offcanvas">G. Kesimpulan</a>
+          </li>
+          <li>
+            <a href="#repo" data-bs-dismiss="offcanvas">H. Repository Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <main>
+      <div class="layout-wrap">
+        <div class="toc-col">
+          <aside class="toc-sidebar">
+            <div class="toc-title">
+              <i class="bi bi-list-ul"></i> Daftar Isi
+            </div>
+            <ul class="toc-list">
+              <li><a href="#tujuan">A. Tujuan Praktikum</a></li>
+              <li><a href="#teori">B. Dasar Teori</a></li>
+              <li><a href="#alat">C. Alat dan Bahan</a></li>
+              <li>
+                <a href="#langkah">D. Langkah Praktikum</a>
+                <ul>
+                  <li>
+                    <a href="#langkah-transaksi">add_transaction_screen.dart</a>
+                  </li>
+                  <li><a href="#langkah-main">main.dart</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#latihan">E. Latihan</a>
+                <ul>
+                  <li>
+                    <a href="#latihan-tanggal">Input Tanggal Transaksi</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#hasil">F. Hasil dan Pembahasan</a></li>
+              <li><a href="#kesimpulan">G. Kesimpulan</a></li>
+              <li><a href="#repo">H. Repository Github</a></li>
+            </ul>
+          </aside>
+        </div>
+        <div class="content-col">
+          <div class="laprak-card" id="tujuan">
+            <div class="section-label">
+              <span class="num">A</span>Tujuan Praktikum
+            </div>
+            <p>
+              Praktikum ini bertujuan supaya mahasiswa mampu menangkap teks dari
+              pengguna melalui <strong>TextEditingController</strong>,
+              menerapkan widget dropdown statis menggunakan
+              <code>DropdownButtonFormField</code>, serta membuat validasi input
+              agar data kosong atau berformat salah tidak dapat tersimpan ke
+              dalam sistem.
+            </p>
+            <p>
+              Konsep tersebut diterapkan pada studi kasus formulir pencatatan
+              transaksi pada aplikasi <em>Expense Tracker</em>, lalu
+              dikembangkan pada bagian latihan dengan menambahkan input tanggal
+              transaksi yang memanfaatkan fungsi <code>showDatePicker</code>.
+            </p>
+          </div>
+          <div class="laprak-card" id="teori">
+            <div class="section-label">
+              <span class="num">B</span>Dasar Teori
+            </div>
+            <p>
+              <strong>Form</strong> adalah widget pembungkus yang mengelompokkan
+              banyak kolom input sehingga seluruhnya dapat divalidasi sekaligus.
+              Form dikendalikan melalui
+              <strong>GlobalKey&lt;FormState&gt;</strong>, yaitu key unik yang
+              memungkinkan method <code>validate()</code> dipanggil dari luar
+              widget Form, misalnya saat tombol ditekan.
+            </p>
+            <p>
+              <strong>TextFormField</strong> adalah kolom teks yang sudah
+              terintegrasi dengan Form dan memiliki properti
+              <code>validator</code>. Nilai yang diketik dibaca menggunakan
+              <strong>TextEditingController</strong>, dan controller tersebut
+              wajib dibersihkan lewat <code>dispose()</code> ketika halaman
+              ditutup agar tidak terjadi kebocoran memori.
+            </p>
+            <p>
+              <strong>Validasi</strong> mencegah masuknya data yang tidak sesuai
+              format sebelum disimpan. Fungsi <code>validator</code> memeriksa
+              isi kolom: jika mengembalikan <code>null</code> berarti data
+              valid, sedangkan jika mengembalikan <code>String</code> berarti
+              data tidak valid dan pesan error berwarna merah ditampilkan di
+              bawah kolom.
+            </p>
+            <p>
+              <strong>DropdownButtonFormField</strong> adalah widget pilihan
+              berbentuk daftar turun yang juga terintegrasi dengan Form. Karena
+              isi formulir (teks dan dropdown) terus berubah saat pengguna
+              berinteraksi, halaman dibuat sebagai
+              <strong>StatefulWidget</strong> dan setiap perubahan pilihan
+              diumumkan lewat <code>setState()</code>. Untuk input tanggal,
+              Flutter menyediakan <code>showDatePicker</code>, yaitu dialog
+              kalender yang mengembalikan nilai <code>DateTime</code> pilihan
+              pengguna.
+            </p>
+          </div>
+          <div class="laprak-card" id="alat">
+            <div class="section-label">
+              <span class="num">C</span>Alat dan Bahan
+            </div>
+            <ul>
+              <li>Laptop / Komputer dengan Flutter SDK dan Dart terinstall</li>
+              <li>
+                Visual Studio Code (Code Editor) dengan ekstensi Flutter &amp;
+                Dart
+              </li>
+              <li>
+                Chrome Browser / Android Emulator sebagai target device untuk
+                menjalankan aplikasi
+              </li>
+              <li>
+                Modul Praktikum Aplikasi Mobile — Praktikum III: Input Widgets
+                &amp; Forms
+              </li>
+            </ul>
+          </div>
+          <div class="laprak-card" id="langkah">
+            <div class="section-label">
+              <span class="num">D</span>Langkah Praktikum
+            </div>
+            <p>
+              Praktikum ini terdiri dari dua file di dalam folder
+              <code>lib</code>, yaitu
+              <code>add_transaction_screen.dart</code> yang berisi formulir
+              pencatatan transaksi dan <code>main.dart</code> yang memanggil
+              halaman tersebut. Setiap file dikerjakan berurutan, mulai dari
+              struktur dasar hingga pengujian.
+            </p>
+            <div class="sub-section-title" id="langkah-transaksi">
+              D.1 <span class="file-badge">add_transaction_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat File dan Struktur Dasar
+                StatefulWidget
+              </div>
+              <p>
+                Buat file baru bernama
+                <code>add_transaction_screen.dart</code> di dalam folder
+                <code>lib</code>, lalu import package material dan deklarasikan
+                kelas halaman.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat File, Import Material, dan Kelas AddTransactionScreen
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss1.png"
+                  alt="SS VS Code struktur dasar AddTransactionScreen StatefulWidget"
+                />
+                <div class="img-cap">
+                  Gambar D.1a – Import material.dart dan kelas
+                  AddTransactionScreen sebagai StatefulWidget
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>import 'package:flutter/material.dart';</code> memuat
+                  seluruh widget Material Design. Kelas
+                  <code>AddTransactionScreen extends StatefulWidget</code>
+                  dipilih karena isi formulir akan terus berubah saat pengguna
+                  mengetik dan memilih kategori, sedangkan
+                  <code>createState()</code> menghubungkannya dengan kelas
+                  <code>_AddTransactionScreenState</code> yang menampung seluruh
+                  state.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Menyiapkan GlobalKey, Controller,
+                dan State Dropdown
+              </div>
+              <p>
+                Di dalam <code>_AddTransactionScreenState</code> disiapkan key
+                untuk memicu validasi, controller untuk judul dan nominal, serta
+                variabel untuk dropdown kategori.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambahkan _formKey, _titleController, _amountController,
+                _selectedCategory, dan _categories
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss2.png"
+                  alt="SS VS Code deklarasi formKey controller dan state dropdown"
+                />
+                <div class="img-cap">
+                  Gambar D.1b – Deklarasi _formKey, dua controller,
+                  _selectedCategory, dan daftar _categories
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>GlobalKey&lt;FormState&gt;()</code> menjadi kunci untuk
+                  mengontrol Form dan memicu validasi.
+                  <code>_titleController</code> dan
+                  <code>_amountController</code> membaca teks yang diketik
+                  pengguna. <code>_selectedCategory = 'Makanan'</code> adalah
+                  nilai awal dropdown, sedangkan <code>_categories</code> berisi
+                  opsi Makanan, Transportasi, Hiburan, dan Lainnya.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Membersihkan Controller dengan
+                dispose()
+              </div>
+              <p>
+                Controller yang sudah tidak dipakai harus dilepaskan saat
+                halaman ditutup.
+              </p>
+              <div class="sub-label">Aksi: Buat Method dispose()</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss3.png"
+                  alt="SS VS Code method dispose membersihkan controller"
+                />
+                <div class="img-cap">
+                  Gambar D.1c – Method dispose() yang membersihkan
+                  _titleController dan _amountController
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>dispose()</code> dipanggil Flutter ketika halaman
+                  dihancurkan. Kedua controller dipanggil
+                  <code>dispose()</code>-nya satu per satu, lalu
+                  <code>super.dispose()</code> dijalankan untuk mencegah
+                  <em>memory leak</em>.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>Membangun Kerangka Scaffold,
+                Form, dan Column
+              </div>
+              <p>
+                Tampilan dibangun di dalam method
+                <code>build()</code> menggunakan Scaffold dengan AppBar dan body
+                yang dapat digulir.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat Scaffold, AppBar, SingleChildScrollView, Form, dan
+                Column
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss4.png"
+                  alt="SS VS Code kerangka Scaffold AppBar SingleChildScrollView Form Column"
+                />
+                <div class="img-cap">
+                  Gambar D.1d – Kerangka tampilan Scaffold berisi AppBar dan
+                  body SingleChildScrollView yang membungkus Form
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>AppBar</code> berjudul "Catat Transaksi Baru" diberi
+                  warna <code>Colors.deepPurple</code>.
+                  <code>SingleChildScrollView</code> mencegah error layout saat
+                  keyboard muncul. Widget
+                  <code>Form(key: _formKey)</code> membungkus
+                  <code>Column</code> agar seluruh kolom di dalamnya terdaftar
+                  pada key yang sama, dan
+                  <code>CrossAxisAlignment.stretch</code> membuat anak-anaknya
+                  melebar penuh.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>TextFormField Judul Transaksi
+              </div>
+              <p>
+                Kolom pertama menerima judul transaksi dan tidak boleh
+                dikosongkan.
+              </p>
+              <div class="sub-label">
+                Aksi: Isi TextFormField Judul beserta Validator
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss5.png"
+                  alt="SS VS Code TextFormField judul transaksi dengan validator"
+                />
+                <div class="img-cap">
+                  Gambar D.1e – TextFormField Judul Transaksi dengan validator
+                  cek kosong
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>controller: _titleController</code> menghubungkan kolom
+                  dengan controller, sedangkan
+                  <code>InputDecoration</code> mengatur label, garis tepi
+                  <code>OutlineInputBorder</code>, dan ikon
+                  <code>Icons.title</code>. Pada <code>validator</code>, jika
+                  <code>value == null || value.isEmpty</code> maka dikembalikan
+                  pesan "Judul transaksi tidak boleh kosong", selain itu
+                  dikembalikan <code>null</code> yang berarti valid.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">6</span>TextFormField Nominal dengan
+                Keyboard Angka
+              </div>
+              <p>
+                Kolom kedua menerima nominal uang, sehingga keyboard dibuat
+                khusus angka dan formatnya divalidasi.
+              </p>
+              <div class="sub-label">
+                Aksi: Isi TextFormField Nominal dengan keyboardType dan
+                Validator
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss6.png"
+                  alt="SS VS Code TextFormField nominal keyboardType number dan validator"
+                />
+                <div class="img-cap">
+                  Gambar D.1f – TextFormField Nominal dengan keyboardType number
+                  dan dua kondisi validator
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>keyboardType: TextInputType.number</code> memunculkan
+                  keyboard angka. Validator memeriksa dua kondisi bertingkat:
+                  kolom kosong menghasilkan "Nominal wajib diisi", lalu
+                  <code>int.tryParse(value) == null</code> menghasilkan "Harus
+                  berupa angka bulat yang valid".
+                  <code>int.tryParse</code> mengembalikan <code>null</code> bila
+                  teks bukan bilangan bulat, misalnya berisi huruf atau tanda
+                  titik.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">7</span>DropdownButtonFormField Kategori
+              </div>
+              <p>
+                Pilihan kategori transaksi dibuat dengan dropdown statis yang
+                isinya diambil dari daftar <code>_categories</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat DropdownButtonFormField dengan items dan onChanged
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss7.png"
+                  alt="SS VS Code DropdownButtonFormField kategori items onChanged"
+                />
+                <div class="img-cap">
+                  Gambar D.1g – DropdownButtonFormField Kategori beserta items
+                  dan onChanged
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>value: _selectedCategory</code> menampilkan pilihan
+                  aktif. Method <code>.map()</code> mengubah setiap string pada
+                  <code>_categories</code> menjadi
+                  <code>DropdownMenuItem</code>, lalu
+                  <code>.toList()</code> mengumpulkannya. Pada
+                  <code>onChanged</code>, <code>setState()</code> memperbarui
+                  <code>_selectedCategory</code> dengan nilai baru sehingga
+                  tampilan dropdown ikut berubah.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">8</span>Tombol Simpan dan Pemicu Validasi
+              </div>
+              <p>
+                Tombol Simpan menjalankan seluruh validator sekaligus dan
+                menampilkan SnackBar jika data valid.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat ElevatedButton Simpan Transaksi dengan validate() dan
+                SnackBar
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss8.png"
+                  alt="SS VS Code ElevatedButton simpan validate dan SnackBar"
+                />
+                <div class="img-cap">
+                  Gambar D.1h – ElevatedButton Simpan Transaksi dengan
+                  validate() dan SnackBar sukses
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>_formKey.currentState!.validate()</code> menjalankan
+                  semua validator; hasilnya <code>true</code> hanya bila
+                  seluruhnya mengembalikan <code>null</code>. Jika lolos,
+                  <code>ScaffoldMessenger.of(context).showSnackBar()</code>
+                  menampilkan pesan "Tersimpan: [judul] (Rp [nominal])" berlatar
+                  hijau, dengan nilai diambil dari <code>controller.text</code>.
+                  Gaya tombol diatur lewat
+                  <code>ElevatedButton.styleFrom</code>.
+                </p>
+              </div>
+            </div>
+            <div class="sub-section-title" id="langkah-main">
+              D.2 <span class="file-badge">main.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Memanggil Halaman Form dari
+                main()
+              </div>
+              <p>
+                File <code>main.dart</code> bawaan diubah agar langsung membuka
+                halaman formulir.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambahkan Import add_transaction_screen.dart dan Fungsi
+                main()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss9.png"
+                  alt="SS VS Code import dan fungsi main pada main.dart"
+                />
+                <div class="img-cap">
+                  Gambar D.2a – Import add_transaction_screen.dart dan fungsi
+                  main() dengan runApp(const MyApp())
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code>import 'add_transaction_screen.dart';</code> memanggil
+                  file form yang dibuat sebelumnya. Fungsi
+                  <code>main()</code> adalah titik awal aplikasi dan
+                  <code>runApp(const MyApp())</code> menjalankan widget root.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membuat MyApp dengan MaterialApp
+              </div>
+              <p>
+                Kelas <code>MyApp</code> menjadi root widget yang mengatur
+                judul, tema, dan halaman awal.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat MyApp dengan Tema deepPurple dan home
+                AddTransactionScreen
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss10.png"
+                  alt="SS VS Code kelas MyApp MaterialApp tema deepPurple"
+                />
+                <div class="img-cap">
+                  Gambar D.2b – MyApp mengembalikan MaterialApp dengan tema
+                  deepPurple dan home AddTransactionScreen
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>debugShowCheckedModeBanner: false</code> menyembunyikan
+                  label debug, <code>title</code> berisi "Expense Tracker -
+                  Modul 3", dan
+                  <code>primarySwatch: Colors.deepPurple</code> menjadi warna
+                  tema. Properti
+                  <code>home: const AddTransactionScreen()</code> membuat
+                  aplikasi langsung membuka halaman form.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Menjalankan dan Menguji Form
+              </div>
+              <p>
+                Aplikasi dijalankan lalu diuji dengan beberapa skenario: kolom
+                dikosongkan, nominal diisi format salah, pemilihan kategori, dan
+                seluruh input diisi benar.
+              </p>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 1: Seluruh
+                  Kolom Dikosongkan
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Tekan Tombol "Simpan Transaksi" Tanpa Mengisi Apa
+                  Pun
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss11.png"
+                    alt="SS hasil running validasi kolom kosong"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2c – Pesan error merah muncul di bawah kolom Judul
+                    dan Nominal
+                  </div>
+                </div>
+              </div>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 2: Nominal
+                  Bukan Angka Bulat
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Isi Nominal dengan Format Salah (misal 50.000 atau
+                  huruf), lalu Simpan
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss12.png"
+                    alt="SS hasil running validasi nominal bukan angka"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2d – Pesan "Harus berupa angka bulat yang valid"
+                    pada kolom Nominal
+                  </div>
+                </div>
+              </div>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 3: Memilih
+                  Kategori Dropdown
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Buka Dropdown Kategori dan Pilih Salah Satu Opsi
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss13.png"
+                    alt="SS hasil running dropdown kategori"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2e – Daftar opsi kategori pada dropdown dan nilai
+                    yang berubah setelah dipilih
+                  </div>
+                </div>
+              </div>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 4: Seluruh
+                  Input Terisi dengan Benar
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Isi Judul, Nominal Angka Bulat, dan Kategori, lalu
+                  Simpan
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss14.png"
+                    alt="SS hasil running validasi berhasil dan SnackBar muncul"
+                  />
+                  <div class="img-cap">
+                    Gambar D.2f – SnackBar hijau "Tersimpan: [judul] (Rp
+                    [nominal])"
+                  </div>
+                </div>
+              </div>
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Keempat skenario berjalan sesuai ekspektasi, menandakan
+                  <code>validator</code>,
+                  <code>GlobalKey&lt;FormState&gt;</code>, dan
+                  <code>DropdownButtonFormField</code> pada
+                  <code>add_transaction_screen.dart</code> berfungsi dengan
+                  benar.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="laprak-card" id="latihan">
+            <div class="section-label">
+              <span class="num">E</span>Latihan: Input Tanggal Transaksi
+            </div>
+            <div class="latihan-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Latihan — Menambah Input Tanggal Transaksi</h5>
+                <p>
+                  Menambahkan satu input baru sebelum tombol Simpan untuk
+                  mengisi Tanggal Transaksi berformat DD/MM/YYYY, dengan tombol
+                  plus yang membuka <code>showDatePicker</code> serta validasi
+                  wajib diisi.
+                </p>
+              </div>
+            </div>
+            <div class="sub-section-title" id="latihan-tanggal">
+              E.1 <span class="file-badge">add_transaction_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">1</span>Menambah _dateController
+              </div>
+              <p>
+                Kolom tanggal membutuhkan controller sendiri untuk menampung
+                teks tanggal yang dipilih.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambahkan _dateController dan Bersihkan di dispose()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss15.png"
+                  alt="SS VS Code deklarasi dateController dan dispose"
+                />
+                <div class="img-cap">
+                  Gambar E.1a – Deklarasi _dateController dan pemanggilan
+                  dispose()-nya
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>final _dateController = TextEditingController();</code>
+                  menyiapkan controller tanggal, dan
+                  <code>_dateController.dispose()</code> ditambahkan pada
+                  <code>dispose()</code> agar dibersihkan bersama controller
+                  lainnya.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">2</span>Membuat Fungsi
+                _selectDate() dengan showDatePicker
+              </div>
+              <p>
+                Fungsi asynchronous dibuat untuk membuka kalender dan menuliskan
+                tanggal pilihan ke kolom.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat Future&lt;void&gt; _selectDate()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss16.png"
+                  alt="SS VS Code fungsi selectDate showDatePicker padLeft"
+                />
+                <div class="img-cap">
+                  Gambar E.1b – Fungsi _selectDate() dengan showDatePicker dan
+                  format DD/MM/YYYY
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>await showDatePicker(...)</code> menampilkan kalender
+                  dengan <code>initialDate: DateTime.now()</code> serta rentang
+                  <code>firstDate</code> tahun 2000 sampai
+                  <code>lastDate</code> tahun 2100, dan menghasilkan
+                  <code>DateTime?</code>. Jika <code>pickedDate != null</code>,
+                  <code>setState()</code> mengisi
+                  <code>_dateController.text</code> dengan format DD/MM/YYYY;
+                  <code>padLeft(2, '0')</code> menambahkan angka nol di depan
+                  agar tanggal dan bulan selalu dua digit.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">3</span>TextFormField Tanggal
+                dengan Tombol Plus
+              </div>
+              <p>
+                Kolom tanggal dibuat hanya-baca dan diisi lewat tombol plus yang
+                memanggil <code>_selectDate</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Isi TextFormField Tanggal dengan readOnly, suffixIcon, dan
+                Validator
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss17.png"
+                  alt="SS VS Code TextFormField tanggal readOnly suffixIcon validator"
+                />
+                <div class="img-cap">
+                  Gambar E.1c – TextFormField Tanggal Transaksi dengan readOnly,
+                  tombol plus, dan validator wajib diisi
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>readOnly: true</code> mencegah pengguna mengetik manual
+                  sehingga format selalu benar. <code>prefixIcon</code> memakai
+                  <code>Icons.calendar_today</code>, sedangkan
+                  <code>suffixIcon</code> berupa
+                  <code
+                    >IconButton(icon: Icon(Icons.add), onPressed:
+                    _selectDate)</code
+                  >
+                  sebagai tombol plus. Validator mengembalikan "Tanggal
+                  transaksi wajib diisi" bila kolom kosong. Kolom ini disisipkan
+                  sebelum tombol Simpan.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">4</span>Menampilkan Tanggal pada
+                SnackBar
+              </div>
+              <p>
+                Pesan sukses diperbarui agar ikut menampilkan tanggal transaksi.
+              </p>
+              <div class="sub-label">Aksi: Ubah Teks SnackBar</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan7/ss18.png"
+                  alt="SS VS Code SnackBar menampilkan tanggal"
+                />
+                <div class="img-cap">
+                  Gambar E.1d – Teks SnackBar yang kini memuat judul, nominal,
+                  dan tanggal
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Teks SnackBar digabung menjadi
+                  <code
+                    >'Tersimpan: ${{_titleController.text}} (Rp
+                    ${{_amountController.text}}) Tanggal:
+                    ${{_dateController.text}}'</code
+                  >, sehingga ketiga isian tampil bersama.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">5</span>Menjalankan dan Menguji
+                Input Tanggal
+              </div>
+              <p>
+                Aplikasi dijalankan kembali untuk menguji validasi wajib diisi,
+                tombol plus, dan penyimpanan lengkap.
+              </p>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 1: Tanggal
+                  Dikosongkan
+                </div>
+                <div class="sub-label test-label fail">
+                  Percobaan: Isi Judul dan Nominal, Kosongkan Tanggal, lalu
+                  Simpan
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss19.png"
+                    alt="SS hasil running validasi tanggal kosong"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1e – Pesan "Tanggal transaksi wajib diisi" pada
+                    kolom Tanggal
+                  </div>
+                </div>
+              </div>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 2: Memilih
+                  Tanggal dengan Tombol Plus
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Tekan Tombol Plus dan Pilih Tanggal pada Kalender
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss20.png"
+                    alt="SS hasil running date picker dan tanggal terisi"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1f – Kalender showDatePicker dan kolom Tanggal
+                    terisi format DD/MM/YYYY
+                  </div>
+                </div>
+              </div>
+              <div class="test-box">
+                <div class="test-box-title">
+                  <i class="bi bi-clipboard-check"></i> Pengujian 3: Seluruh
+                  Input Terisi dengan Benar
+                </div>
+                <div class="sub-label test-label">
+                  Percobaan: Isi Semua Kolom termasuk Tanggal, lalu Simpan
+                </div>
+                <div class="img-wrap">
+                  <img
+                    src="../images/laporan/laporan7/ss21.png"
+                    alt="SS hasil running SnackBar dengan tanggal"
+                  />
+                  <div class="img-cap">
+                    Gambar E.1g – SnackBar menampilkan judul, nominal, dan
+                    tanggal transaksi
+                  </div>
+                </div>
+              </div>
+              <div class="info-box green">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  Input tanggal berfungsi: validasi wajib diisi menolak kolom
+                  kosong, tombol plus membuka <code>showDatePicker</code>, dan
+                  tanggal terpilih tampil pada kolom serta SnackBar.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="laprak-card" id="hasil">
+            <div class="section-label">
+              <span class="num">F</span>Hasil dan Pembahasan
+            </div>
+            <p>
+              Melalui Praktikum III ini, formulir pencatatan transaksi berhasil
+              dibuat lengkap dengan penangkapan teks, dropdown, dan validasi.
+              <code>TextEditingController</code> terbukti mampu membaca judul
+              dan nominal untuk ditampilkan kembali pada <code>SnackBar</code>,
+              dan <code>dispose()</code> membersihkan seluruh controller.
+            </p>
+            <p>
+              <code>GlobalKey&lt;FormState&gt;</code> beserta
+              <code>validate()</code> menjalankan semua validator sekaligus:
+              kolom kosong dan nominal yang bukan bilangan bulat ditolak dengan
+              pesan error merah, sedangkan input valid meloloskan proses simpan.
+              <code>DropdownButtonFormField</code> dengan
+              <code>setState()</code> memperbarui kategori terpilih pada
+              tampilan.
+            </p>
+            <p>
+              Pada latihan, input tanggal berhasil ditambahkan:
+              <code>showDatePicker</code> yang dipanggil dari tombol plus
+              mengisi kolom berformat DD/MM/YYYY, <code>readOnly</code> menjaga
+              format tetap konsisten, dan validator memastikan tanggal tidak
+              dikosongkan.
+            </p>
+          </div>
+          <div class="laprak-card" id="kesimpulan">
+            <div class="section-label">
+              <span class="num">G</span>Kesimpulan
+            </div>
+            <p>
+              Berdasarkan seluruh tahapan praktikum, diperoleh kesimpulan
+              sebagai berikut:
+            </p>
+            <ol>
+              <li>
+                <strong>TextEditingController</strong> berfungsi membaca teks
+                pengguna dan wajib di-<code>dispose()</code> untuk mencegah
+                kebocoran memori.
+              </li>
+              <li>
+                <strong>Form</strong> dengan
+                <strong>GlobalKey&lt;FormState&gt;</strong> memungkinkan seluruh
+                <code>TextFormField</code> divalidasi sekaligus dari satu titik
+                lewat <code>validate()</code>.
+              </li>
+              <li>
+                <strong>Validator</strong> mengembalikan <code>null</code> untuk
+                data valid dan <code>String</code> untuk pesan error, sehingga
+                data kosong atau berformat salah dapat dicegah sebelum disimpan.
+              </li>
+              <li>
+                <strong>DropdownButtonFormField</strong> dan
+                <code>setState()</code> mempermudah pemilihan kategori dari opsi
+                statis.
+              </li>
+              <li>
+                <code>showDatePicker</code> memudahkan pengisian tanggal tanpa
+                mengetik manual, sehingga format DD/MM/YYYY tetap konsisten.
+              </li>
+            </ol>
+          </div>
+          <div class="laprak-card" id="repo">
+            <div class="section-label">
+              <span class="num">H</span>Repository Github
+            </div>
+            <p>
+              Seluruh source code praktikum ini dapat diakses pada repository
+              Github berikut:
+            </p>
+            <div class="text-center mt-4">
+              <a
+                href="https://github.com/saskiaalifah/AppMobile_2411531002_SaskiaAlifah/tree/pertemuan3"
+                target="_blank"
+                class="github-btn"
+                ><i class="bi bi-github me-2"></i> Lihat Repository GitHub</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-4 text-md-start text-center">
+            <div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+            <div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <nav>
+              <ul class="list-inline mb-0" style="font-size: 13px">
+                <li class="list-inline-item">
+                  <a
+                    href="index.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Home</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="about.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >About</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="main.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Laporan</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="kontak.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-flex gap-2">
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://github.com/saskiaalifah"
+                target="_blank"
+                style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-github"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <small style="color: var(--muted)"
+            >&copy; <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+  </body>
+</html>

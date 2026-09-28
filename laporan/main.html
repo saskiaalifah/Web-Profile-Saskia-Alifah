@@ -1,347 +1,475 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laporan - Saskia Alifah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link href="../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="../bootstrap-5.3.8-dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-    <link rel="stylesheet" href="../custom.css">
+    <link rel="stylesheet" href="../custom.css" />
 
     <style>
-        /* ===== LAPORAN HERO (Style asli kamu) ===== */
-        .laporan-hero {
-            padding: 120px 0 60px;
-            background: linear-gradient(180deg, rgba(21, 19, 32, 0) 0%, var(--bg) 100%);
-            text-align: center;
-        }
+      /* ===== LAPORAN HERO (Style asli kamu) ===== */
+      .laporan-hero {
+        padding: 120px 0 60px;
+        background: linear-gradient(
+          180deg,
+          rgba(21, 19, 32, 0) 0%,
+          var(--bg) 100%
+        );
+        text-align: center;
+      }
 
-        .laporan-hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
+      .laporan-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
 
-        .laporan-hero h1 span {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      .laporan-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-        /* --- Style Filter --- */
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+      /* --- Style Filter --- */
+      .filter-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
 
-        .filter-btn.active, .filter-btn:hover {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            color: white;
-            border-color: transparent;
-        }
+      .filter-btn.active,
+      .filter-btn:hover {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        border-color: transparent;
+      }
 
-        /* --- Card Rombakan (Lebih Profesional) --- */
-        .laprak-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            height: 100%;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            display: flex;
-            flex-direction: column;
-        }
+      /* --- Card Rombakan (Lebih Profesional) --- */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+        height: 100%;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        display: flex;
+        flex-direction: column;
+      }
 
-        .laprak-image-box {
-            height: 180px;
-            background: #1a1a2e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+      .laprak-image-box {
+        height: 180px;
+        background: #1a1a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
 
-        .laprak-image-box i {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      .laprak-image-box i {
+        font-size: 3.5rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-        .laprak-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(232, 62, 140, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+      .laprak-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(232, 62, 140, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
 
-        .laprak-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-        }
+      .laprak-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+      }
 
-        .laprak-card:hover .laprak-overlay {
-            opacity: 1;
-        }
+      .laprak-card:hover .laprak-overlay {
+        opacity: 1;
+      }
 
-        .laprak-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+      .laprak-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
-        .laprak-badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            margin-bottom: 8px;
-            display: block;
-        }
+      .laprak-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--accent);
+        margin-bottom: 8px;
+        display: block;
+      }
 
-        .laprak-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--text);
-        }
+      .laprak-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
 
-        .laprak-desc {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-bottom: 1.5rem;
-        }
+      .laprak-desc {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
 
-        .laprak-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .laprak-footer {
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        /* --- Reveal Animation --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+      /* --- Reveal Animation --- */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
     </style>
-</head>
+  </head>
 
-<body class="d-flex flex-column min-vh-100">
-
+  <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-                <img src="../images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle">
-                <span class="fw-bold text-uppercase">Saskia Alifah</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../portofolio.html">Portfolio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="main.html">Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../kontak.html">Contact</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          href="../index.html"
+        >
+          <img
+            src="../images/logo.png"
+            alt="Logo"
+            width="34"
+            height="34"
+            class="rounded-circle"
+          />
+          <span class="fw-bold text-uppercase">Saskia Alifah</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../kontak.html">Contact</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <main class="flex-grow-1">
-        <section class="laporan-hero">
-            <div class="container">
-                <h1 class="reveal">My <span>Journals</span></h1>
-                <p class="text-muted reveal">Dokumentasi praktikum Pemrograman Web berbasis framework Laravel.</p>
-            </div>
-        </section>
-
-        <div class="container mb-5">
-            <div class="d-flex justify-content-center gap-3 reveal">
-                <button class="filter-btn active" data-filter="all">Semua Laporan</button>
-                <button class="filter-btn" data-filter="pweb">Pemrograman Web</button>
-            </div>
+      <section class="laporan-hero">
+        <div class="container">
+          <h1 class="reveal">My <span>Journals</span></h1>
+          <p class="text-muted reveal">
+            Dokumentasi praktikum Pemrograman Web dan Aplikasi Mobile.
+          </p>
         </div>
+      </section>
 
-        <div class="container pb-5">
-            <div class="row g-4" id="laporanGrid">
-                
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-terminal"></i>
-                            <div class="laprak-overlay"><a href="laprak1.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 01</span>
-                            <h3 class="laprak-title">Instalasi & Konfigurasi</h3>
-                            <p class="laprak-desc">Persiapan environment dan inisialisasi project Laravel 11.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 1</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-database"></i>
-                            <div class="laprak-overlay"><a href="laprak2.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 02</span>
-                            <h3 class="laprak-title">Migration & Seeding</h3>
-                            <p class="laprak-desc">Pengelolaan skema database dan pengisian data dummy otomatis.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 2</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-layout-text-window-reverse"></i>
-                            <div class="laprak-overlay"><a href="laprak3.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 03</span>
-                            <h3 class="laprak-title">Blade Templating</h3>
-                            <p class="laprak-desc">Membangun layout dinamis dengan engine template Blade.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 3</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-gear-wide-connected"></i>
-                            <div class="laprak-overlay"><a href="laprak4.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 04</span>
-                            <h3 class="laprak-title">Controller & Routing</h3>
-                            <p class="laprak-desc">Manajemen alur logika aplikasi dan sistem navigasi URL.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 4</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-code-square"></i>
-                            <div class="laprak-overlay"><a href="laprak5.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 05</span>
-                            <h3 class="laprak-title">Eloquent CRUD</h3>
-                            <p class="laprak-desc">Operasi Database (Create, Read, Update, Delete) menggunakan ORM.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 5</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
-                    <div class="laprak-card">
-                        <div class="laprak-image-box">
-                            <i class="bi bi-shield-lock"></i>
-                            <div class="laprak-overlay"><a href="laprak6.html" class="btn btn-light btn-sm fw-bold rounded-pill">Lihat Laporan</a></div>
-                        </div>
-                        <div class="laprak-content">
-                            <span class="laprak-badge">Praktikum 06</span>
-                            <h3 class="laprak-title">Authentication</h3>
-                            <p class="laprak-desc">Sistem login, register, dan keamanan hak akses user.</p>
-                            <div class="laprak-footer">
-                                <small class="text-muted">Laporan 6</small>
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+      <div class="container mb-5">
+        <div class="d-flex justify-content-center gap-3 reveal">
+          <button class="filter-btn active" data-filter="all">
+            Semua Laporan
+          </button>
+          <button class="filter-btn" data-filter="pweb">Pemrograman Web</button>
+          <button class="filter-btn" data-filter="appmob">
+            Aplikasi Mobile
+          </button>
         </div>
+      </div>
+
+      <div class="container pb-5">
+        <div class="row g-4" id="laporanGrid">
+          <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-terminal"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak1.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 01</span>
+                <h3 class="laprak-title">Instalasi & Konfigurasi</h3>
+                <p class="laprak-desc">
+                  Persiapan environment dan inisialisasi project Laravel 11.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 1</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-database"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak2.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 02</span>
+                <h3 class="laprak-title">Migration & Seeding</h3>
+                <p class="laprak-desc">
+                  Pengelolaan skema database dan pengisian data dummy otomatis.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 2</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak3.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 03</span>
+                <h3 class="laprak-title">Blade Templating</h3>
+                <p class="laprak-desc">
+                  Membangun layout dinamis dengan engine template Blade.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 3</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-gear-wide-connected"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak4.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 04</span>
+                <h3 class="laprak-title">Controller & Routing</h3>
+                <p class="laprak-desc">
+                  Manajemen alur logika aplikasi dan sistem navigasi URL.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 4</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-ui-checks-grid"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak5.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 05</span>
+                <h3 class="laprak-title">Input Widgets &amp; Forms</h3>
+                <p class="laprak-desc">
+                  Pengenalan input widgets dan pembuatan form dasar pada
+                  aplikasi mobile.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 5</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-grid-3x3-gap"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak6.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 06</span>
+                <h3 class="laprak-title">Pengenalan Widget dan Layouting</h3>
+                <p class="laprak-desc">
+                  Mengenal berbagai widget serta menyusun tampilan aplikasi
+                  menggunakan layouting.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 6</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-input-cursor-text"></i>
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak7.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                    >Lihat Laporan</a
+                  >
+                </div>
+              </div>
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 07</span>
+                <h3 class="laprak-title">Input Widgets dan Basic Form</h3>
+                <p class="laprak-desc">
+                  Implementasi input widgets dan pembuatan basic form untuk
+                  menerima data dari pengguna.
+                </p>
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 7</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <footer class="py-4 mt-auto border-top border-secondary border-opacity-10">
-        <div class="container text-center">
-            <small class="text-muted">&copy; 2024 Saskia Alifah. Universitas Andalas.</small>
-        </div>
+      <div class="container text-center">
+        <small class="text-muted"
+          >&copy; 2024 Saskia Alifah. Universitas Andalas.</small
+        >
+      </div>
     </footer>
 
     <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Reveal animation (Sesuai style aslimu)
-        function reveal() {
-            const reveals = document.querySelectorAll(".reveal");
-            reveals.forEach(el => {
-                const windowHeight = window.innerHeight;
-                const elementTop = el.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 100) el.classList.add("active");
-            });
-        }
-        window.addEventListener("scroll", reveal);
-        window.onload = reveal;
+      // Reveal animation (Sesuai style aslimu)
+      function reveal() {
+        const reveals = document.querySelectorAll(".reveal");
+        reveals.forEach((el) => {
+          const windowHeight = window.innerHeight;
+          const elementTop = el.getBoundingClientRect().top;
+          if (elementTop < windowHeight - 100) el.classList.add("active");
+        });
+      }
+      window.addEventListener("scroll", reveal);
+      window.onload = reveal;
 
-        // Filter Logic
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const filter = btn.dataset.filter;
-                document.querySelectorAll('.reveal[data-category]').forEach(card => {
-                    card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'block' : 'none';
-                });
+      // Filter Logic
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const filter = btn.dataset.filter;
+          document
+            .querySelectorAll(".reveal[data-category]")
+            .forEach((card) => {
+              card.style.display =
+                filter === "all" || card.dataset.category === filter
+                  ? "block"
+                  : "none";
             });
         });
+      });
     </script>
-</body>
+  </body>
 </html>

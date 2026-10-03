@@ -1,0 +1,2239 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 4 — Navigasi dan Passing Data (Flutter)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY (nempel selama kolom konten masih berjalan) ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
+        }
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
+        }
+      }
+
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
+        }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.latihan {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+      .sub-label.test-label.fail {
+        color: #f2a65a;
+      }
+      .sub-label.test-label.fail::before {
+        background: #f2a65a;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan untuk pengujian (pass/fail) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Latihan Banner ── */
+      .latihan-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .latihan-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .latihan-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .latihan-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block (paragraf + poin) ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
+        }
+        .step-block {
+          padding: 16px 16px;
+        }
+        .img-wrap img {
+          max-height: 240px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase"
+          href="index.html"
+        >
+          <i class="bi bi-code-slash" style="color: var(--accent)"></i>
+          Saskia Alifah
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kontak.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="laprak-hero">
+      <div class="container">
+        <a href="main.html" class="btn-back-hero"
+          ><i class="bi bi-chevron-left"></i> Kembali ke Laporan</a
+        >
+        <h1>Laprak 4 — <span>Navigasi dan Passing Data (Flutter)</span></h1>
+        <p class="lead">Aplikasi Mobile · Praktikum 4</p>
+        <div class="badge-row">
+          <span class="badge-pill"
+            ><i class="bi bi-person-fill"></i> Saskia Alifah</span
+          >
+          <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+          <span class="badge-pill"
+            ><i class="bi bi-calendar3"></i> Aplikasi Mobile</span
+          >
+          <span class="badge-pill"><i class="bi bi-phone"></i> Flutter</span>
+          <span class="badge-pill"
+            ><i class="bi bi-signpost-split"></i> Navigator &amp; Passing
+            Data</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- TOC MOBILE (offcanvas) -->
+    <button
+      class="toc-fab"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#tocOffcanvas"
+      aria-controls="tocOffcanvas"
+    >
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="tocOffcanvas"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">
+          <i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="toc-list">
+          <li>
+            <a href="#tujuan" data-bs-dismiss="offcanvas"
+              >A. Tujuan Praktikum</a
+            >
+          </li>
+          <li>
+            <a href="#teori" data-bs-dismiss="offcanvas">B. Dasar Teori</a>
+          </li>
+          <li>
+            <a href="#alat" data-bs-dismiss="offcanvas">C. Alat dan Bahan</a>
+          </li>
+          <li>
+            <a href="#langkah" data-bs-dismiss="offcanvas"
+              >D. Langkah Praktikum</a
+            >
+            <ul>
+              <li>
+                <a href="#langkah-main" data-bs-dismiss="offcanvas"
+                  >main.dart</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-detail" data-bs-dismiss="offcanvas"
+                  >transaction_detail_screen.dart</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-dashboard" data-bs-dismiss="offcanvas"
+                  >dashboard_screen.dart</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-add" data-bs-dismiss="offcanvas"
+                  >add_transaction_screen.dart</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#latihan" data-bs-dismiss="offcanvas">E. Latihan</a>
+            <ul>
+              <li>
+                <a href="#latihan-tanggal" data-bs-dismiss="offcanvas"
+                  >Input Tanggal (add_transaction_screen.dart)</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#hasil" data-bs-dismiss="offcanvas"
+              >F. Hasil dan Pembahasan</a
+            >
+          </li>
+          <li>
+            <a href="#kesimpulan" data-bs-dismiss="offcanvas">G. Kesimpulan</a>
+          </li>
+          <li>
+            <a href="#repo" data-bs-dismiss="offcanvas">H. Repository Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+      <div class="layout-wrap">
+        <div class="toc-col">
+          <aside class="toc-sidebar">
+            <div class="toc-title">
+              <i class="bi bi-list-ul"></i> Daftar Isi
+            </div>
+            <ul class="toc-list">
+              <li><a href="#tujuan">A. Tujuan Praktikum</a></li>
+              <li><a href="#teori">B. Dasar Teori</a></li>
+              <li><a href="#alat">C. Alat dan Bahan</a></li>
+              <li>
+                <a href="#langkah">D. Langkah Praktikum</a>
+                <ul>
+                  <li><a href="#langkah-main">main.dart</a></li>
+                  <li>
+                    <a href="#langkah-detail">transaction_detail_screen.dart</a>
+                  </li>
+                  <li>
+                    <a href="#langkah-dashboard">dashboard_screen.dart</a>
+                  </li>
+                  <li>
+                    <a href="#langkah-add">add_transaction_screen.dart</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#latihan">E. Latihan</a>
+                <ul>
+                  <li>
+                    <a href="#latihan-tanggal"
+                      >Input Tanggal (add_transaction_screen.dart)</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#hasil">F. Hasil dan Pembahasan</a></li>
+              <li><a href="#kesimpulan">G. Kesimpulan</a></li>
+              <li><a href="#repo">H. Repository Github</a></li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="content-col">
+          <div class="laprak-card" id="tujuan">
+            <div class="section-label">
+              <span class="num">A</span>Tujuan Praktikum
+            </div>
+
+            <p>
+              Praktikum ini bertujuan supaya mahasiswa mampu mengelola
+              perpindahan antar halaman (layar) pada aplikasi Flutter. Secara
+              lebih rinci, setelah menyelesaikan praktikum ini mahasiswa
+              diharapkan mampu menerapkan <code>Navigator.push</code> untuk
+              berpindah ke layar baru, menggunakan
+              <code>Navigator.pop</code> untuk menutup layar setelah suatu aksi
+              selesai, serta mengirim data bertipe <strong>String</strong> dan
+              <strong>int</strong> antar layar melalui
+              <strong>Constructor</strong>.
+            </p>
+            <p>
+              Konsep tersebut diterapkan pada studi kasus aplikasi
+              <em>Expense Tracker</em> yang terdiri dari halaman Dashboard,
+              halaman Detail Transaksi, dan halaman form Catat Transaksi. Pada
+              bagian latihan, mahasiswa menambahkan input Tanggal Transaksi pada
+              form menggunakan <code>showDatePicker</code> lengkap dengan
+              validasi wajib diisi.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="teori">
+            <div class="section-label">
+              <span class="num">B</span>Dasar Teori
+            </div>
+
+            <p>
+              <strong>Navigator</strong> adalah widget pengelola rute (halaman)
+              pada Flutter yang bekerja seperti
+              <strong>tumpukan kartu (stack)</strong>. Setiap halaman dipandang
+              sebagai sebuah <em>route</em> yang ditumpuk satu di atas yang
+              lain, dan halaman yang tampil di layar selalu halaman yang berada
+              di tumpukan paling atas. Prinsip kerjanya adalah LIFO (<em
+                >Last In, First Out</em
+              >): halaman yang terakhir dibuka menjadi halaman yang pertama
+              ditutup.
+            </p>
+            <p>
+              <strong>Navigator.push</strong> (maju) meletakkan halaman baru di
+              tumpukan teratas sehingga halaman lama tidak dihapus, hanya
+              tertutup di bawahnya. Method ini membutuhkan
+              <code>context</code> dan sebuah route, umumnya
+              <code>MaterialPageRoute</code> yang properti
+              <code>builder</code>-nya mengembalikan widget halaman tujuan.
+              Karena halaman lama masih ada di dalam stack,
+              <code>AppBar</code> pada halaman baru otomatis menampilkan tombol
+              panah kiri (back).
+            </p>
+            <p>
+              <strong>Navigator.pop</strong> (mundur) menghapus atau menutup
+              halaman teratas sehingga tampilan kembali ke halaman di bawahnya.
+              Method ini juga dapat membawa nilai balik melalui
+              <code>Navigator.pop(context, nilai)</code>, namun pada praktikum
+              ini <code>pop</code> hanya dipakai untuk menutup layar.
+            </p>
+            <p>
+              <strong>Constructor &amp; Passing Data</strong>: untuk mengirim
+              data dari Halaman A ke Halaman B, Halaman B harus menyiapkan
+              variabel dan constructor.
+              <strong>Variabel final</strong> berfungsi sebagai penampung data
+              (misalnya <code>title</code>), sedangkan kata kunci
+              <strong>required</strong> menandai bahwa data tersebut wajib diisi
+              saat berpindah layar. Variabel dibuat <code>final</code> karena
+              <code>StatelessWidget</code> bersifat immutable, sehingga nilainya
+              tidak boleh berubah setelah widget dibuat.
+            </p>
+            <p>
+              <strong>showDatePicker</strong> adalah fungsi bawaan Flutter yang
+              menampilkan dialog kalender. Fungsi ini mengembalikan
+              <code>Future&lt;DateTime?&gt;</code>, sehingga pemanggilannya
+              menggunakan <code>async/await</code>, dan hasilnya bernilai
+              <code>null</code> apabila pengguna menutup dialog tanpa memilih
+              tanggal.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="alat">
+            <div class="section-label">
+              <span class="num">C</span>Alat dan Bahan
+            </div>
+            <ul>
+              <li>Laptop / Komputer dengan Flutter SDK dan Dart terinstall</li>
+              <li>
+                Visual Studio Code (Code Editor) dengan ekstensi Flutter &amp;
+                Dart
+              </li>
+              <li>
+                Chrome Browser / Android Emulator sebagai target device untuk
+                menjalankan aplikasi
+              </li>
+              <li>
+                Modul Praktikum Aplikasi Mobile — Praktikum IV: Navigasi &amp;
+                Passing Data
+              </li>
+            </ul>
+          </div>
+
+          <div class="laprak-card" id="langkah">
+            <div class="section-label">
+              <span class="num">D</span>Langkah Praktikum
+            </div>
+            <p>
+              Praktikum ini terdiri dari empat file yang dibuat di dalam folder
+              <code>lib</code>, yaitu <code>main.dart</code> sebagai pintu masuk
+              aplikasi, <code>transaction_detail_screen.dart</code> sebagai
+              halaman penerima data, <code>dashboard_screen.dart</code> sebagai
+              halaman utama yang mengirim data dan membuka form, serta
+              <code>add_transaction_screen.dart</code> sebagai form yang menutup
+              dirinya sendiri dengan <code>Navigator.pop</code>. Setiap file
+              dikerjakan berurutan beserta penjelasan kodenya.
+            </p>
+            <div class="sub-section-title" id="langkah-main">
+              D.1 <span class="file-badge">main.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat File main.dart dan
+                Mengatur MaterialApp
+              </div>
+              <p>
+                Langkah pertama adalah membuat file <code>main.dart</code> di
+                dalam folder <code>lib</code>. File ini menjalankan aplikasi,
+                memanggil <code>MyApp</code>, dan menetapkan
+                <code>DashboardScreen</code> sebagai halaman pertama yang
+                dimuat.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Kode main.dart Lengkap dengan Tema Merah
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss1.png"
+                  alt="SS VS Code main.dart dengan MyApp, MaterialApp, tema merah, dan home DashboardScreen"
+                />
+                <div class="img-cap">
+                  Gambar D.1a – Kode main.dart: MaterialApp dengan tema
+                  Colors.red dan home DashboardScreen
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Baris
+                  <code>import 'dashboard_screen.dart';</code> menghubungkan
+                  <code>main.dart</code> dengan file dashboard, sementara
+                  <code>void main() { runApp(const MyApp()); }</code> adalah
+                  titik masuk yang menjalankan widget <code>MyApp</code>. Widget
+                  ini berupa <code>StatelessWidget</code> karena tidak memiliki
+                  data yang berubah.
+                </p>
+                <ul>
+                  <li>
+                    <code>debugShowCheckedModeBanner: false</code> —
+                    menyembunyikan pita "DEBUG" di pojok kanan atas layar.
+                  </li>
+                  <li>
+                    <code>title: 'Expense Tracker - Modul 4'</code> — judul
+                    aplikasi yang dikenali sistem.
+                  </li>
+                  <li>
+                    <code>theme: ThemeData(primarySwatch: Colors.red)</code> —
+                    mengatur warna utama aplikasi menjadi merah sesuai slide
+                    Modul 4.
+                  </li>
+                  <li>
+                    <code>home: const DashboardScreen()</code> — halaman pertama
+                    yang tampil ketika aplikasi dijalankan.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-info-circle-fill"></i>
+              <div>
+                Pada versi Flutter yang memakai Material 3,
+                <code>primarySwatch</code> tidak selalu mewarnai
+                <code>AppBar</code> secara otomatis. Karena itu, setiap
+                <code>AppBar</code> pada praktikum ini juga diberi
+                <code>backgroundColor: Colors.red</code> dan
+                <code>foregroundColor: Colors.white</code> agar warnanya
+                konsisten.
+              </div>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke File Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="langkah-detail">
+              D.2 <span class="file-badge">transaction_detail_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Menyiapkan Variabel Final dan
+                Constructor Penerima Data
+              </div>
+              <p>
+                File <code>transaction_detail_screen.dart</code> dibuat sebagai
+                halaman tujuan. Sesuai teori, halaman tujuan harus menyiapkan
+                variabel penampung data dan constructor yang mewajibkan data
+                tersebut diisi.
+              </p>
+              <div class="sub-label">
+                Aksi: Deklarasikan Empat Variabel final dan Constructor dengan
+                required
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss2.png"
+                  alt="SS VS Code class TransactionDetailScreen dengan variabel final dan constructor required"
+                />
+                <div class="img-cap">
+                  Gambar D.2a – Class TransactionDetailScreen dengan variabel
+                  final title, amount, category, date dan constructor required
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Class
+                  <code>TransactionDetailScreen extends StatelessWidget</code>
+                  memiliki empat variabel <code>final String</code>, yaitu
+                  <code>title</code>, <code>amount</code>,
+                  <code>category</code>, dan <code>date</code>. Keempatnya
+                  bertipe <code>final</code> karena
+                  <code>StatelessWidget</code> tidak boleh mengubah datanya
+                  setelah dibuat.
+                </p>
+                <ul>
+                  <li>
+                    <code>const TransactionDetailScreen({...})</code> —
+                    constructor bernama parameter (named parameter) yang
+                    bersifat <code>const</code>.
+                  </li>
+                  <li>
+                    <code>super.key</code> — meneruskan <code>key</code> widget
+                    ke class induk.
+                  </li>
+                  <li>
+                    <code>required this.title</code> (dan tiga lainnya) —
+                    memasukkan nilai parameter langsung ke variabel milik class,
+                    sekaligus mewajibkan halaman pengirim mengisinya. Bila ada
+                    yang terlewat, kode akan error saat dikompilasi.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membangun Tampilan Halaman Detail
+                pada build()
+              </div>
+              <p>
+                Data yang sudah diterima kemudian ditampilkan pada method
+                <code>build()</code> menggunakan <code>Scaffold</code>,
+                <code>Column</code>, dan beberapa widget <code>Text</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Method build() dan Helper _buildDetailRow()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss3.png"
+                  alt="SS VS Code method build TransactionDetailScreen dan _buildDetailRow"
+                />
+                <div class="img-cap">
+                  Gambar D.2b – Method build() yang menampilkan ikon, judul,
+                  nominal, dan baris detail, serta helper _buildDetailRow()
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>AppBar</code> berjudul "Detail Transaksi" diberi warna
+                  merah dan teks putih. Isi halaman dibungkus
+                  <code>Padding(all: 24)</code> dan <code>Column</code> dengan
+                  <code>crossAxisAlignment: CrossAxisAlignment.center</code>
+                  agar semua elemen berada di tengah.
+                </p>
+                <ul>
+                  <li>
+                    <code
+                      >Icon(Icons.receipt_long, size: 80, color:
+                      Colors.redAccent)</code
+                    >
+                    — ikon struk berukuran besar sebagai penanda halaman.
+                  </li>
+                  <li>
+                    <code>Text(title, ...)</code> berukuran 24 tebal dan
+                    <code>Text(amount, ...)</code> berukuran 32 tebal berwarna
+                    merah — inilah tempat data hasil
+                    <em>passing data</em> ditampilkan.
+                  </li>
+                  <li>
+                    <code>Divider(height: 40, thickness: 2)</code> — garis
+                    pemisah antara ringkasan dan rincian.
+                  </li>
+                  <li>
+                    <code>_buildDetailRow('Kategori', category)</code> dan
+                    <code>_buildDetailRow('Tanggal', date)</code> — memakai data
+                    kiriman, sedangkan
+                    <code>_buildDetailRow('Status', 'Berhasil')</code> berisi
+                    teks tetap.
+                  </li>
+                </ul>
+                <p>
+                  Method
+                  <code>_buildDetailRow(String label, String value)</code>
+                  adalah widget pembantu berupa <code>Row</code> dengan
+                  <code>mainAxisAlignment: MainAxisAlignment.spaceBetween</code
+                  >: label abu-abu di kiri dan nilai tebal di kanan, sehingga
+                  pembuatan tiga baris detail tidak perlu menulis kode berulang.
+                </p>
+              </div>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke File Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="langkah-dashboard">
+              D.3 <span class="file-badge">dashboard_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat Struktur Dashboard dan
+                Tombol FAB dengan Navigator.push
+              </div>
+              <p>
+                File <code>dashboard_screen.dart</code> adalah halaman utama.
+                Pada langkah ini dibuat kerangka <code>Scaffold</code> beserta
+                tombol mengambang (FAB) yang berpindah ke halaman form
+                menggunakan <code>Navigator.push</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Import, AppBar, dan FloatingActionButton
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss4.png"
+                  alt="SS VS Code import, class DashboardScreen, AppBar, dan FloatingActionButton dengan Navigator.push"
+                />
+                <div class="img-cap">
+                  Gambar D.3a – Kerangka DashboardScreen dengan AppBar dan
+                  FloatingActionButton yang memanggil Navigator.push ke
+                  AddTransactionScreen
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Dua baris import, yaitu
+                  <code>add_transaction_screen.dart</code> dan
+                  <code>transaction_detail_screen.dart</code>, dibutuhkan agar
+                  class <code>AddTransactionScreen</code> dan
+                  <code>TransactionDetailScreen</code> dapat dipanggil dari file
+                  ini.
+                </p>
+                <ul>
+                  <li>
+                    <code>AppBar(title: const Text('Dashboard Keuangan'))</code>
+                    — judul halaman, berwarna latar merah dengan teks putih.
+                  </li>
+                  <li>
+                    <code>FloatingActionButton</code> — tombol bulat merah
+                    berikon <code>Icons.add</code> di pojok kanan bawah.
+                  </li>
+                  //h
+                  <li>
+                    <code
+                      >Navigator.push(context, MaterialPageRoute(builder:
+                      (context) =&gt; const AddTransactionScreen()))</code
+                    >
+                    — meletakkan halaman form di atas tumpukan.
+                    <code>context</code> menunjukkan posisi widget di tree,
+                    sedangkan <code>MaterialPageRoute</code> membungkus halaman
+                    tujuan beserta animasi transisinya.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Menyusun Body: Sapaan, Kartu
+                Saldo, dan Judul Daftar
+              </div>
+              <p>
+                Bagian <code>body</code> berupa
+                <code>SingleChildScrollView</code> agar halaman dapat digulir
+                bila isinya melebihi layar.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Body dan Method _buildBalanceCard()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss5.png"
+                  alt="SS VS Code body SingleChildScrollView dan method _buildBalanceCard"
+                />
+                <div class="img-cap">
+                  Gambar D.3b – Body Dashboard dan method _buildBalanceCard()
+                  untuk kartu Saldo Utama
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>Column</code> dengan
+                  <code>crossAxisAlignment: CrossAxisAlignment.start</code>
+                  menata elemen rata kiri: teks
+                  <code>'Halo, Budi'</code> berukuran 20 tebal, kartu saldo,
+                  judul <code>'Transaksi Terakhir'</code>, lalu daftar
+                  transaksi. <code>SizedBox(height: ...)</code> dipakai sebagai
+                  jarak antar elemen.
+                </p>
+                <ul>
+                  <li>
+                    <code>_buildBalanceCard()</code> — mengembalikan
+                    <code>Card</code> dengan <code>elevation: 4</code>, warna
+                    <code>Colors.redAccent</code>, dan sudut membulat
+                    <code>BorderRadius.circular(16)</code>.
+                  </li>
+                  <li>
+                    Isinya <code>Text('Saldo Utama')</code> berwarna putih
+                    transparan (<code>Colors.white70</code>) dan
+                    <code>Text('Rp 5.000.000')</code> berukuran 28 tebal putih.
+                  </li>
+                  <li>
+                    <code>_buildTransactionList(context)</code> —
+                    <code>context</code> sengaja dikirim sebagai argumen karena
+                    method ini berada di luar <code>build()</code> tetapi
+                    memerlukan <code>context</code> untuk
+                    <code>Navigator.push</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Menambahkan onTap dengan
+                Navigator.push dan Passing Data pada ListTile Pertama
+              </div>
+              <p>
+                Item transaksi dibuat dengan <code>ListTile</code> di dalam
+                <code>Card</code>. Fungsi <code>onTap</code> ditambahkan agar
+                ketika baris diketuk, aplikasi berpindah ke halaman detail
+                sambil membawa data baris tersebut.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis ListTile "Makan Siang" beserta onTap
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss6.png"
+                  alt="SS VS Code ListTile Makan Siang dengan onTap Navigator.push TransactionDetailScreen"
+                />
+                <div class="img-cap">
+                  Gambar D.3c – ListTile "Makan Siang" dengan onTap yang
+                  mengirim title, amount, category, dan date ke
+                  TransactionDetailScreen
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>ListTile</code> tersusun dari
+                  <code>leading</code> berupa <code>CircleAvatar</code> oranye
+                  dengan ikon <code>Icons.fastfood</code>,
+                  <code>title</code> "Makan Siang", <code>subtitle</code> "Hari
+                  ini", dan <code>trailing</code> "- Rp 50.000" berwarna merah
+                  tebal.
+                </p>
+                <p>
+                  Di dalam <code>onTap</code>,
+                  <code>Navigator.push</code> dipanggil dengan
+                  <code>MaterialPageRoute</code> yang <code>builder</code>-nya
+                  membuat <code>TransactionDetailScreen</code> dan mengisi
+                  constructor-nya: <code>title: 'Makan Siang'</code>,
+                  <code>amount: '- Rp 50.000'</code>,
+                  <code>category: 'Makanan'</code>, dan
+                  <code>date: '13 September 2026'</code>. Inilah inti
+                  <em>passing data via constructor</em>: nilai diisikan saat
+                  objek halaman tujuan dibuat. Kata kunci
+                  <code>const</code> dapat dipakai karena semua nilainya
+                  konstanta.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>Menambahkan ListTile Kedua dan
+                Pemisah
+              </div>
+              <p>
+                Satu item transaksi lagi ditambahkan untuk membuktikan bahwa
+                halaman detail menyesuaikan isinya dengan baris yang diketuk.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Divider dan ListTile "Gaji Bulanan"
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss7.png"
+                  alt="SS VS Code Divider dan ListTile Gaji Bulanan dengan onTap Navigator.push"
+                />
+                <div class="img-cap">
+                  Gambar D.3d – Divider dan ListTile "Gaji Bulanan" dengan data
+                  pemasukan yang dikirim ke halaman detail
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>Divider(height: 1)</code> memberi garis tipis di antara
+                  dua item. <code>ListTile</code> kedua berisi ikon
+                  <code>Icons.attach_money</code> dengan latar hijau, judul
+                  "Gaji Bulanan", subjudul "1 September 2026", dan nominal "+ Rp
+                  5.000.000" berwarna hijau tebal.
+                </p>
+                <p>
+                  Data yang dikirim berbeda: <code>title: 'Gaji Bulanan'</code>,
+                  <code>amount: '+ Rp 5.000.000'</code>,
+                  <code>category: 'Pemasukan'</code>, dan
+                  <code>date: '1 September 2026'</code>. Karena kelas tujuannya
+                  sama tetapi datanya berbeda, halaman detail akan menampilkan
+                  isi yang sesuai dengan baris yang diketuk.
+                </p>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Dashboard dan
+                Navigator.push dengan Passing Data
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Jalankan Aplikasi dan Ketuk "Makan Siang"
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss8.png"
+                  alt="SS hasil running Dashboard dan halaman Detail Transaksi Makan Siang"
+                />
+                <div class="img-cap">
+                  Gambar D.3e – Tampilan Dashboard Keuangan dan halaman Detail
+                  Transaksi "Makan Siang" setelah baris diketuk
+                </div>
+              </div>
+              <p>
+                Aplikasi dijalankan dan Dashboard tampil dengan kartu saldo
+                serta dua transaksi. Setelah baris "Makan Siang" diketuk,
+                halaman Detail Transaksi terbuka dengan judul, nominal,
+                kategori, dan tanggal yang sesuai dengan data baris. Tombol
+                panah kiri muncul otomatis di <code>AppBar</code> karena halaman
+                dibuka dengan <code>Navigator.push</code>, dan menekannya
+                mengeluarkan halaman detail dari stack sehingga Dashboard tampil
+                kembali.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Data Berbeda
+                pada Baris Lain
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Ketuk "Gaji Bulanan"
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss9.png"
+                  alt="SS hasil halaman Detail Transaksi Gaji Bulanan"
+                />
+                <div class="img-cap">
+                  Gambar D.3f – Halaman Detail Transaksi "Gaji Bulanan" yang
+                  menampilkan nominal pemasukan berbeda dari baris pertama
+                </div>
+              </div>
+              <p>
+                Halaman detail yang sama kini menampilkan "Gaji Bulanan", "+ Rp
+                5.000.000", kategori "Pemasukan", dan tanggal "1 September
+                2026". Ini membuktikan data dikirim per baris melalui
+                constructor, bukan ditulis tetap di halaman detail.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Ketuk pada kedua baris transaksi berhasil membuka halaman detail
+                dengan data yang sesuai, menandakan
+                <code>Navigator.push</code> dan <em>passing data</em> via
+                constructor pada <code>dashboard_screen.dart</code> telah
+                berfungsi dengan benar.
+              </div>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke File Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="langkah-add">
+              D.4 <span class="file-badge">add_transaction_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Membuat StatefulWidget,
+                GlobalKey, dan Controller
+              </div>
+              <p>
+                File <code>add_transaction_screen.dart</code> (hasil Modul 3)
+                adalah form pencatatan transaksi. Form dibuat sebagai
+                <code>StatefulWidget</code> karena mengelola state berupa
+                inputan pengguna.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis Class AddTransactionScreen dan State-nya
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss10.png"
+                  alt="SS VS Code AddTransactionScreen StatefulWidget dengan formKey dan controller"
+                />
+                <div class="img-cap">
+                  Gambar D.4a – Class AddTransactionScreen dan
+                  _AddTransactionScreenState dengan _formKey, _titleController,
+                  dan _amountController
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>createState()</code> menghubungkan widget dengan class
+                  State <code>_AddTransactionScreenState</code>. Di dalamnya,
+                  <code>GlobalKey&lt;FormState&gt;</code> bernama
+                  <code>_formKey</code> dipakai untuk memicu validasi seluruh
+                  field sekaligus, sedangkan <code>_titleController</code> dan
+                  <code>_amountController</code> bertipe
+                  <code>TextEditingController</code> untuk mengelola teks
+                  inputan Judul dan Nominal.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>Membuat Tampilan Form: Field
+                Judul dan Nominal
+              </div>
+              <p>
+                Body form dibungkus <code>Padding</code>, <code>Form</code>, dan
+                <code>Column</code> yang berisi dua
+                <code>TextFormField</code> beserta validator.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis AppBar, Form, dan Dua TextFormField
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss11.png"
+                  alt="SS VS Code Scaffold, Form, TextFormField Judul dan Nominal dengan validator"
+                />
+                <div class="img-cap">
+                  Gambar D.4b – Scaffold "Catat Transaksi" dengan Form berisi
+                  field Judul dan Nominal beserta validator
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>Form(key: _formKey)</code> menghubungkan form dengan
+                  <code>_formKey</code>, dan
+                  <code>crossAxisAlignment: CrossAxisAlignment.stretch</code>
+                  membuat elemen melebar penuh. Field Judul memakai
+                  <code>controller: _titleController</code>, sedangkan field
+                  Nominal ditambah
+                  <code>keyboardType: TextInputType.number</code> agar yang
+                  muncul keyboard angka.
+                </p>
+                <p>
+                  Keduanya memakai <code>InputDecoration</code> berupa
+                  <code>labelText</code> dan <code>OutlineInputBorder()</code>,
+                  serta
+                  <code
+                    >validator: (value) =&gt; value!.isEmpty ? "Tidak boleh
+                    kosong" : null</code
+                  >. Validator mengembalikan pesan error bila field kosong dan
+                  <code>null</code> bila valid.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>Menutup Layar Otomatis dengan
+                Navigator.pop
+              </div>
+              <p>
+                Form diharapkan tertutup otomatis dan kembali ke Dashboard
+                setelah tombol Simpan ditekan. Hal ini dilakukan dengan
+                <code>Navigator.pop</code> pada <code>onPressed</code> tombol.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis ElevatedButton Simpan dengan SnackBar dan
+                Navigator.pop
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss12.png"
+                  alt="SS VS Code ElevatedButton Simpan dengan validate, showSnackBar, dan Navigator.pop"
+                />
+                <div class="img-cap">
+                  Gambar D.4c – ElevatedButton "Simpan" dengan validasi form,
+                  SnackBar, dan Navigator.pop(context)
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>ElevatedButton.styleFrom(...)</code> mengatur warna
+                  latar merah, teks putih, dan padding vertikal 16. Logika
+                  utamanya ada di <code>onPressed</code>:
+                </p>
+                <ul>
+                  <li>
+                    <code>if (_formKey.currentState!.validate())</code> —
+                    menjalankan seluruh validator; blok di dalamnya hanya
+                    berjalan bila semua field valid.
+                  </li>
+                  <li>
+                    <code>ScaffoldMessenger.of(context).showSnackBar(...)</code>
+                    — menampilkan notifikasi hijau "Transaksi Berhasil
+                    Disimpan!".
+                  </li>
+                  <li>
+                    <code>Navigator.pop(context)</code> — mengeluarkan
+                    <code>AddTransactionScreen</code> dari tumpukan, sehingga
+                    Dashboard yang ada di bawahnya tampil kembali. Karena tidak
+                    ada nilai kedua, <code>pop</code> di sini hanya menutup
+                    layar tanpa membawa data balik.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Simpan dengan
+                Field Kosong
+              </div>
+              <div class="sub-label test-label fail">
+                Percobaan: Buka Form dari FAB, Tekan Simpan Tanpa Mengisi
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss13.png"
+                  alt="SS form Catat Transaksi dengan pesan Tidak boleh kosong"
+                />
+                <div class="img-cap">
+                  Gambar D.4d – Form Catat Transaksi yang menampilkan pesan
+                  "Tidak boleh kosong" dan tetap terbuka
+                </div>
+              </div>
+              <p>
+                Tombol "+" pada Dashboard membuka form Catat Transaksi lewat
+                <code>Navigator.push</code>. Saat tombol Simpan ditekan dalam
+                keadaan kosong, <code>validate()</code> bernilai
+                <code>false</code> sehingga pesan error muncul dan
+                <code>Navigator.pop</code> tidak dijalankan; form tetap terbuka.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Simpan dengan
+                Data Lengkap
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Isi Judul dan Nominal, Tekan Simpan
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss14.png"
+                  alt="SS Dashboard setelah form tertutup dan SnackBar berhasil muncul"
+                />
+                <div class="img-cap">
+                  Gambar D.4e – Form tertutup otomatis dan Dashboard tampil
+                  kembali dengan SnackBar "Transaksi Berhasil Disimpan!"
+                </div>
+              </div>
+              <p>
+                Setelah kedua field diisi dan tombol Simpan ditekan, SnackBar
+                hijau muncul dan form langsung tertutup, kembali ke Dashboard.
+                Ini menunjukkan <code>Navigator.pop</code> bekerja sesuai teori.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Form berhasil menolak input kosong dan menutup dirinya otomatis
+                setelah data valid disimpan, menandakan
+                <code>Navigator.pop</code> pada
+                <code>add_transaction_screen.dart</code> berfungsi dengan benar.
+              </div>
+            </div>
+          </div>
+
+          <div class="laprak-card" id="latihan">
+            <div class="section-label">
+              <span class="num">E</span>Latihan: Input Tanggal
+            </div>
+            <div class="latihan-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Latihan — Input Tanggal Transaksi</h5>
+                <p>
+                  Menambahkan satu input baru sebelum tombol Simpan untuk
+                  mengisi Tanggal Transaksi. Dapat memakai
+                  <code>TextFormField</code> biasa (format teks DD/MM/YYYY),
+                  tombol plus memakai fungsi <code>showDatePicker</code>, dan
+                  wajib diberi validasi wajib diisi.
+                </p>
+              </div>
+            </div>
+            <div class="sub-section-title" id="latihan-tanggal">
+              E.1 <span class="file-badge">add_transaction_screen.dart</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">1</span>Menambahkan Controller
+                Tanggal dan Method dispose()
+              </div>
+              <p>
+                Perubahan hanya dilakukan pada
+                <code>add_transaction_screen.dart</code>. Langkah pertama adalah
+                menyiapkan controller khusus untuk menampung teks tanggal.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambahkan _dateController dan Method dispose()
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss15.png"
+                  alt="SS VS Code deklarasi _dateController dan method dispose"
+                />
+                <div class="img-cap">
+                  Gambar E.1a – Deklarasi _dateController dan method dispose()
+                  yang membersihkan tiga controller
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code>final _dateController = TextEditingController();</code>
+                  menampung teks tanggal yang muncul di field. Method
+                  <code>dispose()</code> ditambahkan untuk memanggil
+                  <code>dispose()</code> pada <code>_titleController</code>,
+                  <code>_amountController</code>, dan
+                  <code>_dateController</code>, lalu
+                  <code>super.dispose()</code>, sehingga resource dibersihkan
+                  saat halaman ditutup dan tidak terjadi kebocoran memori.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">2</span>Membuat Fungsi
+                _pickDate() dengan showDatePicker
+              </div>
+              <p>
+                Fungsi terpisah dibuat untuk menampilkan kalender dan mengisi
+                controller dengan tanggal terpilih.
+              </p>
+              <div class="sub-label">Aksi: Tulis Method _pickDate()</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss16.png"
+                  alt="SS VS Code method _pickDate dengan showDatePicker dan format DD/MM/YYYY"
+                />
+                <div class="img-cap">
+                  Gambar E.1b – Method _pickDate() yang memanggil showDatePicker
+                  dan memformat hasilnya menjadi DD/MM/YYYY
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>Future&lt;void&gt; _pickDate() async</code> — fungsi
+                    asinkron karena menunggu pengguna memilih tanggal.
+                  </li>
+                  <li>
+                    <code
+                      >final DateTime? picked = await showDatePicker(context:
+                      context, initialDate: DateTime.now(), firstDate:
+                      DateTime(2000), lastDate: DateTime(2100));</code
+                    >
+                    — menampilkan kalender yang terbuka di tanggal hari ini
+                    dengan rentang pilihan tahun 2000 sampai 2100. Hasilnya
+                    <code>DateTime?</code> yang bisa <code>null</code>.
+                  </li>
+                  <li>
+                    <code>if (picked != null)</code> — memastikan pengguna
+                    benar-benar memilih tanggal, bukan menutup dialog.
+                  </li>
+                  <li>
+                    <code>picked.day.toString().padLeft(2, '0')</code> —
+                    mengubah angka menjadi teks dua digit (misalnya 5 menjadi
+                    05), begitu pula untuk bulan; tahun langsung diubah ke teks.
+                  </li>
+                  <li>
+                    <code
+                      >setState(() { _dateController.text = '$day/$month/$year';
+                      })</code
+                    >
+                    — mengisi field dengan format
+                    <strong>DD/MM/YYYY</strong> dan memperbarui tampilan.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">3</span>Menambahkan TextFormField
+                Tanggal Sebelum Tombol Simpan
+              </div>
+              <p>
+                Field tanggal diletakkan setelah field Nominal dan sebelum
+                tombol Simpan, sesuai perintah tugas.
+              </p>
+              <div class="sub-label">
+                Aksi: Tulis TextFormField Tanggal Transaksi dengan Ikon Kalender
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss17.png"
+                  alt="SS VS Code TextFormField Tanggal Transaksi dengan readOnly, onTap, dan suffixIcon"
+                />
+                <div class="img-cap">
+                  Gambar E.1c – TextFormField "Tanggal Transaksi" dengan
+                  readOnly, onTap: _pickDate, dan ikon kalender
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>controller: _dateController</code> — menghubungkan
+                    field dengan controller tanggal.
+                  </li>
+                  <li>
+                    <code>readOnly: true</code> — field tidak bisa diketik
+                    manual sehingga format selalu konsisten dan bebas salah
+                    ketik.
+                  </li>
+                  <li>
+                    <code>onTap: _pickDate</code> — mengetuk field membuka
+                    kalender.
+                  </li>
+                  <li>
+                    <code>labelText: "Tanggal Transaksi"</code> dan
+                    <code>hintText: "DD/MM/YYYY"</code> — label dan contoh
+                    format.
+                  </li>
+                  <li>
+                    <code
+                      >suffixIcon: IconButton(icon: const
+                      Icon(Icons.calendar_today), onPressed: _pickDate)</code
+                    >
+                    — tombol ikon kalender di sisi kanan yang juga memanggil
+                    <code>_pickDate</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">4</span>Menambahkan Validasi
+                Wajib Diisi
+              </div>
+              <p>
+                Field tanggal juga diberi validator agar form tidak bisa
+                disimpan bila tanggal belum dipilih.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambahkan Properti validator pada Field Tanggal
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss18.png"
+                  alt="SS VS Code validator pada TextFormField tanggal"
+                />
+                <div class="img-cap">
+                  Gambar E.1d – Validator "Tanggal wajib diisi" pada field
+                  Tanggal Transaksi
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  <code
+                    >validator: (value) =&gt; value == null || value.isEmpty ?
+                    "Tanggal wajib diisi" : null</code
+                  >
+                  mengembalikan pesan error bila nilai <code>null</code> atau
+                  kosong dan <code>null</code> bila sudah terisi. Karena field
+                  ini berada di dalam <code>Form</code> yang sama,
+                  <code>_formKey.currentState!.validate()</code> pada tombol
+                  Simpan otomatis ikut memeriksanya, dan
+                  <code>Navigator.pop</code> hanya berjalan bila field tanggal
+                  terisi.
+                </p>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">5</span>Menjalankan dan Menguji
+                Input Tanggal
+              </div>
+              <p>
+                Aplikasi dijalankan untuk memeriksa tiga skenario: kalender
+                muncul, tanggal masuk ke field dengan format benar, dan validasi
+                menolak field kosong.
+              </p>
+              <div class="sub-label">
+                Aksi: Jalankan Aplikasi dan Buka Form Catat Transaksi
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss19.png"
+                  alt="SS form Catat Transaksi dengan field Tanggal Transaksi baru"
+                />
+                <div class="img-cap">
+                  Gambar E.1e – Form Catat Transaksi dengan field Tanggal
+                  Transaksi di antara Nominal dan tombol Simpan
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Field <strong>Tanggal Transaksi</strong> dengan ikon kalender
+                  kini berada tepat sebelum tombol Simpan.
+                </p>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Memilih Tanggal
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Ketuk Field atau Ikon Kalender
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss20.png"
+                  alt="SS dialog showDatePicker dan field tanggal terisi"
+                />
+                <div class="img-cap">
+                  Gambar E.1f – Dialog kalender showDatePicker dan field terisi
+                  tanggal terpilih dalam format DD/MM/YYYY
+                </div>
+              </div>
+              <p>
+                Mengetuk field atau ikon kalender memunculkan dialog kalender.
+                Setelah tanggal dipilih dan dikonfirmasi, field terisi otomatis
+                dengan format DD/MM/YYYY.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Tanggal
+                Dikosongkan
+              </div>
+              <div class="sub-label test-label fail">
+                Percobaan: Isi Judul dan Nominal, Tekan Simpan Tanpa Tanggal
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss21.png"
+                  alt="SS pesan Tanggal wajib diisi pada form"
+                />
+                <div class="img-cap">
+                  Gambar E.1g – Pesan "Tanggal wajib diisi" muncul dan form
+                  tidak tertutup
+                </div>
+              </div>
+              <p>
+                Saat tanggal belum dipilih, muncul pesan "Tanggal wajib diisi"
+                dan form tidak tertutup, karena <code>validate()</code> bernilai
+                <code>false</code>.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Semua Field
+                Terisi
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Isi Semua Field, Tekan Simpan
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan8/ss22.png"
+                  alt="SS Dashboard setelah menyimpan dengan tanggal terisi"
+                />
+                <div class="img-cap">
+                  Gambar E.1h – Form tertutup dan Dashboard tampil kembali
+                  dengan SnackBar berhasil setelah semua field terisi
+                </div>
+              </div>
+              <p>
+                Bila Judul, Nominal, dan Tanggal terisi, SnackBar muncul dan
+                form tertutup lewat <code>Navigator.pop</code>.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Ketiga skenario berjalan sesuai ekspektasi: kalender
+                <code>showDatePicker</code> terbuka, tanggal terformat
+                DD/MM/YYYY, dan validasi menolak tanggal kosong, menandakan
+                tugas input tanggal telah berfungsi dengan baik.
+              </div>
+            </div>
+          </div>
+
+          <div class="laprak-card" id="hasil">
+            <div class="section-label">
+              <span class="num">F</span>Hasil dan Pembahasan
+            </div>
+
+            <p>
+              Melalui Praktikum 4 ini, implementasi navigasi antar halaman dan
+              pengiriman data pada Flutter berhasil diselesaikan pada aplikasi
+              Expense Tracker yang terdiri dari tiga halaman: Dashboard, Detail
+              Transaksi, dan Catat Transaksi.
+            </p>
+            <p>
+              Pada <code>dashboard_screen.dart</code>,
+              <code>Navigator.push</code> dengan
+              <code>MaterialPageRoute</code> terbukti membuka halaman baru di
+              atas tumpukan, baik dari tombol FAB menuju form maupun dari
+              <code>ListTile</code> menuju halaman detail. Pada halaman detail,
+              data <code>title</code>, <code>amount</code>,
+              <code>category</code>, dan <code>date</code> berhasil dikirim
+              lewat constructor berparameter <code>required</code> dan tampil
+              sesuai baris yang diketuk. Tombol panah kiri pada
+              <code>AppBar</code> muncul otomatis karena halaman sebelumnya
+              masih ada di stack.
+            </p>
+            <p>
+              Pada <code>add_transaction_screen.dart</code>,
+              <code>Navigator.pop(context)</code> berhasil menutup form dan
+              mengembalikan tampilan ke Dashboard setelah data valid disimpan,
+              sedangkan input kosong tertahan oleh validasi. Pada bagian
+              latihan, field Tanggal Transaksi berhasil dibuat dengan
+              <code>showDatePicker</code>: tanggal terformat DD/MM/YYYY, field
+              bersifat <code>readOnly</code> sehingga aman dari salah ketik, dan
+              validasi wajib diisi bekerja bersama validator Judul dan Nominal.
+            </p>
+            <p>
+              Perlu dicatat bahwa <code>Navigator.pop(context)</code> pada form
+              belum membawa data balik ke Dashboard, sehingga transaksi dan
+              tanggal yang diinput belum muncul di daftar. Hal ini sesuai
+              lingkup modul, dan dapat dikembangkan dengan
+              <code>Navigator.pop(context, data)</code>.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="kesimpulan">
+            <div class="section-label">
+              <span class="num">G</span>Kesimpulan
+            </div>
+
+            <p>
+              Berdasarkan seluruh tahapan praktikum yang telah dilaksanakan,
+              diperoleh beberapa kesimpulan penting:
+            </p>
+            <ol>
+              <li>
+                <strong>Navigator</strong> mengelola halaman dengan konsep
+                tumpukan (stack): <code>Navigator.push</code> menaruh halaman
+                baru di atas, sedangkan <code>Navigator.pop</code> menutup
+                halaman teratas untuk kembali ke halaman sebelumnya.
+              </li>
+              <li>
+                <code>MaterialPageRoute</code> dengan properti
+                <code>builder</code> menjadi cara standar membuat route, dan
+                halaman yang dibuka dengan <code>push</code> otomatis memiliki
+                tombol back di <code>AppBar</code>.
+              </li>
+              <li>
+                <strong>Passing data via constructor</strong> dilakukan dengan
+                menyiapkan variabel <code>final</code> dan parameter
+                <code>required</code> pada halaman tujuan, lalu mengisinya saat
+                halaman dibuat, sehingga satu halaman detail dapat menampilkan
+                data yang berbeda-beda.
+              </li>
+              <li>
+                Validasi <code>Form</code> menentukan kapan
+                <code>Navigator.pop</code> dijalankan, sehingga form hanya
+                tertutup setelah seluruh field valid.
+              </li>
+              <li>
+                <code>showDatePicker</code> dengan
+                <code>readOnly: true</code> dan validator memungkinkan input
+                tanggal terformat konsisten (DD/MM/YYYY) tanpa kesalahan ketik
+                dan tetap wajib diisi.
+              </li>
+            </ol>
+          </div>
+
+          <div class="laprak-card" id="repo">
+            <div class="section-label">
+              <span class="num">H</span>Repository Github
+            </div>
+
+            <p>
+              Seluruh source code praktikum ini dapat diakses pada repository
+              Github berikut:
+            </p>
+            <div class="text-center mt-4">
+              <a
+                href="https://github.com/saskiaalifah/AppMobile_2411531002_SaskiaAlifah/tree/pertemuan4"
+                target="_blank"
+                class="github-btn"
+                ><i class="bi bi-github me-2"></i> Lihat Repository GitHub</a
+              >
+            </div>
+          </div>
+        </div>
+        <!-- /content-col -->
+      </div>
+      <!-- /layout-wrap -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-4 text-md-start text-center">
+            <div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+            <div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <nav>
+              <ul class="list-inline mb-0" style="font-size: 13px">
+                <li class="list-inline-item">
+                  <a
+                    href="index.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Home</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="about.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >About</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="main.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Laporan</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="kontak.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-flex gap-2">
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://github.com/saskiaalifah"
+                target="_blank"
+                style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-github"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <small style="color: var(--muted)"
+            >&copy; <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+  </body>
+</html>

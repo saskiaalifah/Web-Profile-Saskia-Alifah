@@ -2,31 +2,39 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Laporan - Saskia Alifah</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
 
+    <!-- Bootstrap -->
     <link
       href="../bootstrap-5.3.8-dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
 
+    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
 
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../custom.css" />
 
     <style>
@@ -166,6 +174,7 @@
         transform: translateY(30px);
         transition: all 0.8s ease;
       }
+
       .reveal.active {
         opacity: 1;
         transform: translateY(0);
@@ -174,6 +183,7 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
       <div class="container">
         <a
@@ -187,8 +197,10 @@
             height="34"
             class="rounded-circle"
           />
+
           <span class="fw-bold text-uppercase">Saskia Alifah</span>
         </a>
+
         <button
           class="navbar-toggler"
           type="button"
@@ -197,20 +209,25 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link" href="../index.html">Home</a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="../about.html">About</a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="../portofolio.html">Portfolio</a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link active" href="main.html">Laporan</a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="../kontak.html">Contact</a>
             </li>
@@ -219,48 +236,62 @@
       </div>
     </nav>
 
+    <!-- Main -->
     <main class="flex-grow-1">
+      <!-- Hero -->
       <section class="laporan-hero">
         <div class="container">
           <h1 class="reveal">My <span>Journals</span></h1>
+
           <p class="text-muted reveal">
             Dokumentasi praktikum Pemrograman Web dan Aplikasi Mobile.
           </p>
         </div>
       </section>
 
+      <!-- Filter -->
       <div class="container mb-5">
         <div class="d-flex justify-content-center gap-3 reveal">
           <button class="filter-btn active" data-filter="all">
             Semua Laporan
           </button>
+
           <button class="filter-btn" data-filter="pweb">Pemrograman Web</button>
+
           <button class="filter-btn" data-filter="appmob">
             Aplikasi Mobile
           </button>
         </div>
       </div>
 
+      <!-- Cards -->
       <div class="container pb-5">
         <div class="row g-4" id="laporanGrid">
+          <!-- PRAKTIKUM 01 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-terminal"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak1.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 01</span>
-                <h3 class="laprak-title">Instalasi & Konfigurasi</h3>
+
+                <h3 class="laprak-title">Instalasi &amp; Konfigurasi</h3>
+
                 <p class="laprak-desc">
                   Persiapan environment dan inisialisasi project Laravel 11.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 1</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -269,24 +300,31 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 02 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-database"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak2.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 02</span>
-                <h3 class="laprak-title">Migration & Seeding</h3>
+
+                <h3 class="laprak-title">Migration &amp; Seeding</h3>
+
                 <p class="laprak-desc">
                   Pengelolaan skema database dan pengisian data dummy otomatis.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 2</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -295,24 +333,31 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 03 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-layout-text-window-reverse"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak3.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 03</span>
+
                 <h3 class="laprak-title">Blade Templating</h3>
+
                 <p class="laprak-desc">
                   Membangun layout dinamis dengan engine template Blade.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 3</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -321,24 +366,31 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 04 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="pweb">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-gear-wide-connected"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak4.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 04</span>
-                <h3 class="laprak-title">Controller & Routing</h3>
+
+                <h3 class="laprak-title">Controller &amp; Routing</h3>
+
                 <p class="laprak-desc">
                   Manajemen alur logika aplikasi dan sistem navigasi URL.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 4</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -347,25 +399,32 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 05 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-ui-checks-grid"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak5.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 05</span>
+
                 <h3 class="laprak-title">Input Widgets &amp; Forms</h3>
+
                 <p class="laprak-desc">
                   Pengenalan input widgets dan pembuatan form dasar pada
                   aplikasi mobile.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 5</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -374,25 +433,32 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 06 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-grid-3x3-gap"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak6.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 06</span>
+
                 <h3 class="laprak-title">Pengenalan Widget dan Layouting</h3>
+
                 <p class="laprak-desc">
                   Mengenal berbagai widget serta menyusun tampilan aplikasi
                   menggunakan layouting.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 6</small>
                   <i class="bi bi-arrow-right text-accent"></i>
@@ -401,27 +467,69 @@
             </div>
           </div>
 
+          <!-- PRAKTIKUM 07 -->
           <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
             <div class="laprak-card">
               <div class="laprak-image-box">
                 <i class="bi bi-input-cursor-text"></i>
+
                 <div class="laprak-overlay">
                   <a
                     href="laprak7.html"
                     class="btn btn-light btn-sm fw-bold rounded-pill"
-                    >Lihat Laporan</a
                   >
+                    Lihat Laporan
+                  </a>
                 </div>
               </div>
+
               <div class="laprak-content">
                 <span class="laprak-badge">Praktikum 07</span>
+
                 <h3 class="laprak-title">Input Widgets dan Basic Form</h3>
+
                 <p class="laprak-desc">
                   Implementasi input widgets dan pembuatan basic form untuk
                   menerima data dari pengguna.
                 </p>
+
                 <div class="laprak-footer">
                   <small class="text-muted">Laporan 7</small>
+                  <i class="bi bi-arrow-right text-accent"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRAKTIKUM 08 -->
+          <div class="col-md-6 col-lg-4 reveal" data-category="appmob">
+            <div class="laprak-card">
+              <div class="laprak-image-box">
+                <i class="bi bi-signpost-2"></i>
+
+                <div class="laprak-overlay">
+                  <a
+                    href="laprak8.html"
+                    class="btn btn-light btn-sm fw-bold rounded-pill"
+                  >
+                    Lihat Laporan
+                  </a>
+                </div>
+              </div>
+
+              <div class="laprak-content">
+                <span class="laprak-badge">Praktikum 08</span>
+
+                <h3 class="laprak-title">Navigasi &amp; Passing Data</h3>
+
+                <p class="laprak-desc">
+                  Implementasi navigasi antar halaman menggunakan Navigator,
+                  memahami konsep Stack, serta passing data menggunakan
+                  Constructor pada aplikasi mobile.
+                </p>
+
+                <div class="laprak-footer">
+                  <small class="text-muted">Laporan 8</small>
                   <i class="bi bi-arrow-right text-accent"></i>
                 </div>
               </div>
@@ -431,25 +539,33 @@
       </div>
     </main>
 
+    <!-- Footer -->
     <footer class="py-4 mt-auto border-top border-secondary border-opacity-10">
       <div class="container text-center">
-        <small class="text-muted"
-          >&copy; 2024 Saskia Alifah. Universitas Andalas.</small
-        >
+        <small class="text-muted">
+          &copy; 2024 Saskia Alifah. Universitas Andalas.
+        </small>
       </div>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-      // Reveal animation (Sesuai style aslimu)
+      // Reveal animation
       function reveal() {
         const reveals = document.querySelectorAll(".reveal");
+
         reveals.forEach((el) => {
           const windowHeight = window.innerHeight;
           const elementTop = el.getBoundingClientRect().top;
-          if (elementTop < windowHeight - 100) el.classList.add("active");
+
+          if (elementTop < windowHeight - 100) {
+            el.classList.add("active");
+          }
         });
       }
+
       window.addEventListener("scroll", reveal);
       window.onload = reveal;
 
@@ -459,8 +575,11 @@
           document
             .querySelectorAll(".filter-btn")
             .forEach((b) => b.classList.remove("active"));
+
           btn.classList.add("active");
+
           const filter = btn.dataset.filter;
+
           document
             .querySelectorAll(".reveal[data-category]")
             .forEach((card) => {

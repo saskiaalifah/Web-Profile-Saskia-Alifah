@@ -1,0 +1,4506 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laprak 6 — State Management (Flutter)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY (nempel selama kolom konten masih berjalan) ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
+        }
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
+        }
+      }
+
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
+        }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.latihan {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+      .sub-label.test-label.fail {
+        color: #f2a65a;
+      }
+      .sub-label.test-label.fail::before {
+        background: #f2a65a;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan untuk pengujian (pass/fail) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* Anchor yang tidak tertutup navbar fixed */
+      .sub-section-title,
+      .test-box[id] {
+        scroll-margin-top: 96px;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Latihan Banner ── */
+      .latihan-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .latihan-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .latihan-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .latihan-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block (paragraf + poin) ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
+        }
+        .step-block {
+          padding: 16px 16px;
+        }
+        .img-wrap img {
+          max-height: 240px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+    <!-- DAFTAR NAMA GAMBAR (folder: ../images/laporan/laporan10/, format .png)
+
+    GAMBAR OUTPUT (nama sesuai daftar screenshot):
+      ssa.png  ->  Gambar D.A-8
+      ssa1.png  ->  Gambar D.A-11
+      ssa2.png  ->  Gambar D.A-12
+      ssb1.png  ->  Gambar D.B-2
+      ssb2.png  ->  Gambar D.B-3
+      sss1.png  ->  Gambar D.C-9
+      sss2.png  ->  Gambar D.C-10
+      sss3a.png  ->  Gambar D.C-11
+      sss3b.png  ->  Gambar D.C-12
+      sss4.png  ->  Gambar D.C-13
+      sss5.png  ->  Gambar D.C-14
+      sss6a.png  ->  Gambar D.C-15
+      sss6b.png  ->  Gambar D.C-16
+      sss6c.png  ->  Gambar D.C-17
+      sss6d.png  ->  Gambar D.C-18
+      sscp2c1.png  ->  Gambar D.C-19
+      sscp2c2.png  ->  Gambar D.C-20
+      sscp2c3.png  ->  Gambar D.C-21
+      sslat1a.png  ->  Gambar E.2-5
+      sslat1b.png  ->  Gambar E.2-6
+      sslat1c.png  ->  Gambar E.2-7
+      sslat1d.png  ->  Gambar E.2-8
+      sslat2a.png  ->  Gambar E.3-2
+      sslat2b.png  ->  Gambar E.3-3
+      sslat2c.png  ->  Gambar E.3-4
+      sslat2d.png  ->  Gambar E.3-5
+
+    GAMBAR KODE (nama bebas, silakan sesuaikan):
+      kode01.png  ->  Gambar D.A-1  (Struktur folder lib/ pada project resepku: models, data, providers, pa)
+      kode02.png  ->  Gambar D.A-2  (Class Recipe dengan sebelas field final, constructor required, dan get)
+      kode03.png  ->  Gambar D.A-3  (Daftar dummyRecipes berisi enam resep, dimulai dari Classic Margherita)
+      kode04.png  ->  Gambar D.A-4  (identity_footer.dart: konstanta kNim dan kNama serta widget IdentityFo)
+      kode05.png  ->  Gambar D.A-5  (main.dart versi awal: MaterialApp dengan tema deepOrange, builder foot)
+      kode06.png  ->  Gambar D.A-6  (home_page.dart versi awal: ListView yang memunculkan RecipeTile untuk )
+      kode07.png  ->  Gambar D.A-7  (recipe_tile.dart versi awal: ListTile dengan avatar, judul, subjudul, )
+      kode08.png  ->  Gambar D.A-9  (detail_page.dart versi awal bagian pertama: StatefulWidget, _servings,)
+      kode09.png  ->  Gambar D.A-10  (Method build() halaman detail: kartu Porsi dengan tombol − dan +, tota)
+      kode10.png  ->  Gambar D.A-13  (Baris onPressed: _servings > 1 ? _removeServing : null pada tombol Ico)
+      kode11.png  ->  Gambar D.B-1  (recipe_tile.dart versi eksperimen: StatefulWidget dengan _isFavorite s)
+      kode12.png  ->  Gambar D.C-1  (Hasil flutter pub add provider dan dependency provider pada pubspec.ya)
+      kode13.png  ->  Gambar D.C-2  (FavoriteProvider: _items, getter items dan count, isFavorite(), toggle)
+      kode14.png  ->  Gambar D.C-3  (main.dart: MultiProvider dengan ChangeNotifierProvider FavoriteProvide)
+      kode15.png  ->  Gambar D.C-4  (recipe_tile.dart versi Provider: context.watch di build dan context.re)
+      kode16.png  ->  Gambar D.C-5  (detail_page.dart: import provider, baris isFavorite dengan context.wat)
+      kode17.png  ->  Gambar D.C-6  (favorite_page.dart: Consumer yang menampilkan pesan kosong atau daftar)
+      kode18.png  ->  Gambar D.C-7  (FavoriteBadgeButton: ikon hati dengan Badge jumlah favorit dan navigas)
+      kode19.png  ->  Gambar D.C-8  (home_page.dart versi akhir: AppBar dengan actions berisi FavoriteBadge)
+      kode20.png  ->  Gambar E.1-1  (Kode percobaan: ChangeNotifierProvider membungkus Scaffold pada HomePa)
+      kode21.png  ->  Gambar E.2-1  (ThemeProvider: field ThemeMode, getter themeMode dan isDark, serta met)
+      kode22.png  ->  Gambar E.2-2  (main.dart: ThemeProvider pada MultiProvider, darkTheme, themeMode dari)
+      kode23.png  ->  Gambar E.2-3  (settings_page.dart: SwitchListTile "Mode gelap" yang terhubung ke Them)
+      kode24.png  ->  Gambar E.2-4  (home_page.dart: AppBar dengan tombol ikon pengaturan dan FavoriteBadge)
+      kode25.png  ->  Gambar E.3-1  (favorite_page.dart: method _confirmClear() dengan AlertDialog dan tomb)
+    -->
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase"
+          href="index.html"
+        >
+          <i class="bi bi-code-slash" style="color: var(--accent)"></i>
+          Saskia Alifah
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="portofolio.html">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="main.html">Laporan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kontak.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="laprak-hero">
+      <div class="container">
+        <a href="main.html" class="btn-back-hero"
+          ><i class="bi bi-chevron-left"></i> Kembali ke Laporan</a
+        >
+        <h1>Laprak 6 — <span>State Management (Flutter)</span></h1>
+        <p class="lead">Aplikasi Mobile · Praktikum 6 · Aplikasi ResepKu</p>
+        <div class="badge-row">
+          <span class="badge-pill"
+            ><i class="bi bi-person-fill"></i> Saskia Alifah</span
+          >
+          <span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+          <span class="badge-pill"
+            ><i class="bi bi-calendar3"></i> Aplikasi Mobile</span
+          >
+          <span class="badge-pill"><i class="bi bi-phone"></i> Flutter</span>
+          <span class="badge-pill"
+            ><i class="bi bi-diagram-3"></i> setState &amp; Provider</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- TOC MOBILE (offcanvas) -->
+    <button
+      class="toc-fab"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#tocOffcanvas"
+      aria-controls="tocOffcanvas"
+    >
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="tocOffcanvas"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">
+          <i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="toc-list">
+          <li>
+            <a href="#tujuan" data-bs-dismiss="offcanvas"
+              >A. Tujuan Praktikum</a
+            >
+          </li>
+          <li>
+            <a href="#teori" data-bs-dismiss="offcanvas">B. Dasar Teori</a>
+          </li>
+          <li>
+            <a href="#alat" data-bs-dismiss="offcanvas">C. Alat dan Bahan</a>
+          </li>
+          <li>
+            <a href="#langkah" data-bs-dismiss="offcanvas"
+              >D. Langkah Praktikum</a
+            >
+            <ul>
+              <li>
+                <a href="#langkah-a" data-bs-dismiss="offcanvas"
+                  >Bagian A — State Lokal (setState)</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-b" data-bs-dismiss="offcanvas"
+                  >Bagian B — Eksperimen State Lokal</a
+                >
+              </li>
+              <li>
+                <a href="#langkah-c" data-bs-dismiss="offcanvas"
+                  >Bagian C — Provider</a
+                >
+              </li>
+              <li>
+                <a href="#uji-c7" data-bs-dismiss="offcanvas">Tabel Uji C.7</a>
+              </li>
+              <li>
+                <a href="#checkpoint-2" data-bs-dismiss="offcanvas"
+                  >Checkpoint 2</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#latihan" data-bs-dismiss="offcanvas"
+              >E. Pertanyaan Analisis dan Latihan</a
+            >
+            <ul>
+              <li>
+                <a href="#analisis" data-bs-dismiss="offcanvas"
+                  >E.1 Pertanyaan Analisis</a
+                >
+              </li>
+              <li>
+                <a href="#latihan-1" data-bs-dismiss="offcanvas"
+                  >E.2 Latihan 1 — Tema Gelap</a
+                >
+              </li>
+              <li>
+                <a href="#latihan-2" data-bs-dismiss="offcanvas"
+                  >E.3 Latihan 2 — Hapus Semua</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#hasil" data-bs-dismiss="offcanvas"
+              >F. Hasil dan Pembahasan</a
+            >
+          </li>
+          <li>
+            <a href="#kesimpulan" data-bs-dismiss="offcanvas">G. Kesimpulan</a>
+          </li>
+          <li>
+            <a href="#repo" data-bs-dismiss="offcanvas">H. Repository Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+      <div class="layout-wrap">
+        <div class="toc-col">
+          <aside class="toc-sidebar">
+            <div class="toc-title">
+              <i class="bi bi-list-ul"></i> Daftar Isi
+            </div>
+            <ul class="toc-list">
+              <li><a href="#tujuan">A. Tujuan Praktikum</a></li>
+              <li><a href="#teori">B. Dasar Teori</a></li>
+              <li><a href="#alat">C. Alat dan Bahan</a></li>
+              <li>
+                <a href="#langkah">D. Langkah Praktikum</a>
+                <ul>
+                  <li>
+                    <a href="#langkah-a">Bagian A — State Lokal (setState)</a>
+                  </li>
+                  <li>
+                    <a href="#langkah-b">Bagian B — Eksperimen State Lokal</a>
+                  </li>
+                  <li><a href="#langkah-c">Bagian C — Provider</a></li>
+                  <li><a href="#uji-c7">Tabel Uji C.7</a></li>
+                  <li><a href="#checkpoint-2">Checkpoint 2</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#latihan">E. Pertanyaan Analisis dan Latihan</a>
+                <ul>
+                  <li><a href="#analisis">E.1 Pertanyaan Analisis</a></li>
+                  <li><a href="#latihan-1">E.2 Latihan 1 — Tema Gelap</a></li>
+                  <li><a href="#latihan-2">E.3 Latihan 2 — Hapus Semua</a></li>
+                </ul>
+              </li>
+              <li><a href="#hasil">F. Hasil dan Pembahasan</a></li>
+              <li><a href="#kesimpulan">G. Kesimpulan</a></li>
+              <li><a href="#repo">H. Repository Github</a></li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="content-col">
+          <div class="laprak-card" id="tujuan">
+            <div class="section-label">
+              <span class="num">A</span>Tujuan Praktikum
+            </div>
+
+            <p>
+              Praktikum ini bertujuan supaya mahasiswa mampu mengelola
+              <em>state</em> pada aplikasi Flutter, yaitu data yang dapat
+              berubah selama aplikasi berjalan dan memengaruhi tampilan.
+              Aplikasi yang dibangun adalah <strong>ResepKu</strong>. Setelah
+              menyelesaikan praktikum, mahasiswa diharapkan mampu:
+            </p>
+            <ul>
+              <li>
+                membuat state lokal dengan <code>StatefulWidget</code> dan
+                <code>setState()</code> pada fitur jumlah porsi di halaman
+                detail;
+              </li>
+              <li>
+                menjelaskan keterbatasan state lokal ketika satu data dibutuhkan
+                oleh banyak widget dan halaman;
+              </li>
+              <li>
+                membuat state global dengan package <code>provider</code> (<code
+                  >ChangeNotifier</code
+                >
+                dan <code>MultiProvider</code>) pada fitur favorit;
+              </li>
+              <li>
+                membaca state dengan <code>context.watch</code>,
+                <code>context.read</code>, dan <code>Consumer</code> di beberapa
+                halaman.
+              </li>
+            </ul>
+            <p>
+              Pertanyaan utama yang dijawab praktikum ini: jumlah porsi hanya
+              dibutuhkan satu halaman, sedangkan daftar favorit dibutuhkan oleh
+              daftar resep, badge di AppBar, halaman detail, dan halaman
+              Favorit.
+              <strong>Di mana masing-masing state sebaiknya disimpan?</strong>
+              Jawabannya dibuktikan dengan aplikasi ResepKu yang berjalan.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="teori">
+            <div class="section-label">
+              <span class="num">B</span>Dasar Teori
+            </div>
+
+            <p>
+              <strong>State</strong> adalah data yang dapat berubah selama
+              aplikasi berjalan dan memengaruhi tampilan, dengan prinsip
+              <em>UI = f(state)</em>: tampilan adalah hasil dari data. Ketika
+              data berubah, tampilan harus dibangun ulang. Flutter membagi state
+              menjadi dua jenis menurut siapa yang membutuhkannya.
+            </p>
+            <div style="overflow-x: auto; margin: 12px 0">
+              <table
+                style="width: 100%; border-collapse: collapse; font-size: 14px"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Aspek
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      setState()
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Provider
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Untuk
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      State lokal (ephemeral), dipakai satu widget
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      App state, dipakai banyak widget dan halaman
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Contoh di ResepKu
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Jumlah porsi di halaman detail
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Daftar resep favorit
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Tempat data
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Field di class State
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Class yang meng-extend <code>ChangeNotifier</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Memberi tahu UI
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      <code>setState(() { ... })</code>
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      <code>notifyListeners()</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Membaca data
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Langsung dari field
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      <code>context.watch&lt;T&gt;()</code> di
+                      <code>build()</code>,
+                      <code>context.read&lt;T&gt;()</code> di callback
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <strong>setState dan siklus StatefulWidget.</strong> Widget yang
+              datanya berubah dibuat sebagai <code>StatefulWidget</code> dengan
+              class State terpisah. Nilai awal diisi pada
+              <code>initState()</code>, data milik widget dibaca lewat
+              <code>widget.namaField</code>, dan setiap perubahan data dibungkus
+              <code>setState()</code> supaya Flutter menjalankan ulang
+              <code>build()</code>. Ketika halaman ditutup, objek State dibuang
+              bersama datanya.
+            </p>
+            <p>
+              <strong>Provider.</strong> Package <code>provider</code> menyimpan
+              state di luar widget tampilan, pada class yang meng-extend
+              <code>ChangeNotifier</code>. Setelah data berubah,
+              <code>notifyListeners()</code> memberi tahu semua widget yang
+              sedang "mendengarkan". <code>ChangeNotifierProvider</code> membuat
+              dan menyediakan objek tersebut ke seluruh subtree di bawahnya,
+              sedangkan <code>MultiProvider</code> memungkinkan beberapa
+              provider dipasang sekaligus.
+            </p>
+            <ul>
+              <li>
+                <code>context.watch&lt;T&gt;()</code> dipakai di dalam
+                <code>build()</code>: widget ikut rebuild ketika data berubah.
+              </li>
+              <li>
+                <code>context.read&lt;T&gt;()</code> dipakai di dalam callback
+                (<code>onPressed</code>, <code>onTap</code>): hanya memanggil
+                method tanpa mendengarkan perubahan.
+              </li>
+              <li>
+                <code>Consumer&lt;T&gt;</code> adalah bentuk widget dari
+                <code>context.watch</code>; fungsi <code>builder</code>-nya
+                dijalankan ulang setiap kali
+                <code>notifyListeners()</code> dipanggil.
+              </li>
+            </ul>
+            <p>
+              <strong>Posisi provider di widget tree.</strong> Halaman yang
+              dibuka dengan <code>Navigator.push</code> menjadi route yang
+              sejajar dengan halaman pemanggilnya, bukan anaknya. Agar semua
+              route dapat mengakses provider,
+              <code>ChangeNotifierProvider</code> harus dipasang di atas
+              <code>MaterialApp</code>.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="alat">
+            <div class="section-label">
+              <span class="num">C</span>Alat dan Bahan
+            </div>
+            <ul>
+              <li>
+                Laptop / Komputer dengan Flutter SDK (versi stable) dan Dart
+                terinstall
+              </li>
+              <li>
+                Visual Studio Code (Code Editor) dengan ekstensi Flutter &amp;
+                Dart
+              </li>
+              <li>
+                Chrome Browser / Android Emulator sebagai target device untuk
+                menjalankan aplikasi
+              </li>
+              <li>
+                Koneksi internet untuk menjalankan
+                <code>flutter pub add provider</code>
+              </li>
+              <li>Package <code>provider</code></li>
+              <li>
+                Modul Praktikum Aplikasi Mobile — Praktikum 6: State Management
+                pada Aplikasi ResepKu
+              </li>
+            </ul>
+          </div>
+
+          <div class="laprak-card" id="langkah">
+            <div class="section-label">
+              <span class="num">D</span>Langkah Praktikum
+            </div>
+            <p>
+              Praktikum dikerjakan dalam tiga bagian pada satu project
+              <strong>ResepKu</strong>. <strong>Bagian A</strong> menyiapkan
+              project dan fitur jumlah porsi dengan <code>setState()</code>.
+              <strong>Bagian B</strong> adalah eksperimen yang memperlihatkan
+              keterbatasan state lokal untuk fitur favorit.
+              <strong>Bagian C</strong> memindahkan state favorit ke
+              <code>Provider</code> dan menambah badge serta halaman Favorit.
+              Urutan pengerjaan dijaga: Checkpoint 1 diambil di akhir Bagian A
+              sebelum <code>recipe_tile.dart</code> diganti pada Bagian B.
+            </p>
+            <div class="info-box blue">
+              <i class="bi bi-person-badge-fill"></i>
+              <div>
+                <strong>Footer identitas.</strong> Setiap halaman aplikasi
+                menampilkan footer berisi NIM dan nama (<code
+                  >2411531002 • Saskia Alifah</code
+                >), sehingga identitas ikut terekam di semua screenshot. Footer
+                dipasang sekali lewat parameter <code>builder</code> pada
+                <code>MaterialApp</code> dan tidak pernah dihapus pada
+                langkah-langkah berikutnya.
+              </div>
+            </div>
+            <div class="sub-section-title" id="langkah-a">
+              Bagian A
+              <span class="file-badge"
+                >Menyiapkan ResepKu dan State Lokal (setState)</span
+              >
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>A.1 Membuat Project dan Struktur
+                Folder
+              </div>
+              <p>
+                Langkah pertama adalah membuat project Flutter bernama
+                <code>resepku</code> dan menyiapkan folder untuk memisahkan tiap
+                jenis file.
+              </p>
+              <div class="sub-label">
+                Aksi: Jalankan flutter create resepku, Buat Lima Folder di lib/,
+                dan Hapus test/widget_test.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode01.png"
+                  alt="SS VS Code Explorer folder lib berisi models data providers pages widgets"
+                />
+                <div class="img-cap">
+                  Gambar D.A-1 – Struktur folder lib/ pada project resepku:
+                  models, data, providers, pages, dan widgets
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    Buka terminal di folder kerja (misalnya Documents), lalu
+                    jalankan <code>flutter create resepku</code>. Perintah ini
+                    membuat project baru lengkap dengan template counter. Nama
+                    <code>resepku</code> penting karena menjadi awalan import
+                    <code>package:resepku/...</code> pada semua file.
+                  </li>
+                  <li>
+                    <code>cd resepku</code> — masuk ke folder project, sehingga
+                    perintah berikutnya dijalankan di dalam project.
+                  </li>
+                  <li>
+                    <code>code .</code> — membuka folder project di Visual
+                    Studio Code.
+                  </li>
+                  <li>
+                    <code
+                      >mkdir lib\models lib\data lib\providers lib\pages
+                      lib\widgets</code
+                    >
+                    (Windows) — membuat lima folder sekaligus. Folder juga dapat
+                    dibuat lewat klik kanan pada <code>lib</code> di Explorer.
+                  </li>
+                  <li>
+                    <code>del test\widget_test.dart</code> (Windows) — menghapus
+                    test bawaan.
+                  </li>
+                  <li>
+                    Lima folder di <code>lib/</code>: <code>models</code> (class
+                    data), <code>data</code> (data dummy),
+                    <code>providers</code> (state global),
+                    <code>pages</code> (halaman penuh), dan
+                    <code>widgets</code> (potongan tampilan yang dipakai ulang).
+                  </li>
+                  <li>
+                    <code>test/widget_test.dart</code> dihapus karena merujuk
+                    class <code>MyApp</code> bawaan template yang nanti diganti
+                    <code>ResepKuApp</code>, sehingga editor akan menampilkan
+                    error. Praktikum ini belum memakai testing.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> model ini menjadi tipe data yang
+                dipakai oleh data dummy (A.3), daftar Home (A.4), dan halaman
+                detail (A.5).
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>A.2 Membuat Model Recipe
+              </div>
+              <p>Model adalah class yang merepresentasikan satu resep.</p>
+              <div class="sub-label">Aksi: Buat lib/models/recipe.dart</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode02.png"
+                  alt="SS VS Code recipe.dart class Recipe dengan field constructor dan getter totalTimeMinutes"
+                />
+                <div class="img-cap">
+                  Gambar D.A-2 – Class Recipe dengan sebelas field final,
+                  constructor required, dan getter totalTimeMinutes
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    Field <code>final</code>: <code>id</code>,
+                    <code>name</code>, <code>cuisine</code>,
+                    <code>difficulty</code>, <code>prepTimeMinutes</code>,
+                    <code>cookTimeMinutes</code>, <code>servings</code>,
+                    <code>caloriesPerServing</code>, <code>rating</code>,
+                    <code>image</code>, dan
+                    <code>ingredients</code> (<code>List&lt;String&gt;</code>).
+                    Field <code>image</code> baru dipakai pada Modul 7.
+                  </li>
+                  <li>
+                    <code>const Recipe({required ...})</code> — constructor
+                    konstan yang mewajibkan semua data diisi, sama seperti
+                    konsep passing data pada Praktikum 4.
+                  </li>
+                  <li>
+                    <code
+                      >int get totalTimeMinutes =&gt; prepTimeMinutes +
+                      cookTimeMinutes;</code
+                    >
+                    — getter yang berperilaku seperti field tetapi nilainya
+                    dihitung, dan dipanggil tanpa tanda kurung.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> tiap elemen daftar adalah objek
+                <code>Recipe</code> dari langkah A.2.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>A.3 Menambahkan Data Dummy
+              </div>
+              <p>
+                Enam resep contoh disiapkan sebagai data. Isinya sama dengan
+                enam resep pertama di dummyjson.com/recipes, sehingga pada Modul
+                8 data yang sama dapat diambil dari API tanpa mengubah tampilan.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/data/dummy_recipes.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode03.png"
+                  alt="SS VS Code dummy_recipes.dart list dummyRecipes berisi resep Classic Margherita Pizza dan resep lain"
+                />
+                <div class="img-cap">
+                  Gambar D.A-3 – Daftar dummyRecipes berisi enam resep, dimulai
+                  dari Classic Margherita Pizza
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>import 'package:resepku/models/recipe.dart';</code> —
+                    memuat class <code>Recipe</code>.
+                  </li>
+                  <li>
+                    <code>const List&lt;Recipe&gt; dummyRecipes = [...]</code> —
+                    daftar konstan berisi enam objek <code>Recipe</code>.
+                  </li>
+                  <li>
+                    Resep pertama, <strong>Classic Margherita Pizza</strong>,
+                    memiliki <code>servings: 4</code> dan
+                    <code>caloriesPerServing: 300</code>. Dua nilai ini dipakai
+                    pada Checkpoint 1: porsi 6 menghasilkan 6 × 300 = 1800 kkal.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>A.4 Membuat Footer Identitas
+              </div>
+              <p>
+                Footer identitas dibuat lebih dulu karena akan dipasang pada
+                <code>main.dart</code> dan tampil di setiap halaman.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/widgets/identity_footer.dart dan Isi kNim serta
+                kNama dengan Data Sendiri
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode04.png"
+                  alt="SS VS Code identity_footer.dart dengan kNim 2411531002 dan kNama Saskia Alifah serta class IdentityFooter"
+                />
+                <div class="img-cap">
+                  Gambar D.A-4 – identity_footer.dart: konstanta kNim dan kNama
+                  serta widget IdentityFooter yang membungkus child
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>const String kNim = '2411531002';</code> dan
+                    <code>const String kNama = 'Saskia Alifah';</code> —
+                    identitas yang ditampilkan.
+                  </li>
+                  <li>
+                    <code>IdentityFooter({required this.child})</code> — widget
+                    pembungkus yang menerima halaman sebagai <code>child</code>.
+                  </li>
+                  <li>
+                    <code>Column</code> berisi <code>Expanded</code> (tempat
+                    halaman) di atas dan <code>Material</code> (footer) di
+                    bawah.
+                  </li>
+                  <li>
+                    <code
+                      >MediaQuery.removePadding(removeBottom: true, ...)</code
+                    >
+                    — ruang aman bawah sudah diurus footer, sehingga halaman
+                    tidak menghitungnya dua kali.
+                  </li>
+                  <li>
+                    Footer: <code>Material(color: Colors.black87)</code> dengan
+                    <code>SafeArea(top: false)</code>, lalu
+                    <code>Text('$kNim • $kNama')</code> berwarna putih, ukuran
+                    12, rata tengah.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>IdentityFooter</code> dari
+                langkah sebelumnya dipasang di sini lewat <code>builder</code>.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>A.4 Mengganti main.dart (Versi
+                Awal)
+              </div>
+              <p>
+                File <code>main.dart</code> diganti agar menjalankan
+                <code>ResepKuApp</code> dan memasang footer.
+              </p>
+              <div class="sub-label">Aksi: Tulis main.dart Versi Awal</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode05.png"
+                  alt="SS VS Code main.dart versi awal ResepKuApp dengan MaterialApp theme builder IdentityFooter dan home HomePage"
+                />
+                <div class="img-cap">
+                  Gambar D.A-5 – main.dart versi awal: MaterialApp dengan tema
+                  deepOrange, builder footer, dan home HomePage
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>runApp(const ResepKuApp())</code> — menjalankan
+                    aplikasi.
+                  </li>
+                  <li>
+                    <code
+                      >theme: ThemeData(colorSchemeSeed:
+                      Colors.deepOrange)</code
+                    >
+                    — membuat skema warna Material 3 dari satu warna dasar.
+                  </li>
+                  <li>
+                    <code
+                      >builder: (context, child) =&gt; IdentityFooter(child:
+                      child!)</code
+                    >
+                    — <code>builder</code> membungkus <code>Navigator</code>,
+                    sehingga footer tampil di semua halaman (Home, Detail,
+                    Favorit, dan halaman latihan) tanpa ditambahkan ke tiap
+                    <code>Scaffold</code>.
+                  </li>
+                  <li>
+                    <code>home: const HomePage()</code> — halaman pertama.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">6</span>A.4 Membuat Halaman Home (Versi
+                Awal)
+              </div>
+              <p>Halaman Home menampilkan daftar semua resep.</p>
+              <div class="sub-label">Aksi: Buat lib/pages/home_page.dart</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode06.png"
+                  alt="SS VS Code home_page.dart versi awal ListView dengan for dummyRecipes RecipeTile"
+                />
+                <div class="img-cap">
+                  Gambar D.A-6 – home_page.dart versi awal: ListView yang
+                  memunculkan RecipeTile untuk setiap resep
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>HomePage</code> berupa
+                    <code>StatelessWidget</code> karena belum menyimpan data
+                    yang berubah.
+                  </li>
+                  <li>
+                    <code>AppBar(title: const Text('ResepKu'))</code> — judul
+                    halaman.
+                  </li>
+                  <li>
+                    <code
+                      >ListView(children: [for (final recipe in dummyRecipes)
+                      RecipeTile(recipe: recipe)])</code
+                    >
+                    — perulangan di dalam daftar yang membuat satu
+                    <code>RecipeTile</code> untuk tiap resep pada
+                    <code>dummyRecipes</code> (A.3).
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>RecipeTile</code> dipanggil
+                oleh <code>HomePage</code> (langkah sebelumnya) dan membuka
+                <code>DetailPage</code> yang dibuat pada A.5.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">7</span>A.4 Membuat RecipeTile (Versi
+                Awal)
+              </div>
+              <p>Setiap baris resep dibuat sebagai widget tersendiri.</p>
+              <div class="sub-label">
+                Aksi: Buat lib/widgets/recipe_tile.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode07.png"
+                  alt="SS VS Code recipe_tile.dart versi awal ListTile dengan onTap Navigator.push DetailPage"
+                />
+                <div class="img-cap">
+                  Gambar D.A-7 – recipe_tile.dart versi awal: ListTile dengan
+                  avatar, judul, subjudul, dan onTap menuju DetailPage
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>RecipeTile({required this.recipe})</code> — menerima
+                    satu <code>Recipe</code> lewat constructor.
+                  </li>
+                  <li>
+                    <code
+                      >leading: CircleAvatar(child: Text(recipe.name[0]))</code
+                    >
+                    — avatar berisi huruf pertama nama resep.
+                  </li>
+                  <li>
+                    <code>title</code> dan <code>subtitle</code> — nama resep
+                    dan teks '<code
+                      >${recipe.cuisine} • ${recipe.totalTimeMinutes} menit • ★
+                      ${recipe.rating}</code
+                    >', yang memakai getter dari A.2.
+                  </li>
+                  <li>
+                    <code>onTap</code> — <code>Navigator.push</code> dengan
+                    <code>MaterialPageRoute</code> menuju
+                    <code>DetailPage(recipe: recipe)</code>, konsep yang sama
+                    dengan Praktikum 4.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Tampilan Awal
+                Home
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Jalankan Aplikasi dengan flutter run
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/ssa.png"
+                  alt="SS halaman Home ResepKu berisi enam resep dan footer NIM nama"
+                />
+                <div class="img-cap">
+                  Gambar D.A-8 – Halaman Home ResepKu berisi enam resep dengan
+                  footer NIM dan nama di bagian bawah
+                </div>
+              </div>
+              <p>
+                Aplikasi menampilkan enam resep dalam <code>ListView</code>,
+                satu <code>RecipeTile</code> untuk setiap objek pada
+                <code>dummyRecipes</code>. Setiap baris terdiri dari avatar
+                berisi huruf pertama nama resep (<code>recipe.name[0]</code>),
+                nama resep sebagai judul, dan subjudul berformat
+                <code>cuisine • totalTimeMinutes menit • ★ rating</code>.
+                Contohnya Classic Margherita Pizza tampil sebagai
+                <em>Italian • 35 menit • ★ 4.6</em> karena 20 menit persiapan
+                ditambah 15 menit memasak.
+              </p>
+              <p>
+                Footer <code>2411531002 • Saskia Alifah</code> terlihat di bawah
+                halaman karena dipasang lewat parameter
+                <code>builder</code> pada <code>MaterialApp</code>. Belum ada
+                ikon hati maupun badge di AppBar karena fitur favorit baru
+                dibuat pada Bagian C.
+              </p>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>DetailPage</code> dibuka
+                oleh <code>onTap</code> pada <code>RecipeTile</code> (A.4), dan
+                <code>widget.recipe</code> adalah objek <code>Recipe</code> yang
+                dikirim dari sana.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">8</span>A.5 Detail Page: State Lokal dan
+                Fungsi Porsi
+              </div>
+              <p>
+                Halaman detail memakai <code>StatefulWidget</code> karena jumlah
+                porsi berubah ketika tombol + atau − ditekan. Tiga hal yang
+                diperhatikan: nilai awal diisi di <code>initState()</code>, data
+                milik widget diakses lewat <code>widget.recipe</code>, dan
+                setiap perubahan data dibungkus <code>setState()</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/pages/detail_page.dart: Bagian Class, initState,
+                dan Fungsi Porsi
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode08.png"
+                  alt="SS VS Code detail_page.dart bagian DetailPage StatefulWidget _servings initState _addServing _removeServing"
+                />
+                <div class="img-cap">
+                  Gambar D.A-9 – detail_page.dart versi awal bagian pertama:
+                  StatefulWidget, _servings, initState(), _addServing(), dan
+                  _removeServing()
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>DetailPage extends StatefulWidget</code> dengan
+                    <code>final Recipe recipe</code> — resep yang dipilih
+                    dikirim lewat constructor dari <code>RecipeTile</code>.
+                  </li>
+                  <li>
+                    <code>late int _servings;</code> — state lokal yang hanya
+                    dibutuhkan halaman ini.
+                  </li>
+                  <li>
+                    <code>initState()</code> — dipanggil sekali saat State
+                    dibuat; mengisi
+                    <code>_servings = widget.recipe.servings</code> sebagai
+                    nilai awal (empat porsi untuk Margherita).
+                  </li>
+                  <li>
+                    <code>_addServing()</code> —
+                    <code>setState(() =&gt; _servings++)</code> menambah porsi
+                    dan memicu rebuild.
+                  </li>
+                  <li>
+                    <code>_removeServing()</code> — mengurangi porsi hanya bila
+                    <code>_servings &gt; 1</code>, juga lewat
+                    <code>setState</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> nilai <code>_servings</code> dan
+                fungsi <code>_addServing</code>/<code>_removeServing</code> dari
+                langkah sebelumnya dipakai langsung oleh tombol dan teks pada
+                <code>build()</code>.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">9</span>A.5 Detail Page: Method build()
+              </div>
+              <p>
+                Method <code>build()</code> menyusun tampilan dari data resep
+                dan nilai <code>_servings</code>.
+              </p>
+              <div class="sub-label">Aksi: Tulis Method build() Lengkap</div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode09.png"
+                  alt="SS VS Code detail_page.dart method build dengan Card Porsi IconButton filledTonal dan Text Total kalori"
+                />
+                <div class="img-cap">
+                  Gambar D.A-10 – Method build() halaman detail: kartu Porsi
+                  dengan tombol − dan +, total kalori, dan daftar bahan
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >final totalCalories = recipe.caloriesPerServing *
+                      _servings;</code
+                    >
+                    — dihitung ulang setiap rebuild, sehingga selalu mengikuti
+                    jumlah porsi.
+                  </li>
+                  <li>
+                    <code
+                      >Text('${recipe.cuisine} • ${recipe.difficulty} •
+                      ${recipe.totalTimeMinutes} menit')</code
+                    >
+                    — ringkasan resep.
+                  </li>
+                  <li>
+                    <code>Card</code> berisi <code>Row</code>: teks "Porsi",
+                    <code>Spacer</code>, tombol
+                    <code>IconButton.filledTonal</code> berikon
+                    <code>Icons.remove</code>, teks <code>'$_servings'</code>,
+                    dan tombol berikon <code>Icons.add</code>.
+                  </li>
+                  <li>
+                    <code
+                      >onPressed: _servings &gt; 1 ? _removeServing : null</code
+                    >
+                    pada tombol −. Bila <code>onPressed</code> bernilai
+                    <code>null</code>, Flutter menampilkan tombol dalam keadaan
+                    nonaktif.
+                  </li>
+                  <li>
+                    <code>Text('Total kalori: $totalCalories kkal')</code> dan
+                    daftar bahan memakai
+                    <code
+                      >for (final item in recipe.ingredients)
+                      ListTile(...)</code
+                    >.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Checkpoint 1a: Porsi 6 dan
+                Total Kalori
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Buka Detail Classic Margherita Pizza, Tap + Dua Kali
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/ssa1.png"
+                  alt="SS halaman detail Classic Margherita Pizza porsi 6 total kalori 1800 kkal dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.A-11 – Detail Classic Margherita Pizza dengan porsi 6
+                  dan total kalori 1800 kkal (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Porsi awal diambil dari <code>widget.recipe.servings</code> pada
+                <code>initState()</code>, yaitu 4 untuk Margherita. Setiap tap
+                tombol + memanggil <code>_addServing()</code> yang menjalankan
+                <code>setState(() =&gt; _servings++)</code>, sehingga dua tap
+                menghasilkan porsi 6. Total kalori dihitung ulang pada
+                <code>build()</code> dengan
+                <code>recipe.caloriesPerServing * _servings</code>, yaitu 300 ×
+                6 = <strong>1800 kkal</strong>, sesuai nilai yang diminta
+                Checkpoint 1. Angka berubah seketika karena
+                <code>setState()</code> memicu <code>build()</code> berjalan
+                ulang.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Checkpoint 1b: Tombol −
+                Nonaktif pada Porsi 1
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap − Sampai Porsi Bernilai 1
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/ssa2.png"
+                  alt="SS halaman detail porsi 1 dengan tombol minus berwarna abu-abu nonaktif dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.A-12 – Detail dengan porsi 1: tombol − berwarna
+                  abu-abu dan nonaktif (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Ketika <code>_servings</code> bernilai 1, ekspresi
+                <code>_servings &gt; 1 ? _removeServing : null</code>
+                menghasilkan <code>null</code>. Flutter otomatis menampilkan
+                <code>IconButton</code> dengan
+                <code>onPressed: null</code> sebagai tombol nonaktif berwarna
+                abu-abu, sehingga porsi tidak pernah kurang dari 1 dan total
+                kalori tidak pernah bernilai nol atau negatif.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Checkpoint 1c: Baris Kode
+                Penyebab Tombol Nonaktif
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tunjukkan Baris Kode pada detail_page.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode10.png"
+                  alt="SS VS Code baris onPressed _servings lebih dari 1 maka _removeServing jika tidak null"
+                />
+                <div class="img-cap">
+                  Gambar D.A-13 – Baris onPressed: _servings > 1 ?
+                  _removeServing : null pada tombol Icons.remove
+                </div>
+              </div>
+              <p>
+                Baris yang menonaktifkan tombol adalah
+                <code>onPressed: _servings &gt; 1 ? _removeServing : null</code
+                >. Selama <code>_servings</code> lebih dari 1, tombol memanggil
+                <code>_removeServing</code>; ketika bernilai 1,
+                <code>onPressed</code> menjadi <code>null</code> dan tombol
+                nonaktif. Pemeriksaan <code>if (_servings &gt; 1)</code> di
+                dalam <code>_removeServing()</code> hanya pengaman tambahan.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Checkpoint 1 terpenuhi: porsi 6 menghasilkan 1800 kkal, tombol −
+                nonaktif pada porsi 1, dan baris kode penyebabnya ditunjukkan.
+              </div>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke Bagian Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="langkah-b">
+              Bagian B
+              <span class="file-badge"
+                >Eksperimen: Favorit dengan State Lokal</span
+              >
+            </div>
+            <p>
+              Sebelum memakai Provider, cara paling sederhana dicoba terlebih
+              dahulu: setiap <code>RecipeTile</code> menyimpan status favoritnya
+              sendiri dengan <code>setState()</code>. Tujuannya melihat langsung
+              keterbatasan state lokal ketika satu data dibutuhkan di banyak
+              tempat.
+            </p>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> versi ini menggantikan
+                <code>RecipeTile</code> dari A.4, dan
+                <code>DetailPage</code> dari A.5 tetap dibuka lewat
+                <code>onTap</code> yang sama.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>B.1 Mengganti RecipeTile dengan
+                Versi Eksperimen
+              </div>
+              <p>
+                Isi <code>recipe_tile.dart</code> diganti sepenuhnya dengan
+                versi yang menyimpan status favorit di dalam tile.
+              </p>
+              <div class="sub-label">
+                Aksi: Ganti Seluruh Isi lib/widgets/recipe_tile.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode11.png"
+                  alt="SS VS Code recipe_tile.dart versi eksperimen StatefulWidget dengan _isFavorite dan setState pada IconButton"
+                />
+                <div class="img-cap">
+                  Gambar D.B-1 – recipe_tile.dart versi eksperimen:
+                  StatefulWidget dengan _isFavorite sebagai state lokal
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>RecipeTile</code> kini
+                    <code>StatefulWidget</code> dengan
+                    <code>_RecipeTileState</code>.
+                  </li>
+                  <li>
+                    <code>bool _isFavorite = false;</code> — status favorit
+                    milik satu tile saja.
+                  </li>
+                  <li>
+                    <code>trailing: IconButton(...)</code> — ikon
+                    <code>Icons.favorite</code> berwarna merah bila favorit, dan
+                    <code>Icons.favorite_border</code> bila tidak.
+                  </li>
+                  <li>
+                    <code
+                      >onPressed: () =&gt; setState(() =&gt; _isFavorite =
+                      !_isFavorite)</code
+                    >
+                    — membalik nilai dan membangun ulang tile itu.
+                  </li>
+                  <li>
+                    Data resep diakses lewat <code>widget.recipe</code>, karena
+                    sekarang berada di dalam class State.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengamatan: Ikon Hati
+                Muncul di Daftar Resep
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Hot Reload Setelah recipe_tile.dart Diganti
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/ssb1.png"
+                  alt="SS Home setelah recipe_tile versi eksperimen dengan ikon hati kosong di setiap resep dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.B-2 – Home setelah recipe_tile.dart versi eksperimen:
+                  setiap resep memiliki ikon hati kosong di sisi kanan (footer
+                  terlihat)
+                </div>
+              </div>
+              <p>
+                Setelah hot reload, setiap <code>RecipeTile</code> memiliki
+                <code>IconButton</code> pada properti <code>trailing</code>.
+                Seluruh ikon masih berupa hati kosong
+                (<code>Icons.favorite_border</code>) karena
+                <code>_isFavorite</code> pada setiap
+                <code>_RecipeTileState</code> diawali dengan <code>false</code>.
+                Tile kini berupa <code>StatefulWidget</code> agar dapat
+                menyimpan nilai tersebut.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengamatan 1 dan 2: Ikon
+                Hati dan AppBar
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap Ikon Hati pada Dua Resep
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/ssb2.png"
+                  alt="SS Home dengan dua ikon hati merah dan AppBar tanpa angka jumlah favorit serta footer"
+                />
+                <div class="img-cap">
+                  Gambar D.B-3 – Dua resep berikon hati merah, sedangkan AppBar
+                  tidak dapat menampilkan jumlah favorit (footer terlihat)
+                </div>
+              </div>
+              <p>
+                <strong>Pertanyaan 1 — apakah ikon hati berubah?</strong> Ya,
+                berubah menjadi merah dan terisi, karena
+                <code>onPressed</code> memanggil <code>setState</code> di
+                <code>_RecipeTileState</code> sehingga tile tersebut dibangun
+                ulang dengan nilai <code>_isFavorite</code> yang baru. Hanya
+                tile yang di-tap yang berubah, tile lain tidak ikut terpengaruh
+                karena masing-masing memiliki State sendiri.
+              </p>
+              <p>
+                <strong
+                  >Pertanyaan 2 — dapatkah jumlah favorit ditampilkan di judul
+                  AppBar <code>HomePage</code>?</strong
+                >
+                Tidak dapat. <code>_isFavorite</code> adalah field private di
+                <code>_RecipeTileState</code> dan tiap tile memiliki salinannya
+                sendiri. <code>HomePage</code> berada di atas tile dan tidak
+                punya akses ke State milik widget anaknya, serta tidak ada
+                daftar gabungan yang dapat dihitung. Terlihat pada gambar, judul
+                AppBar tetap <em>ResepKu</em> tanpa angka.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengamatan 3: Halaman
+                Detail
+              </div>
+              <div class="sub-label test-label fail">
+                Percobaan: Buka Detail dari Resep yang Sudah Difavoritkan
+              </div>
+              <!-- OPSIONAL: bila punya screenshot detail resep yang sudah difavoritkan (tanpa ikon hati), simpan sebagai ssb3.png lalu hapus tanda komentar blok di bawah.
+<div class="img-wrap"><img src="../images/laporan/laporan10/ssb3.png" alt="SS halaman detail resep yang sudah difavoritkan tanpa ikon hati dan dengan footer" /><div class="img-cap">Gambar D.B-3 – Halaman detail resep yang sudah difavoritkan tidak menampilkan status favorit (footer terlihat)</div></div>
+-->
+              <p>
+                <strong
+                  >Pertanyaan 3 — bagaimana detail tahu resep itu
+                  favorit?</strong
+                >
+                Tidak dapat tahu. <code>DetailPage</code> hanya menerima
+                <code>recipe</code> lewat constructor dan status favorit tidak
+                ikut terkirim karena hidup di tile yang terpisah. Walaupun
+                dikirim lewat parameter tambahan, perubahan dari halaman detail
+                tidak akan kembali ke tile tanpa callback, sehingga cara ini
+                cepat menjadi rumit.
+              </p>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-info-circle-fill"></i>
+              <div>
+                <strong>Kesimpulan eksperimen.</strong> Data favorit dibutuhkan
+                di banyak tempat: daftar resep, badge, halaman detail, dan
+                halaman Favorit. Bila disimpan di dalam setiap tile, data tidak
+                dapat dibaca widget lain. Solusinya memindahkan data ke atas, ke
+                sebuah Provider, yang dikerjakan pada Bagian C.
+              </div>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke Bagian Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="langkah-c">
+              Bagian C
+              <span class="file-badge">Fitur Favorit dengan Provider</span>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>C.1 Memasang Package provider
+              </div>
+              <p>
+                Package <code>provider</code> ditambahkan ke project lewat
+                terminal.
+              </p>
+              <div class="sub-label">
+                Aksi: Jalankan flutter pub add provider
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode12.png"
+                  alt="SS terminal hasil flutter pub add provider dan pubspec.yaml berisi dependency provider"
+                />
+                <div class="img-cap">
+                  Gambar D.C-1 – Hasil flutter pub add provider dan dependency
+                  provider pada pubspec.yaml
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    Pastikan terminal berada di folder project (<code
+                      >cd resepku</code
+                    >), lalu jalankan <code>flutter pub add provider</code> —
+                    perintah ini menambahkan <code>provider</code> ke bagian
+                    <code>dependencies</code> pada
+                    <code>pubspec.yaml</code> sekaligus mengunduhnya.
+                  </li>
+                  <li>
+                    Baris <code>provider: ^...</code> pada
+                    <code>pubspec.yaml</code> menjadi bukti package terpasang.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong>
+                <code>FavoriteProvider</code> menggunakan model
+                <code>Recipe</code> (A.2) dan menggantikan
+                <code>_isFavorite</code> milik tile pada percobaan Bagian B.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">2</span>C.1 Membuat FavoriteProvider
+              </div>
+              <p>
+                State global berupa daftar favorit disimpan pada class yang
+                meng-extend <code>ChangeNotifier</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/providers/favorite_provider.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode13.png"
+                  alt="SS VS Code favorite_provider.dart class FavoriteProvider extends ChangeNotifier dengan toggle dan notifyListeners"
+                />
+                <div class="img-cap">
+                  Gambar D.C-2 – FavoriteProvider: _items, getter items dan
+                  count, isFavorite(), toggle(), dan clear()
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>extends ChangeNotifier</code> — memberi class
+                    kemampuan menyimpan daftar listener dan memanggil
+                    <code>notifyListeners()</code>.
+                  </li>
+                  <li>
+                    <code>final List&lt;Recipe&gt; _items = [];</code> — daftar
+                    favorit yang bersifat private.
+                  </li>
+                  <li>
+                    <code
+                      >List&lt;Recipe&gt; get items =&gt;
+                      List.unmodifiable(_items);</code
+                    >
+                    — dari luar data hanya dapat dibaca, sehingga setiap
+                    perubahan wajib melalui <code>toggle()</code> atau
+                    <code>clear()</code> dan
+                    <code>notifyListeners()</code> tidak terlewat.
+                  </li>
+                  <li>
+                    <code>int get count =&gt; _items.length;</code> — jumlah
+                    favorit untuk badge.
+                  </li>
+                  <li>
+                    <code>bool isFavorite(Recipe recipe)</code> — memakai
+                    <code>_items.any((r) =&gt; r.id == recipe.id)</code>. Resep
+                    dibandingkan berdasarkan <code>id</code>, bukan objeknya,
+                    karena pada Modul 8 objek <code>Recipe</code> akan dibuat
+                    ulang dari JSON.
+                  </li>
+                  <li>
+                    <code>toggle(Recipe recipe)</code> — menghapus resep bila
+                    sudah favorit, menambahkannya bila belum, lalu memanggil
+                    <code>notifyListeners()</code> untuk memberi tahu semua
+                    widget yang mendengarkan.
+                  </li>
+                  <li>
+                    <code>clear()</code> — mengosongkan daftar lalu
+                    <code>notifyListeners()</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>main.dart</code> versi awal
+                dari A.4 diperluas: <code>ResepKuApp</code> tidak berubah,
+                tetapi kini berada di dalam <code>MultiProvider</code>.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">3</span>C.2 Memasang Provider di Atas
+                MaterialApp
+              </div>
+              <p>
+                Provider dipasang di <code>main()</code>, di atas
+                <code>MaterialApp</code>, agar semua halaman (route) dapat
+                mengakses <code>FavoriteProvider</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Ganti Seluruh Isi main.dart dan Lakukan Hot Restart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode14.png"
+                  alt="SS VS Code main.dart dengan MultiProvider ChangeNotifierProvider FavoriteProvider dan builder IdentityFooter"
+                />
+                <div class="img-cap">
+                  Gambar D.C-3 – main.dart: MultiProvider dengan
+                  ChangeNotifierProvider FavoriteProvider di atas ResepKuApp,
+                  footer tetap dipertahankan
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >MultiProvider(providers: [...], child: const
+                      ResepKuApp())</code
+                    >
+                    — membungkus seluruh aplikasi.
+                    <code>MultiProvider</code> dipilih agar provider lain mudah
+                    ditambahkan, misalnya pada Latihan 1.
+                  </li>
+                  <li>
+                    <code
+                      >ChangeNotifierProvider(create: (context) =&gt;
+                      FavoriteProvider())</code
+                    >
+                    — membuat satu objek <code>FavoriteProvider</code> yang
+                    dibagikan ke semua widget di bawahnya.
+                  </li>
+                  <li>
+                    Import dan baris
+                    <code
+                      >builder: (context, child) =&gt; IdentityFooter(child:
+                      child!)</code
+                    >
+                    tetap ada, sehingga footer identitas tidak hilang.
+                  </li>
+                </ul>
+                <p>
+                  Setelah mengubah <code>main.dart</code>, wajib
+                  <strong>hot restart</strong> (Shift + R). Hot reload tidak
+                  menjalankan ulang <code>main()</code>, sehingga provider belum
+                  terpasang dan muncul <code>ProviderNotFoundException</code>.
+                </p>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>toggle()</code> dan
+                <code>isFavorite()</code> berasal dari
+                <code>FavoriteProvider</code> (C.1), yang disediakan oleh
+                <code>main.dart</code> (C.2). Versi ini menggantikan
+                <code>_isFavorite</code> lokal dari Bagian B.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">4</span>C.3 RecipeTile Membaca Data dari
+                Provider
+              </div>
+              <p>
+                <code>RecipeTile</code> kembali menjadi
+                <code>StatelessWidget</code>. Data favorit tidak lagi disimpan
+                di tile, melainkan diambil dari <code>FavoriteProvider</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Ganti Seluruh Isi lib/widgets/recipe_tile.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode15.png"
+                  alt="SS VS Code recipe_tile.dart versi Provider dengan context.watch isFavorite dan context.read toggle"
+                />
+                <div class="img-cap">
+                  Gambar D.C-4 – recipe_tile.dart versi Provider: context.watch
+                  di build dan context.read pada onPressed
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >final isFavorite =
+                      context.watch&lt;FavoriteProvider&gt;().isFavorite(recipe);</code
+                    >
+                    — <code>watch</code> di dalam <code>build()</code> membuat
+                    tile ikut rebuild ketika daftar favorit berubah.
+                  </li>
+                  <li>
+                    <code
+                      >icon: Icon(isFavorite ? Icons.favorite :
+                      Icons.favorite_border)</code
+                    >
+                    dan <code>color: isFavorite ? Colors.red : null</code> —
+                    ikon dan warna mengikuti data dari provider.
+                  </li>
+                  <li>
+                    <code
+                      >onPressed: () =&gt;
+                      context.read&lt;FavoriteProvider&gt;().toggle(recipe)</code
+                    >
+                    — <code>read</code> di dalam callback hanya memanggil method
+                    tanpa mendengarkan perubahan.
+                  </li>
+                </ul>
+                <p>
+                  Aturan utamanya: <code>context.watch</code> di
+                  <code>build()</code>, <code>context.read</code> di callback
+                  seperti <code>onPressed</code> dan <code>onTap</code>.
+                </p>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>DetailPage</code> dari A.5
+                dilengkapi, dan <code>FavoriteProvider</code> yang sama dengan
+                milik <code>RecipeTile</code> (C.3) sehingga status favorit
+                konsisten di dua halaman.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">5</span>C.4 Tombol Favorit pada Halaman
+                Detail
+              </div>
+              <p>
+                Halaman detail mendapat tombol favorit di AppBar yang membaca
+                provider yang sama dengan daftar resep.
+              </p>
+              <div class="sub-label">
+                Aksi: Tambah Dua Import, Baris isFavorite, dan actions pada
+                detail_page.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode16.png"
+                  alt="SS VS Code detail_page.dart import provider favorite_provider baris isFavorite context.watch dan actions IconButton"
+                />
+                <div class="img-cap">
+                  Gambar D.C-5 – detail_page.dart: import provider, baris
+                  isFavorite dengan context.watch, dan actions pada AppBar
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    Import <code>package:provider/provider.dart</code> dan
+                    <code>package:resepku/providers/favorite_provider.dart</code
+                    >.
+                  </li>
+                  <li>
+                    <code
+                      >final isFavorite =
+                      context.watch&lt;FavoriteProvider&gt;().isFavorite(recipe);</code
+                    >
+                    — diletakkan tepat setelah baris <code>totalCalories</code>.
+                  </li>
+                  <li>
+                    <code>actions: [IconButton(...)]</code> pada AppBar — ikon
+                    hati terisi bila favorit, <code>onPressed</code> memanggil
+                    <code
+                      >context.read&lt;FavoriteProvider&gt;().toggle(recipe)</code
+                    >.
+                  </li>
+                </ul>
+                <p>
+                  Halaman ini kini memakai dua jenis state sekaligus:
+                  <code>_servings</code> sebagai state lokal
+                  (<code>setState</code>) dan favorit sebagai state global
+                  (Provider). Kombinasi seperti ini wajar pada aplikasi nyata.
+                </p>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>favorite.items</code> dan
+                <code>favorite.count</code> berasal dari
+                <code>FavoriteProvider</code> (C.1).
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">6</span>C.5 Membuat Halaman Favorit
+              </div>
+              <p>
+                Halaman Favorit memakai <code>Consumer</code>, bentuk widget
+                dari <code>context.watch</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/pages/favorite_page.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode17.png"
+                  alt="SS VS Code favorite_page.dart Consumer FavoriteProvider dengan pesan kosong dan ListView favorit"
+                />
+                <div class="img-cap">
+                  Gambar D.C-6 – favorite_page.dart: Consumer yang menampilkan
+                  pesan kosong atau daftar resep favorit dengan tombol hapus
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >Consumer&lt;FavoriteProvider&gt;(builder: (context,
+                      favorite, child) {...})</code
+                    >
+                    — fungsi <code>builder</code> dijalankan ulang setiap kali
+                    <code>notifyListeners()</code> dipanggil.
+                  </li>
+                  <li>
+                    <code>if (favorite.count == 0)</code> — menampilkan
+                    <code>Center</code> berisi "Belum ada resep favorit. Tekan
+                    ikon hati di daftar resep."
+                  </li>
+                  <li>
+                    Bila ada data: <code>ListView</code> dengan
+                    <code
+                      >for (final recipe in favorite.items) ListTile(...)</code
+                    >
+                    yang menampilkan nama dan masakan.
+                  </li>
+                  <li>
+                    <code
+                      >trailing: IconButton(icon: Icons.delete_outline,
+                      onPressed: () =&gt; favorite.toggle(recipe))</code
+                    >
+                    — menghapus resep dari favorit.
+                  </li>
+                </ul>
+                <p>
+                  Halaman ini belum dapat dibuka dari mana pun; tombolnya dibuat
+                  pada langkah berikutnya.
+                </p>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> tombol ini membuka
+                <code>FavoritePage</code> dari langkah C.5 dan membaca
+                <code>count</code> dari <code>FavoriteProvider</code> (C.1).
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">7</span>C.6 Membuat Badge Jumlah Favorit
+              </div>
+              <p>
+                Widget <code>Badge</code> dari Material 3 menampilkan angka
+                kecil di atas ikon. Dibuat sebagai widget terpisah agar hanya
+                bagian ini yang rebuild ketika jumlah favorit berubah.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/widgets/favorite_badge_button.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode18.png"
+                  alt="SS VS Code favorite_badge_button.dart IconButton dengan Badge isLabelVisible count dan Navigator.push FavoritePage"
+                />
+                <div class="img-cap">
+                  Gambar D.C-7 – FavoriteBadgeButton: ikon hati dengan Badge
+                  jumlah favorit dan navigasi ke FavoritePage
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >final count =
+                      context.watch&lt;FavoriteProvider&gt;().count;</code
+                    >
+                    — angka badge ikut berubah.
+                  </li>
+                  <li>
+                    <code
+                      >Badge(isLabelVisible: count &gt; 0, label:
+                      Text('$count'), child: const Icon(Icons.favorite))</code
+                    >
+                    — badge hanya terlihat bila ada favorit.
+                  </li>
+                  <li>
+                    <code
+                      >onPressed: () =&gt; Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =&gt; const
+                      FavoritePage()))</code
+                    >
+                    — membuka halaman Favorit (C.5).
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>HomePage</code> versi awal
+                (A.4) dilengkapi dengan widget dari langkah sebelumnya.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">8</span>C.6 Memasang Badge di AppBar
+                HomePage
+              </div>
+              <p>Terakhir, badge dipasang pada AppBar halaman Home.</p>
+              <div class="sub-label">
+                Aksi: Ganti Isi home_page.dart dengan Versi Akhir
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode19.png"
+                  alt="SS VS Code home_page.dart versi akhir dengan actions const FavoriteBadgeButton"
+                />
+                <div class="img-cap">
+                  Gambar D.C-8 – home_page.dart versi akhir: AppBar dengan
+                  actions berisi FavoriteBadgeButton
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <p>
+                  Ditambahkan
+                  <code
+                    >import
+                    'package:resepku/widgets/favorite_badge_button.dart';</code
+                  >
+                  dan parameter
+                  <code>actions: const [FavoriteBadgeButton()]</code> pada
+                  <code>AppBar</code>. Badge ditempatkan di sisi kanan AppBar
+                  dan dapat dibuat <code>const</code> karena widget-nya
+                  mengambil datanya sendiri dari provider.
+                </p>
+              </div>
+            </div>
+            <p>
+              Setelah seluruh file selesai, dilakukan hot restart lalu enam
+              skenario pada Langkah C.7 dijalankan berurutan.
+            </p>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 1: Ikon Hati dan
+                Badge Bernilai 2
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap Ikon Hati pada Margherita dan Alfredo di Home
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss1.png"
+                  alt="SS Home dengan dua ikon hati merah badge angka 2 di AppBar dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-9 – Home setelah Margherita dan Alfredo
+                  difavoritkan: dua ikon hati merah dan badge bernilai 2 (footer
+                  NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Ikon hati pada Classic Margherita Pizza dan Chicken Alfredo
+                Pasta berubah merah, dan badge di AppBar menunjukkan angka
+                <strong>2</strong>. Setiap tap memanggil
+                <code
+                  >context.read&lt;FavoriteProvider&gt;().toggle(recipe)</code
+                >
+                yang menambahkan resep ke <code>_items</code> lalu memanggil
+                <code>notifyListeners()</code>. Karena
+                <code>RecipeTile</code> dan
+                <code>FavoriteBadgeButton</code> memakai
+                <code>context.watch</code>, keduanya ikut dibangun ulang.
+                Berbeda dengan eksperimen Bagian B, jumlah favorit kini dapat
+                tampil di AppBar karena datanya tersimpan di provider.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 2: Detail dengan
+                Ikon Hati Terisi
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Buka Detail Margherita
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss2.png"
+                  alt="SS halaman detail Classic Margherita Pizza dengan ikon hati terisi di AppBar dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-10 – Detail Classic Margherita Pizza dengan ikon
+                  hati terisi di AppBar (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Halaman detail mengetahui bahwa resep ini favorit tanpa ada data
+                yang dikirim lewat constructor, karena baris
+                <code
+                  >context.watch&lt;FavoriteProvider&gt;().isFavorite(recipe)</code
+                >
+                membaca provider yang sama dengan daftar resep. Pada Bagian B
+                hal ini tidak mungkin dilakukan.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 3: Membatalkan
+                Favorit dari Detail
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap Ikon Hati di Detail, Lalu Kembali ke Home
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss3a.png"
+                  alt="SS Home dengan ikon hati Margherita kosong setelah dibatalkan dari detail"
+                />
+                <div class="img-cap">
+                  Gambar D.C-11 – Home setelah favorit Margherita dibatalkan
+                  dari halaman detail: ikon hati Margherita kembali kosong
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss3b.png"
+                  alt="SS Home dengan badge angka 1 di AppBar dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-12 – Badge di AppBar berkurang menjadi 1 (footer
+                  NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Perubahan yang dilakukan di halaman detail langsung tercermin di
+                Home tanpa mekanisme tambahan. <code>toggle()</code> menghapus
+                Margherita dari <code>_items</code> (<code>removeWhere</code>
+                berdasarkan <code>id</code>) lalu memanggil
+                <code>notifyListeners()</code>, sehingga ikon Margherita kembali
+                kosong dan badge menjadi <strong>1</strong>.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 4: Halaman
+                Favorit
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap Badge di AppBar
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss4.png"
+                  alt="SS halaman Favorit Saya hanya berisi Chicken Alfredo Pasta dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-13 – Halaman Favorit Saya hanya berisi Chicken
+                  Alfredo Pasta (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Halaman Favorit hanya memuat Alfredo, sesuai kondisi terakhir
+                daftar favorit. Halaman dibuka lewat
+                <code>FavoriteBadgeButton</code> dengan
+                <code>Navigator.push</code>, lalu
+                <code>Consumer&lt;FavoriteProvider&gt;</code> menyusun
+                <code>ListView</code> dari <code>favorite.items</code>. Setiap
+                baris menampilkan nama resep, jenis masakan, dan ikon tong
+                sampah yang memanggil <code>favorite.toggle(recipe)</code>.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 5: Daftar Favorit
+                Kosong
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Hapus Alfredo dari Halaman Favorit, Lalu Kembali
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss5.png"
+                  alt="SS hasil skenario 5 daftar favorit kosong setelah Alfredo dihapus dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-14 – Hasil skenario 5: daftar favorit kosong
+                  setelah Alfredo dihapus (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Setelah Alfredo dihapus lewat ikon tong sampah,
+                <code>favorite.count</code> menjadi 0 sehingga
+                <code>Consumer</code> menampilkan pesan
+                <em>“Belum ada resep favorit”</em>. Setelah kembali ke Home,
+                badge tidak terlihat lagi karena
+                <code>isLabelVisible: count &gt; 0</code> bernilai
+                <code>false</code>.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Skenario 6: State Lokal
+                Dibuang Saat Halaman Ditutup
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Ubah Porsi Jadi 2, Kembali ke Home, Buka Lagi Resep
+                yang Sama
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss6a.png"
+                  alt="SS detail Margherita dengan porsi nilai awal sebelum diubah dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-15 – Detail Margherita dengan porsi pada nilai awal
+                  sebelum diubah (footer terlihat)
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss6b.png"
+                  alt="SS detail Margherita dengan porsi diubah menjadi 2 dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-16 – Porsi diubah menjadi 2 dengan menekan tombol −
+                  (footer terlihat)
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss6c.png"
+                  alt="SS halaman Home setelah kembali dari detail dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-17 – Kembali ke Home dengan tombol back (footer
+                  terlihat)
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sss6d.png"
+                  alt="SS detail Margherita dibuka lagi dengan porsi kembali ke nilai awal dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-18 – Resep yang sama dibuka lagi: porsi kembali ke
+                  nilai awal (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Porsi kembali ke nilai awal setelah halaman ditutup dan dibuka
+                lagi, karena <code>_servings</code> adalah state lokal milik
+                <code>_DetailPageState</code>. Ketika halaman ditutup, objek
+                State dibuang bersama datanya, dan membuka halaman lagi membuat
+                State baru yang menjalankan <code>initState()</code> dengan
+                <code>widget.recipe.servings</code>. Sebaliknya, daftar favorit
+                tidak hilang karena disimpan di provider yang berada di atas
+                <code>MaterialApp</code>.
+              </p>
+            </div>
+            <p id="uji-c7" style="scroll-margin-top: 96px">
+              <strong>Tabel uji Langkah C.7</strong>
+            </p>
+            <div style="overflow-x: auto; margin: 12px 0">
+              <table
+                style="width: 100%; border-collapse: collapse; font-size: 14px"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      No
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Skenario
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Hasil yang diharapkan
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Bukti (Gambar)
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Sesuai?
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      1
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Tap ikon hati pada Margherita dan Alfredo di Home
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ikon berwarna merah, badge menunjukkan angka 2
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-9
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      2
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Buka detail Margherita
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ikon hati di AppBar terisi
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-10
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      3
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Di halaman detail, tap ikon hati, lalu kembali ke Home
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ikon Margherita kosong, badge menunjukkan angka 1
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-11, D.C-12
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      4
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Tap badge di AppBar
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Halaman Favorit hanya berisi Alfredo
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-13
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      5
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Hapus Alfredo dari halaman Favorit, lalu kembali
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Muncul pesan “Belum ada resep favorit”, badge hilang
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-14
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      6
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ubah porsi menjadi 2, kembali ke Home, lalu buka lagi
+                      resep yang sama
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Porsi kembali ke nilai awal, karena state lokal ikut
+                      dibuang ketika halaman ditutup
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-15 s.d. D.C-18
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="test-box" id="checkpoint-2">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Checkpoint 2: Home Badge
+                2, Detail Hati Terisi, dan Halaman Favorit
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tiga Tampilan yang Membaca FavoriteProvider yang Sama
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sscp2c1.png"
+                  alt="SS Checkpoint 2 Home dengan badge bernilai 2 dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-19 – Checkpoint 2 (1/3): Home dengan badge bernilai
+                  2 (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sscp2c2.png"
+                  alt="SS Checkpoint 2 halaman Detail dengan ikon hati terisi dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-20 – Checkpoint 2 (2/3): Halaman Detail dengan ikon
+                  hati terisi (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sscp2c3.png"
+                  alt="SS Checkpoint 2 halaman Favorit Saya dan footer"
+                />
+                <div class="img-cap">
+                  Gambar D.C-21 – Checkpoint 2 (3/3): Halaman Favorit Saya
+                  (footer NIM dan nama terlihat)
+                </div>
+              </div>
+              <p>
+                Ketiga screenshot menunjukkan data yang sama dibaca dari tiga
+                tempat berbeda. Badge pada Home dibangun oleh
+                <code>FavoriteBadgeButton</code> lewat
+                <code>context.watch&lt;FavoriteProvider&gt;().count</code>. Ikon
+                hati pada detail dibangun dari <code>isFavorite(recipe)</code>.
+                Daftar pada halaman Favorit dibangun oleh
+                <code>Consumer</code> dari <code>favorite.items</code>. Semuanya
+                konsisten karena hanya ada satu objek
+                <code>FavoriteProvider</code> yang dipasang di atas
+                <code>MaterialApp</code>.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Checkpoint 2 terpenuhi: Home dengan badge 2, detail dengan ikon
+                hati terisi, dan halaman Favorit, dengan footer NIM dan nama
+                terlihat pada setiap screenshot. Keenam skenario sesuai.
+              </div>
+            </div>
+          </div>
+
+          <div class="laprak-card" id="latihan">
+            <div class="section-label">
+              <span class="num">E</span>Pertanyaan Analisis dan Latihan
+            </div>
+            <div class="latihan-banner">
+              <i class="bi bi-journal-code"></i>
+              <div>
+                <h5>Pertanyaan Analisis dan Latihan</h5>
+                <p>
+                  Bagian ini berisi tiga pertanyaan analisis, Latihan 1 (halaman
+                  Pengaturan dengan tema gelap dan terang memakai
+                  <code>ThemeProvider</code>), dan Latihan 2 (tombol "Hapus
+                  semua" favorit dengan konfirmasi <code>AlertDialog</code>).
+                </p>
+              </div>
+            </div>
+            <div class="sub-section-title" id="analisis">
+              E.1 <span class="file-badge">Pertanyaan Analisis</span>
+            </div>
+            <p>
+              <strong
+                >Pertanyaan 1 — jawaban tiga pertanyaan Langkah B.2.</strong
+              >
+              Ikon hati berubah menjadi merah dan terisi karena
+              <code>onPressed</code> memanggil <code>setState</code> pada
+              <code>_RecipeTileState</code>, sehingga tile yang bersangkutan
+              dibangun ulang dengan nilai <code>_isFavorite</code> yang baru.
+              Jumlah resep favorit tidak dapat ditampilkan di AppBar
+              <code>HomePage</code>, karena <code>_isFavorite</code> adalah
+              field private di <code>_RecipeTileState</code> milik masing-masing
+              tile, sedangkan <code>HomePage</code> berada di atasnya dan tidak
+              dapat membaca State milik widget anak. Halaman detail juga tidak
+              dapat mengetahui status favorit karena hanya menerima
+              <code>recipe</code> lewat constructor, sementara status favorit
+              hidup di tile yang terpisah. Ketiganya menunjukkan bahwa state
+              lokal tidak dapat dibagikan ke widget lain.
+            </p>
+            <p>
+              <strong
+                >Pertanyaan 2 — mengapa jumlah porsi tetap memakai
+                <code>setState()</code>?</strong
+              >
+              Jumlah porsi hanya dibutuhkan oleh satu halaman, yaitu halaman
+              detail, sehingga cukup disimpan sebagai state lokal di
+              <code>_DetailPageState</code>. Hasil skenario 6 membuktikannya:
+              ketika halaman ditutup dan dibuka lagi, porsi kembali ke nilai
+              awal karena State dibuang bersama halamannya, dan itu perilaku
+              yang diinginkan karena porsi hanyalah pilihan sementara. Bila
+              dimasukkan ke Provider, data sementara itu akan bertahan tanpa
+              alasan dan dapat memicu rebuild widget lain yang tidak
+              membutuhkannya. Favorit sebaliknya harus bertahan dan dibaca
+              banyak halaman, sehingga disimpan di Provider.
+            </p>
+            <p>
+              <strong
+                >Pertanyaan 3 — memindahkan
+                <code>ChangeNotifierProvider</code> ke dalam
+                <code>HomePage</code>.</strong
+              >
+              Sebagai percobaan sementara, <code>MultiProvider</code> dihapus
+              dari <code>main()</code> dan
+              <code>ChangeNotifierProvider</code> dipasang membungkus
+              <code>Scaffold</code> pada <code>HomePage</code>.
+            </p>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> percobaan ini membalik langkah
+                C.2: provider yang semula berada di atas
+                <code>MaterialApp</code> kini hanya berada di dalam
+                <code>HomePage</code>.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num">1</span>Percobaan: Provider Dipindah ke
+                HomePage
+              </div>
+              <p>
+                Kode diubah sementara untuk melihat akibat posisi provider pada
+                widget tree.
+              </p>
+              <div class="sub-label">
+                Aksi: Ubah main.dart dan home_page.dart Sementara
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode20.png"
+                  alt="SS VS Code home_page.dart ChangeNotifierProvider membungkus Scaffold dan main.dart tanpa MultiProvider"
+                />
+                <div class="img-cap">
+                  Gambar E.1-1 – Kode percobaan: ChangeNotifierProvider
+                  membungkus Scaffold pada HomePage dan runApp tanpa
+                  MultiProvider
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    Pada <code>main.dart</code>, <code>runApp</code> dipanggil
+                    langsung dengan <code>const ResepKuApp()</code>, tanpa
+                    <code>MultiProvider</code>.
+                  </li>
+                  <li>
+                    Pada <code>home_page.dart</code>,
+                    <code
+                      >return ChangeNotifierProvider(create: (context) =&gt;
+                      FavoriteProvider(), child: Scaffold(...))</code
+                    >, lengkap dengan import <code>provider</code> dan
+                    <code>favorite_provider</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Hasil Percobaan: Membuka
+                Halaman Favorit
+              </div>
+              <div class="sub-label test-label fail">
+                Percobaan: Hot Restart, Tap Badge di AppBar
+              </div>
+              <!-- OPSIONAL: bila punya screenshot layar error ProviderNotFoundException, simpan sebagai sserror.png lalu hapus tanda komentar blok di bawah.
+<div class="img-wrap"><img src="../images/laporan/laporan10/sserror.png" alt="SS layar error ProviderNotFoundException saat halaman Favorit dibuka dengan footer terlihat" /><div class="img-cap">Gambar E.1-2 – ProviderNotFoundException muncul ketika halaman Favorit dibuka (footer NIM dan nama terlihat)</div></div>
+-->
+              <p>
+                Halaman Home dan tombol hati masih berfungsi, tetapi membuka
+                halaman Favorit menghasilkan
+                <code>ProviderNotFoundException</code>.
+                <strong>Penyebabnya</strong> adalah posisi provider pada widget
+                tree. <code>Navigator.push</code> menempatkan halaman baru
+                sebagai route yang sejajar dengan <code>HomePage</code>, bukan
+                sebagai anaknya. Provider yang dipasang di dalam
+                <code>HomePage</code> hanya mencakup subtree
+                <code>HomePage</code>, sehingga <code>FavoritePage</code> (dan
+                juga <code>DetailPage</code>) berada di luar jangkauannya dan
+                <code>context.watch</code> tidak menemukan provider ke atas.
+                Karena itu provider harus dipasang di atas
+                <code>MaterialApp</code>. Setelah percobaan, kode dikembalikan
+                seperti semula (C.2 dan C.6) lalu dilakukan hot restart.
+              </p>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke Bagian Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="latihan-1">
+              E.2
+              <span class="file-badge">Latihan 1 — Tema Gelap dan Terang</span>
+            </div>
+            <p>
+              Halaman Pengaturan ditambahkan dengan
+              <code>SwitchListTile</code> "Mode gelap". Ketika switch aktif,
+              seluruh aplikasi berganti ke tema gelap. Mode tema disimpan di
+              <code>ThemeProvider</code> sehingga dapat dibaca oleh
+              <code>MaterialApp</code> di tingkat paling atas.
+            </p>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">1</span>Membuat ThemeProvider
+              </div>
+              <p>
+                State mode tema disimpan di class <code>ChangeNotifier</code>,
+                mengikuti pola <code>FavoriteProvider</code>.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/providers/theme_provider.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode21.png"
+                  alt="SS VS Code theme_provider.dart class ThemeProvider dengan ThemeMode getter isDark setDark dan notifyListeners"
+                />
+                <div class="img-cap">
+                  Gambar E.2-1 – ThemeProvider: field ThemeMode, getter
+                  themeMode dan isDark, serta method setDark() dengan
+                  notifyListeners()
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code>ThemeMode _themeMode = ThemeMode.light;</code> — mode
+                    awal terang.
+                  </li>
+                  <li>
+                    <code>ThemeMode get themeMode</code> dan
+                    <code>bool get isDark</code> — getter untuk dibaca
+                    <code>MaterialApp</code> dan switch.
+                  </li>
+                  <li>
+                    <code>void setDark(bool value)</code> — mengubah mode
+                    menjadi gelap atau terang lalu memanggil
+                    <code>notifyListeners()</code>, sehingga widget yang
+                    mendengarkan ikut rebuild.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>MultiProvider</code> dari
+                C.2 diperluas dengan provider kedua, dan
+                <code>ThemeProvider</code> berasal dari langkah sebelumnya.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">2</span>Mendaftarkan
+                ThemeProvider dan Mengatur MaterialApp
+              </div>
+              <p>
+                <code>ThemeProvider</code> didaftarkan pada
+                <code>MultiProvider</code>, lalu
+                <code>MaterialApp</code> membaca mode tema darinya.
+              </p>
+              <div class="sub-label">
+                Aksi: Ubah main.dart: Tambah Provider, darkTheme, dan themeMode
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode22.png"
+                  alt="SS VS Code main.dart MultiProvider dengan ThemeProvider context.watch themeMode darkTheme dan builder IdentityFooter"
+                />
+                <div class="img-cap">
+                  Gambar E.2-2 – main.dart: ThemeProvider pada MultiProvider,
+                  darkTheme, themeMode dari context.watch, dan footer
+                  dipertahankan
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >ChangeNotifierProvider(create: (context) =&gt;
+                      ThemeProvider())</code
+                    >
+                    — ditambahkan di samping <code>FavoriteProvider</code> pada
+                    <code>MultiProvider</code>.
+                  </li>
+                  <li>
+                    <code
+                      >final themeMode =
+                      context.watch&lt;ThemeProvider&gt;().themeMode;</code
+                    >
+                    — memakai <strong>watch</strong>, bukan read, karena
+                    <code>MaterialApp</code> harus dibangun ulang setiap kali
+                    mode berubah.
+                  </li>
+                  <li>
+                    <code
+                      >darkTheme: ThemeData(colorSchemeSeed: Colors.deepOrange,
+                      brightness: Brightness.dark)</code
+                    >
+                    — tema gelap dengan warna dasar yang sama.
+                  </li>
+                  <li>
+                    <code>themeMode: themeMode</code> — memilih tema yang aktif.
+                  </li>
+                  <li>Baris <code>builder</code> footer tetap ada.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> switch membaca dan mengubah
+                <code>ThemeProvider</code> dari langkah 1, dan perubahannya
+                diterima oleh <code>MaterialApp</code> (langkah 2).
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">3</span>Membuat Halaman
+                Pengaturan
+              </div>
+              <p>
+                Halaman Pengaturan berisi satu switch untuk mengubah mode tema.
+              </p>
+              <div class="sub-label">
+                Aksi: Buat lib/pages/settings_page.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode23.png"
+                  alt="SS VS Code settings_page.dart SwitchListTile Mode gelap dengan context.watch ThemeProvider dan context.read setDark"
+                />
+                <div class="img-cap">
+                  Gambar E.2-3 – settings_page.dart: SwitchListTile "Mode gelap"
+                  yang terhubung ke ThemeProvider
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >final theme = context.watch&lt;ThemeProvider&gt;();</code
+                    >
+                    — membaca status mode untuk menampilkan posisi switch.
+                  </li>
+                  <li>
+                    <code
+                      >SwitchListTile(title: const Text('Mode gelap'),
+                      secondary: const Icon(Icons.dark_mode), value:
+                      theme.isDark, ...)</code
+                    >
+                    — baris switch.
+                  </li>
+                  <li>
+                    <code
+                      >onChanged: (value) =&gt;
+                      context.read&lt;ThemeProvider&gt;().setDark(value)</code
+                    >
+                    — <strong>read</strong> dipakai di callback karena hanya
+                    memanggil method.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> tombol ini membuka
+                <code>SettingsPage</code> dari langkah 3 dan berdampingan dengan
+                badge dari C.6.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">4</span>Menambahkan Tombol
+                Pengaturan di AppBar Home
+              </div>
+              <p>
+                Tombol ikon pengaturan ditambahkan di samping badge favorit.
+              </p>
+              <div class="sub-label">
+                Aksi: Ubah actions pada home_page.dart dan Tambah Import
+                settings_page.dart
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode24.png"
+                  alt="SS VS Code home_page.dart actions berisi IconButton settings dan FavoriteBadgeButton"
+                />
+                <div class="img-cap">
+                  Gambar E.2-4 – home_page.dart: AppBar dengan tombol ikon
+                  pengaturan dan FavoriteBadgeButton
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >import 'package:resepku/pages/settings_page.dart';</code
+                    >
+                    ditambahkan.
+                  </li>
+                  <li>
+                    <code>actions</code> kini berisi dua widget:
+                    <code
+                      >IconButton(icon: Icons.settings, tooltip: 'Pengaturan',
+                      onPressed: () =&gt;
+                      Navigator.push(...SettingsPage()))</code
+                    >
+                    dan <code>const FavoriteBadgeButton()</code>. Kata
+                    <code>const</code> dihapus dari daftar
+                    <code>actions</code> karena berisi widget yang tidak
+                    konstan.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Halaman
+                Pengaturan dan Switch Mode Gelap
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Tap Ikon Pengaturan di AppBar Home, Lalu Aktifkan
+                Switch
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat1a.png"
+                  alt="SS halaman Pengaturan dengan opsi Mode gelap dan switch mati pada tema terang dan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.2-5 – Halaman Pengaturan menampilkan opsi “Mode
+                  gelap” dengan switch mati pada tema terang (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Ikon pengaturan di AppBar membuka <code>SettingsPage</code>.
+                Switch tampil mati karena <code>theme.isDark</code> bernilai
+                <code>false</code> (<code>ThemeProvider</code> diawali dengan
+                <code>ThemeMode.light</code>), sehingga seluruh aplikasi masih
+                memakai tema terang.
+              </p>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat1b.png"
+                  alt="SS halaman Pengaturan tema gelap setelah switch Mode gelap diaktifkan dan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.2-6 – Setelah switch “Mode gelap” diaktifkan, halaman
+                  Pengaturan langsung berubah ke tema gelap (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Saat switch digeser, <code>onChanged</code> memanggil
+                <code>context.read&lt;ThemeProvider&gt;().setDark(true)</code>
+                yang mengubah <code>_themeMode</code> menjadi
+                <code>ThemeMode.dark</code> lalu memanggil
+                <code>notifyListeners()</code>.
+                <code>MaterialApp</code> mendengarkan lewat
+                <code>context.watch</code>, sehingga dibangun ulang dan memakai
+                <code>darkTheme</code>. Footer identitas tetap tampil karena
+                baris <code>builder</code> tidak dihapus.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Seluruh
+                Aplikasi Berganti Tema
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Kembali ke Home dan Buka Halaman Favorit dengan Mode
+                Gelap Aktif
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat1c.png"
+                  alt="SS halaman utama Home dalam tema gelap dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.2-7 – Halaman utama Home dalam tema gelap (footer
+                  terlihat)
+                </div>
+              </div>
+              <p>
+                Home ikut berubah menjadi gelap tanpa ada kode tambahan di
+                <code>HomePage</code>, karena <code>themeMode</code> dibaca oleh
+                <code>MaterialApp</code> yang berada di atas semua route.
+              </p>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat1d.png"
+                  alt="SS halaman Favorit Saya dalam tema gelap dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.2-8 – Halaman Favorit Saya dalam tema gelap (footer
+                  terlihat)
+                </div>
+              </div>
+              <p>
+                Halaman Favorit, yang dibuka lewat <code>Navigator.push</code>,
+                juga gelap. Hal ini membuktikan mode gelap berlaku pada seluruh
+                aplikasi (Home, Detail, Favorit, dan Pengaturan), bukan hanya
+                pada halaman Pengaturan.
+              </p>
+            </div>
+            <div class="file-divider">
+              <div class="line"></div>
+              <span>Lanjut ke Bagian Berikutnya</span>
+              <div class="line"></div>
+            </div>
+            <div class="sub-section-title" id="latihan-2">
+              E.3
+              <span class="file-badge">Latihan 2 — Hapus Semua Favorit</span>
+            </div>
+            <div class="info-box blue">
+              <i class="bi bi-link-45deg"></i>
+              <div>
+                <strong>Keterkaitan:</strong> <code>clear()</code> berasal dari
+                <code>FavoriteProvider</code> (C.1), dan halaman ini dibuka dari
+                badge pada C.6.
+              </div>
+            </div>
+            <div class="step-block">
+              <div class="step-title">
+                <span class="step-num latihan">1</span>Menambahkan Tombol Hapus
+                Semua dengan AlertDialog
+              </div>
+              <p>
+                Di AppBar halaman Favorit ditambahkan tombol "Hapus semua" yang
+                meminta konfirmasi lebih dulu dan nonaktif ketika daftar kosong.
+              </p>
+              <div class="sub-label">
+                Aksi: Ubah favorite_page.dart: Tambah Method _confirmClear() dan
+                actions pada AppBar
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/kode25.png"
+                  alt="SS VS Code favorite_page.dart method _confirmClear showDialog AlertDialog dan actions TextButton Hapus semua dengan Consumer"
+                />
+                <div class="img-cap">
+                  Gambar E.3-1 – favorite_page.dart: method _confirmClear()
+                  dengan AlertDialog dan tombol "Hapus semua" pada AppBar
+                </div>
+              </div>
+              <div class="penjelasan-box">
+                <div class="penjelasan-title">Penjelasan Kode</div>
+                <ul>
+                  <li>
+                    <code
+                      >Future&lt;void&gt; _confirmClear(BuildContext context)
+                      async</code
+                    >
+                    — menampilkan dialog dengan
+                    <code>showDialog&lt;bool&gt;</code> dan menunggu pilihan
+                    pengguna.
+                  </li>
+                  <li>
+                    <code>AlertDialog</code> berjudul "Hapus semua favorit?"
+                    dengan dua tombol: <code>TextButton</code> "Batal" yang
+                    menutup dialog dengan <code>false</code>, dan
+                    <code>FilledButton</code> "Hapus" dengan <code>true</code>.
+                  </li>
+                  <li>
+                    <code
+                      >if (confirmed == true &amp;&amp; context.mounted)
+                      context.read&lt;FavoriteProvider&gt;().clear();</code
+                    >
+                    — <code>clear()</code> hanya dijalankan bila pengguna
+                    menekan "Hapus". Pemeriksaan
+                    <code>context.mounted</code> memastikan halaman masih aktif
+                    setelah dialog ditutup.
+                  </li>
+                  <li>
+                    <code
+                      >actions: [Consumer&lt;FavoriteProvider&gt;(...)]</code
+                    >
+                    pada AppBar — dibungkus <code>Consumer</code> agar tombol
+                    ikut berubah saat jumlah favorit berubah.
+                  </li>
+                  <li>
+                    <code
+                      >onPressed: favorite.count == 0 ? null : () =&gt;
+                      _confirmClear(context)</code
+                    >
+                    — bernilai <code>null</code> saat kosong, sehingga tombol
+                    "Hapus semua" nonaktif.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Tombol Hapus
+                Semua Aktif dan Dialog Konfirmasi
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Buka Halaman Favorit yang Berisi Resep, Tekan Hapus
+                Semua
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat2a.png"
+                  alt="SS halaman Favorit berisi resep dengan tombol Hapus semua aktif dan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.3-2 – Halaman Favorit berisi resep dan tombol “Hapus
+                  semua” aktif di AppBar (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Selama <code>favorite.count</code> tidak nol,
+                <code>onPressed</code> tombol berisi
+                <code>() =&gt; _confirmClear(context)</code> sehingga tombol
+                aktif dan dapat ditekan.
+              </p>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat2b.png"
+                  alt="SS dialog konfirmasi Hapus semua favorit dengan tombol Batal dan Hapus dan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.3-3 – Dialog konfirmasi “Hapus semua favorit?” dengan
+                  tombol Batal dan Hapus (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Menekan tombol memunculkan <code>AlertDialog</code> lewat
+                <code>showDialog&lt;bool&gt;</code>. Penghapusan belum terjadi
+                pada tahap ini: pilihan <em>Batal</em> menutup dialog dengan
+                nilai <code>false</code> tanpa mengubah daftar, sedangkan
+                pilihan <em>Hapus</em> menutup dialog dengan nilai
+                <code>true</code>.
+              </p>
+            </div>
+            <div class="test-box">
+              <div class="test-box-title">
+                <i class="bi bi-clipboard-check"></i> Pengujian: Setelah
+                Konfirmasi Hapus
+              </div>
+              <div class="sub-label test-label">
+                Percobaan: Pilih Hapus pada Dialog, Lalu Kembali ke Home
+              </div>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat2c.png"
+                  alt="SS halaman Favorit kosong dengan pesan dan tombol Hapus semua nonaktif dan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.3-4 – Halaman Favorit kosong dengan tombol “Hapus
+                  semua” nonaktif (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Setelah “Hapus” dipilih, <code>clear()</code> mengosongkan
+                <code>_items</code> dan memanggil
+                <code>notifyListeners()</code>. Halaman menampilkan pesan
+                kosong, dan karena <code>favorite.count == 0</code> maka
+                <code>onPressed</code> bernilai <code>null</code> sehingga
+                tombol “Hapus semua” berubah abu-abu (nonaktif). Tombol ikut
+                berubah otomatis karena dibungkus <code>Consumer</code>.
+              </p>
+              <div class="img-wrap">
+                <img
+                  src="../images/laporan/laporan10/sslat2d.png"
+                  alt="SS halaman utama Home tanpa resep favorit dan tanpa badge dengan footer"
+                />
+                <div class="img-cap">
+                  Gambar E.3-5 – Halaman utama setelah semua favorit dihapus:
+                  tidak ada resep favorit dan badge hilang (footer terlihat)
+                </div>
+              </div>
+              <p>
+                Pada Home, semua ikon hati kembali kosong dan badge tidak tampil
+                lagi, karena <code>RecipeTile</code> dan
+                <code>FavoriteBadgeButton</code> membaca
+                <code>FavoriteProvider</code> yang sama dengan halaman Favorit.
+              </p>
+            </div>
+            <div class="info-box green">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                Latihan 1 dan 2 berfungsi: tema berganti pada seluruh aplikasi
+                lewat <code>ThemeProvider</code>, dan tombol "Hapus semua"
+                meminta konfirmasi serta nonaktif saat daftar kosong.
+              </div>
+            </div>
+          </div>
+
+          <div class="laprak-card" id="hasil">
+            <div class="section-label">
+              <span class="num">F</span>Hasil dan Pembahasan
+            </div>
+
+            <p>
+              Pertanyaan utama praktikum ini adalah di mana state sebaiknya
+              disimpan. Hasil praktikum menjawabnya dengan dua prinsip berbeda
+              yang dipakai berdampingan pada satu aplikasi.
+            </p>
+            <p><strong>Ringkasan pemenuhan checkpoint dan latihan</strong></p>
+            <div style="overflow-x: auto; margin: 12px 0">
+              <table
+                style="width: 100%; border-collapse: collapse; font-size: 14px"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Komponen
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Yang dibuktikan
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Bukti (Gambar)
+                    </th>
+                    <th
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        text-align: left;
+                        color: var(--accent);
+                      "
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Checkpoint 1 (Bagian A)
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Porsi 6 menghasilkan 1800 kkal; tombol − nonaktif pada
+                      porsi 1 beserta baris kodenya
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.A-11, D.A-12, D.A-13
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Pengamatan Bagian B
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ikon berubah, AppBar tidak dapat menghitung favorit,
+                      detail tidak tahu status favorit
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.B-2, D.B-3
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Tabel uji C.7
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Keenam skenario sesuai
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-9 s.d. D.C-18
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Checkpoint 2
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Home badge 2, Detail hati terisi, dan halaman Favorit
+                      dengan footer terlihat
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      D.C-19, D.C-20, D.C-21
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Pertanyaan analisis
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Tiga pertanyaan dijawab dengan alasan, termasuk percobaan
+                      provider di HomePage
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      E.1-1
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Latihan 1
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Seluruh aplikasi berganti tema
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      E.2-5 s.d. E.2-8
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Latihan 2
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      Ada konfirmasi; tombol nonaktif saat daftar kosong
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      E.3-2 s.d. E.3-5
+                    </td>
+                    <td
+                      style="
+                        border: 1px solid var(--border);
+                        padding: 8px 10px;
+                        vertical-align: top;
+                      "
+                    >
+                      &#10003;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              <strong>Jumlah porsi disimpan sebagai state lokal.</strong> Pada
+              Bagian A, jumlah porsi hanya dibutuhkan oleh halaman detail,
+              sehingga disimpan sebagai field <code>_servings</code> di
+              <code>_DetailPageState</code> dan diubah dengan
+              <code>setState()</code>. Checkpoint 1 membuktikan porsi 6
+              menghasilkan 1800 kkal (6 × 300), dan tombol − nonaktif pada porsi
+              1 berkat
+              <code>onPressed: _servings &gt; 1 ? _removeServing : null</code>.
+              Skenario 6 menunjukkan porsi kembali ke nilai awal ketika halaman
+              ditutup, yang wajar untuk data sementara.
+            </p>
+            <p>
+              <strong>Favorit tidak cukup disimpan sebagai state lokal.</strong>
+              Eksperimen Bagian B memperlihatkan bahwa bila status favorit
+              disimpan di setiap tile, ikon hati memang berubah, tetapi AppBar
+              tidak dapat menghitung jumlah favorit dan halaman detail tidak
+              dapat mengetahui statusnya. Data tersebut terkunci di dalam
+              <code>_RecipeTileState</code> milik masing-masing tile.
+            </p>
+            <p>
+              <strong>Favorit disimpan di Provider.</strong> Pada Bagian C,
+              daftar favorit dipindahkan ke
+              <code>FavoriteProvider</code> (<code>ChangeNotifier</code>) yang
+              dipasang di atas <code>MaterialApp</code>.
+              <code>RecipeTile</code>, <code>DetailPage</code>,
+              <code>FavoriteBadgeButton</code>, dan
+              <code>FavoritePage</code> membaca data yang sama, sehingga satu
+              perubahan langsung tercermin di semua halaman.
+              <code>context.watch</code> dipakai di <code>build()</code> dan
+              <code>Consumer</code> pada halaman Favorit supaya tampilan ikut
+              berubah, sedangkan <code>context.read</code> dipakai pada callback
+              karena hanya memanggil <code>toggle()</code>. Keenam skenario uji
+              C.7 sesuai, termasuk badge yang bertambah, berkurang, dan hilang
+              saat daftar kosong.
+            </p>
+            <p>
+              Pertanyaan analisis 3 menegaskan pentingnya posisi provider:
+              dengan provider di dalam <code>HomePage</code>, halaman yang
+              dibuka lewat <code>Navigator.push</code> tidak menemukan provider
+              dan muncul <code>ProviderNotFoundException</code>. Pada Latihan 1,
+              pola yang sama dipakai untuk <code>ThemeProvider</code>, dan
+              <code>context.watch</code> pada <code>MaterialApp</code> membuat
+              seluruh aplikasi berganti tema. Pada Latihan 2,
+              <code>clear()</code> dijalankan setelah konfirmasi
+              <code>AlertDialog</code>, dan tombol dinonaktifkan dengan
+              <code>onPressed: null</code> saat daftar kosong.
+            </p>
+            <p>
+              Footer identitas yang dipasang lewat <code>builder</code> pada
+              <code>MaterialApp</code> membuat NIM dan nama terlihat pada semua
+              halaman dan semua screenshot.
+            </p>
+          </div>
+
+          <div class="laprak-card" id="kesimpulan">
+            <div class="section-label">
+              <span class="num">G</span>Kesimpulan
+            </div>
+
+            <p>
+              Berdasarkan seluruh tahapan praktikum, diperoleh beberapa
+              kesimpulan penting:
+            </p>
+            <ol>
+              <li>
+                <strong>State lokal</strong> dengan
+                <code>StatefulWidget</code> dan <code>setState()</code> cocok
+                untuk data yang hanya dibutuhkan satu widget, seperti jumlah
+                porsi pada halaman detail. Data ini ikut dibuang ketika halaman
+                ditutup.
+              </li>
+              <li>
+                State lokal tidak cukup ketika satu data dibutuhkan banyak
+                widget dan halaman, karena data di dalam class State tidak dapat
+                dibaca widget lain, seperti terlihat pada eksperimen favorit.
+              </li>
+              <li>
+                <strong>Provider</strong> menyimpan app state pada class
+                <code>ChangeNotifier</code>. Setiap perubahan memanggil
+                <code>notifyListeners()</code> sehingga semua widget yang
+                mendengarkan ikut diperbarui, dan
+                <code>MultiProvider</code> memudahkan penambahan provider baru
+                seperti <code>ThemeProvider</code>.
+              </li>
+              <li>
+                <code>context.watch</code> dipakai di dalam
+                <code>build()</code> untuk ikut rebuild,
+                <code>context.read</code> dipakai di dalam callback, dan
+                <code>Consumer</code> adalah bentuk widget dari
+                <code>watch</code>.
+              </li>
+              <li>
+                Provider harus dipasang di atas <code>MaterialApp</code> agar
+                dapat diakses semua route; bila dipasang di dalam satu halaman,
+                halaman lain yang dibuka lewat <code>Navigator.push</code> tidak
+                menemukannya.
+              </li>
+              <li>
+                Satu halaman dapat memakai kedua jenis state sekaligus, dan
+                keputusan penyimpanan didasarkan pada siapa yang membutuhkan
+                data tersebut.
+              </li>
+            </ol>
+          </div>
+
+          <div class="laprak-card" id="repo">
+            <div class="section-label">
+              <span class="num">H</span>Repository Github
+            </div>
+
+            <p>
+              Seluruh source code praktikum ini dapat diakses pada repository
+              Github berikut:
+            </p>
+            <div class="text-center mt-4">
+              <a
+                href="https://github.com/saskiaalifah/2411531002_KelasA_AppMob_ResepKu"
+                target="_blank"
+                class="github-btn"
+                ><i class="bi bi-github me-2"></i> Lihat Repository GitHub</a
+              >
+            </div>
+          </div>
+        </div>
+        <!-- /content-col -->
+      </div>
+      <!-- /layout-wrap -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer py-4">
+      <div class="container">
+        <div class="row align-items-center gy-3">
+          <div class="col-md-4 text-md-start text-center">
+            <div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+            <div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <nav>
+              <ul class="list-inline mb-0" style="font-size: 13px">
+                <li class="list-inline-item">
+                  <a
+                    href="index.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Home</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="about.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >About</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="main.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Laporan</a
+                  >
+                </li>
+                <li class="list-inline-item">
+                  <a
+                    href="kontak.html"
+                    style="color: var(--muted); text-decoration: none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-flex gap-2">
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://github.com/saskiaalifah"
+                target="_blank"
+                style="color: var(--muted); font-size: 16px"
+                ><i class="fab fa-github"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <small style="color: var(--muted)"
+            >&copy; <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+  </body>
+</html>

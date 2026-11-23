@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Laprak 12 — HTTP Request dan Integrasi API (Flutter)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+      :root {
+        --bg: #0d0d18;
+        --card: #13131f;
+        --border: rgba(255, 255, 255, 0.07);
+        --text: #e8e8f0;
+        --muted: #8b8ba0;
+        --accent: #e83e8c;
+        --accent-2: #f472b6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ── */
+      .glass-nav {
+        background: rgba(13, 13, 24, 0.85) !important;
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .glass-nav .navbar-brand {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+      }
+      .glass-nav .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .glass-nav .nav-link:hover,
+      .glass-nav .nav-link.active {
+        color: var(--accent-2) !important;
+      }
+
+      /* ── Hero ── */
+      .laprak-hero {
+        padding: 100px 0 50px;
+        position: relative;
+        overflow: hidden;
+      }
+      .laprak-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          var(--card) 50%,
+          rgba(232, 62, 140, 0.08) 100%
+        );
+        z-index: 0;
+      }
+      .laprak-hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .laprak-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+        line-height: 1.25;
+      }
+      .laprak-hero h1 span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .laprak-hero .lead {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        color: var(--accent-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .btn-back-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        margin-bottom: 20px;
+      }
+      .btn-back-hero:hover {
+        color: var(--accent);
+      }
+
+      /* ── Layout: TOC kiri + konten ── */
+      main {
+        flex: 1;
+        padding: 40px 0 80px;
+        background: var(--bg);
+      }
+
+      .layout-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 34px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .toc-col {
+        flex: 0 0 240px;
+      }
+      .content-col {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 820px;
+      }
+
+      /* ── TOC (Daftar Isi) — kiri, STICKY (nempel selama kolom konten masih berjalan) ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 96px;
+        width: 240px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 16px;
+        z-index: 40;
+      }
+      .toc-sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .toc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(232, 62, 140, 0.3);
+        border-radius: 4px;
+      }
+      .toc-title {
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-title i {
+        color: var(--accent);
+      }
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .toc-list li {
+        margin-bottom: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 8px;
+        border-radius: 6px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc-list a:hover,
+      .toc-list a.active {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-left-color: var(--accent);
+      }
+      .toc-list ul {
+        list-style: none;
+        padding-left: 14px;
+        margin: 2px 0 4px;
+      }
+      .toc-list ul a {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 4px 8px;
+      }
+      .toc-list ul a::before {
+        content: "›";
+        margin-right: 4px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 1080px) {
+        .toc-col {
+          display: none;
+        }
+        .content-col {
+          max-width: 860px;
+          margin: 0 auto;
+        }
+      }
+
+      /* ── TOC — Mobile floating button + offcanvas ── */
+      .toc-fab {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        left: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(232, 62, 140, 0.4);
+        z-index: 70;
+      }
+      @media (max-width: 1080px) {
+        .toc-fab {
+          display: flex;
+        }
+      }
+      .offcanvas.text-bg-dark {
+        background: var(--card) !important;
+      }
+      .offcanvas-header {
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ── Section Card ── */
+      .laprak-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 36px;
+        margin-bottom: 24px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+        scroll-margin-top: 96px;
+      }
+      .laprak-card:hover {
+        border-color: rgba(232, 62, 140, 0.25);
+        box-shadow: 0 8px 30px rgba(232, 62, 140, 0.08);
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+      .section-label::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .section-label .num {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .laprak-card p,
+      .laprak-card li {
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+      }
+      .laprak-card ul,
+      .laprak-card ol {
+        padding-left: 20px;
+      }
+      .laprak-card li {
+        margin-bottom: 5px;
+      }
+      .laprak-card strong {
+        color: var(--accent-2);
+        font-weight: 600;
+      }
+      .laprak-card p + p {
+        margin-top: 10px;
+      }
+
+      code {
+        background: rgba(232, 62, 140, 0.12);
+        color: var(--accent-2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      /* ── Subsection (D.1 / D.2 / E.1) ── */
+      .sub-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 34px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .sub-section-title:first-of-type {
+        margin-top: 6px;
+      }
+      .sub-section-title .file-badge {
+        font-family: "Courier New", monospace;
+        font-size: 12.5px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.1);
+        border: 1px solid rgba(232, 62, 140, 0.25);
+        padding: 3px 10px;
+        border-radius: 6px;
+      }
+      .file-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 36px 0 8px;
+      }
+      .file-divider .line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .file-divider span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── Step Block ── */
+      .step-block {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .step-block:hover {
+        background: rgba(232, 62, 140, 0.04);
+        border-color: rgba(232, 62, 140, 0.2);
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 14.5px;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4);
+      }
+      .step-num.latihan {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+      }
+
+      .step-block p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.85;
+        margin: 0 0 10px;
+      }
+
+      .sub-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 13px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+      .sub-label::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sub-label.test-label {
+        color: #7ecf9d;
+      }
+      .sub-label.test-label::before {
+        background: #27ae60;
+      }
+      .sub-label.test-label.fail {
+        color: #f2a65a;
+      }
+      .sub-label.test-label.fail::before {
+        background: #f2a65a;
+      }
+
+      /* ── Image ── */
+      .img-wrap {
+        margin: 16px auto;
+        max-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .img-wrap:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+      }
+      .img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        max-height: 360px;
+        background: #14141e;
+      }
+      .img-cap {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        background: rgba(232, 62, 140, 0.03);
+      }
+
+      /* Dua gambar berdampingan untuk pengujian (pass/fail) */
+      .img-pair {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 16px 0;
+      }
+      .img-pair .img-wrap {
+        flex: 1 1 260px;
+        max-width: 290px;
+        margin: 0;
+      }
+
+      /* Anchor yang tidak tertutup navbar fixed */
+      .sub-section-title,
+      .test-box[id] {
+        scroll-margin-top: 96px;
+      }
+
+      /* ── Info Box ── */
+      .info-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 15px;
+      }
+      .info-box.blue {
+        background: rgba(232, 62, 140, 0.08);
+        border-left: 3px solid var(--accent);
+        color: var(--accent-2);
+      }
+      .info-box.green {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 3px solid #27ae60;
+        color: #7ecf9d;
+      }
+      .info-box.purple {
+        background: rgba(168, 85, 247, 0.08);
+        border-left: 3px solid #a855f7;
+        color: #c084fc;
+      }
+
+      /* ── Latihan Banner ── */
+      .latihan-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(232, 62, 140, 0.1),
+          rgba(244, 114, 182, 0.05)
+        );
+        border: 1px solid rgba(232, 62, 140, 0.2);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .latihan-banner i {
+        color: var(--accent);
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .latihan-banner h5 {
+        color: var(--accent-2);
+        font-size: 14.5px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .latihan-banner p {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.75;
+        margin: 0;
+      }
+
+      /* ── Penjelasan block (paragraf + poin) ── */
+      .penjelasan-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent-2);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 6px 0 16px;
+      }
+      .penjelasan-box .penjelasan-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 10px;
+      }
+      .penjelasan-box p {
+        font-size: 13.8px;
+        line-height: 1.85;
+        margin-bottom: 8px;
+      }
+      .penjelasan-box p:last-child {
+        margin-bottom: 0;
+      }
+      .penjelasan-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+      .penjelasan-box li {
+        font-size: 13.5px;
+        line-height: 1.8;
+      }
+
+      /* Kotak Pengujian */
+      .test-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-top: 18px;
+      }
+      .test-box .test-box-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .test-box .test-box-title i {
+        color: var(--accent);
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        background: var(--card);
+        border-top: 1px solid var(--border);
+      }
+
+      /* ── Github btn ── */
+      .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .github-btn:hover {
+        background: rgba(232, 62, 140, 0.12);
+        border-color: rgba(232, 62, 140, 0.3);
+        color: var(--accent-2);
+      }
+
+      @media (max-width: 600px) {
+        .laprak-card {
+          padding: 22px 18px;
+        }
+        .step-block {
+          padding: 16px 16px;
+        }
+        .img-wrap img {
+          max-height: 240px;
+        }
+      }
+    </style>
+<style>
+      .code-panel {
+        position: relative;
+        margin: 12px 0 18px;
+        border: 1px solid rgba(244, 114, 182, 0.20);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #0a0a13;
+      }
+      .code-panel .code-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 14px;
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, 0.08);
+        border-bottom: 1px solid var(--border);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: .04em;
+      }
+      .code-panel pre {
+        margin: 0;
+        padding: 16px 18px;
+        overflow-x: auto;
+        color: #dedee9;
+        font: 12.5px/1.8 Consolas, 'Courier New', monospace;
+        white-space: pre;
+      }
+      .code-panel pre code {
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+      }
+      .result-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 10px;
+        border-radius: 7px;
+        background: rgba(39, 174, 96, .10);
+        border: 1px solid rgba(39, 174, 96, .24);
+        color: #7ecf9d;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .screenshot-placeholder {
+        display: none;
+        min-height: 150px;
+        padding: 28px 18px;
+        text-align: center;
+        color: var(--muted);
+        background: repeating-linear-gradient(135deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 8px, rgba(232,62,140,.025) 8px, rgba(232,62,140,.025) 16px);
+      }
+      .screenshot-placeholder i {
+        display: block;
+        color: var(--accent);
+        font-size: 26px;
+        margin-bottom: 8px;
+      }
+      .screenshot-placeholder strong {
+        display: block;
+        color: var(--accent-2);
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      .screenshot-placeholder small { font-size: 11.5px; }
+      .img-wrap img { min-height: 90px; }
+      .result-table th {
+        color: var(--accent-2);
+        background: rgba(232, 62, 140, .08);
+        text-align: left;
+      }
+      .result-table th, .result-table td {
+        border: 1px solid var(--border);
+        padding: 9px 10px;
+        vertical-align: top;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .result-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+      .small-note { color: var(--muted); font-size: 12.5px !important; line-height: 1.75 !important; }
+      .endpoint {
+        display: inline-block;
+        font: 12px Consolas, 'Courier New', monospace;
+        color: var(--accent-2);
+        background: rgba(232,62,140,.10);
+        padding: 3px 7px;
+        border-radius: 5px;
+        overflow-wrap: anywhere;
+      }
+      .status-done { color: #7ecf9d; font-weight: 700; white-space: nowrap; }
+      .status-sim { color: #f2c078; font-weight: 700; }
+      .question-card {
+        padding: 15px 17px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin: 12px 0;
+        background: rgba(255,255,255,.015);
+      }
+      .question-card .q-title { color: var(--accent-2); font-size: 13px; font-weight: 700; margin-bottom: 7px; }
+      .checklist-table input { accent-color: var(--accent); }
+      .step-block .img-wrap { margin-top: 14px; }
+      .toc-list ul ul { padding-left: 10px; }
+      @media (max-width: 600px) {
+        .code-panel pre { font-size: 11px; padding: 13px; }
+        .result-table th, .result-table td { font-size: 12px; padding: 7px; }
+      }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100"><!--
+    DAFTAR NAMA GAMBAR LAPRAK 12 (folder: ../images/laporan/laporan12/, format .png)
+
+    GAMBAR KODE (screenshot asli dari VS Code):
+      d-a3-model-fromjson.png
+      d-b1-recipe-service.png
+      d-b2-provider-main.png
+      d-b3-error-view.png
+      d-b4-home-code.png
+      d-b5-detail-code.png
+      d-c1-addrecipe-service.png
+      d-c2-add-recipe-code.png
+      d-c3-home-fab-code.png
+      e1-home-search-code.png
+      e1-search-service.png
+      e1-search-page-code.png
+      e2-service-put-delete.png
+      e2-detail-methods-code.png
+      e2-detail-sliver-code.png
+      e3-test-code.png
+
+    GAMBAR OUTPUT (hasil browser, terminal, atau emulator):
+      d-a1-respons-api.png
+      d-a2-http-package.png
+      d-a4-hapus-dummy.png
+      d-b4-loading.png
+      d-b4-home-futurebuilder.png
+      d-b5-detail-instructions.png
+      d-b6-error-state.png
+      d-b6-refresh.png
+      d-c2-add-recipe-page.png
+      d-c3-home-fab.png
+      d-c4-validasi.png
+      d-c4-post-snackbar.png
+      e1-search-page.png
+      e1-search-empty.png
+      e1-search-error.png
+      e2-detail-popup.png
+      e2-edit-dialog.png
+      e2-update-snackbar.png
+      e2-delete-confirm.png
+      e2-delete-snackbar.png
+      e3-test-output.png
+
+    Seluruh gambar ditampilkan pada bagian langkah masing-masing melalui caption Gambar D.A, D.B, D.C, E.1, E.2, dan E.3.
+    Komentar ini hanya inventaris file gambar dan tidak tampil pada halaman laporan.
+    -->
+<!--
+      DAFTAR SCREENSHOT LAPRAK 12
+      Simpan screenshot asli pada: ../images/laporan/laporan12/
+      d-a1-respons-api.png, d-a2-http-install.png, d-a3-model-fromjson.png, d-a4-hapus-dummy.png
+      d-b1-recipe-service.png, d-b2-provider-main.png, d-b3-error-view.png, d-b4-home-futurebuilder.png
+      d-b5-detail-instructions.png, d-b6-error-state.png, d-b6-refresh.png
+      d-c1-addrecipe-service.png, d-c2-add-recipe-page.png, d-c3-home-fab.png
+      d-c4-validasi.png, d-c4-post-snackbar.png, d-d1-pengujian.png
+      e1-search-service.png, e1-search-page.png, e2-service-put-delete.png, e2-detail-popup.png
+      e2-edit-dialog.png, e2-update-snackbar.png, e2-delete-confirm.png, e2-delete-snackbar.png
+      e3-test-code.png, e3-test-output.png, f-home-api.png, f-detail-instructions.png
+      f-error-view.png, f-add-recipe.png
+      Slot gambar akan otomatis menampilkan nama file dan petunjuk jika gambar belum tersedia.
+    -->
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+<div class="container">
+<a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase" href="index.html">
+<i class="bi bi-code-slash" style="color: var(--accent)"></i>
+          Saskia Alifah
+        </a>
+<button class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item">
+<a class="nav-link" href="index.html">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="about.html">About</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="portofolio.html">Portfolio</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="main.html">Laporan</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="kontak.html">Contact</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<!-- PAGE HERO -->
+<div class="laprak-hero">
+<div class="container">
+<a class="btn-back-hero" href="main.html"><i class="bi bi-chevron-left"></i> Kembali ke Laporan</a>
+<h1>Laprak 12 — <span>HTTP Request dan Integrasi API (Flutter)</span></h1>
+<p class="lead">Praktikum Aplikasi Mobile · Modul 8 · Pengembangan Aplikasi ResepKu dengan REST API</p>
+<div class="badge-row">
+<span class="badge-pill"><i class="bi bi-person-fill"></i> Saskia Alifah</span>
+<span class="badge-pill"><i class="bi bi-hash"></i> 2411531002</span>
+<span class="badge-pill"><i class="bi bi-journal-code"></i> Praktikum 8</span>
+<span class="badge-pill"><i class="bi bi-phone"></i> Flutter &amp; Dart</span>
+<span class="badge-pill"><i class="bi bi-cloud-arrow-down"></i> REST API · DummyJSON</span>
+<span class="badge-pill"><i class="bi bi-check2-circle"></i> Unit Test: 3 Passed</span>
+</div>
+</div>
+</div>
+<!-- TOC MOBILE (offcanvas) -->
+<button aria-controls="tocOffcanvas" class="toc-fab" data-bs-target="#tocOffcanvas" data-bs-toggle="offcanvas" type="button">
+<i class="bi bi-list-ul"></i>
+</button>
+<div class="offcanvas offcanvas-start text-bg-dark" id="tocOffcanvas" tabindex="-1">
+<div class="offcanvas-header">
+<h5 class="offcanvas-title"><i class="bi bi-list-ul" style="color: var(--accent)"></i> Daftar Isi</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="offcanvas" type="button"></button>
+</div>
+<div class="offcanvas-body"><ul class="toc-list">
+<li><a data-bs-dismiss="offcanvas" href="#tujuan">A. Tujuan Praktikum</a>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#teori">B. Dasar Teori</a>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#alat">C. Alat dan Bahan</a>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#langkah">D. Langkah Praktikum</a>
+<ul>
+<li><a data-bs-dismiss="offcanvas" href="#bagian-a">Bagian A — API dan Model fromJson</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#bagian-b">Bagian B — RecipeService dan FutureBuilder</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#bagian-c">Bagian C — Mengirim Resep Baru (POST)</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#bagian-d">Bagian D — Pengujian Aplikasi</a></li>
+</ul>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#latihan">E. Pertanyaan Analisis dan Latihan</a>
+<ul>
+<li><a data-bs-dismiss="offcanvas" href="#analisis">E.1 Pertanyaan Analisis</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#latihan-1">E.2 Latihan 1 — Pencarian Resep</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#latihan-2">E.3 Latihan 2 — Ubah dan Hapus Resep</a></li>
+<li><a data-bs-dismiss="offcanvas" href="#latihan-3">E.4 Latihan 3 — Unit Test</a></li>
+</ul>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#hasil">F. Hasil dan Pembahasan</a>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#kesimpulan">G. Kesimpulan</a>
+</li>
+<li><a data-bs-dismiss="offcanvas" href="#repo">H. Repository GitHub</a>
+</li>
+</ul></div>
+</div>
+<!-- MAIN -->
+<main>
+<div class="layout-wrap">
+<div class="toc-col"><aside class="toc-sidebar"><div class="toc-title"><i class="bi bi-list-ul"></i> Daftar Isi</div><ul class="toc-list">
+<li><a href="#tujuan">A. Tujuan Praktikum</a>
+</li>
+<li><a href="#teori">B. Dasar Teori</a>
+</li>
+<li><a href="#alat">C. Alat dan Bahan</a>
+</li>
+<li><a href="#langkah">D. Langkah Praktikum</a>
+<ul>
+<li><a href="#bagian-a">Bagian A — API dan Model fromJson</a></li>
+<li><a href="#bagian-b">Bagian B — RecipeService dan FutureBuilder</a></li>
+<li><a href="#bagian-c">Bagian C — Mengirim Resep Baru (POST)</a></li>
+<li><a href="#bagian-d">Bagian D — Pengujian Aplikasi</a></li>
+</ul>
+</li>
+<li><a href="#latihan">E. Pertanyaan Analisis dan Latihan</a>
+<ul>
+<li><a href="#analisis">E.1 Pertanyaan Analisis</a></li>
+<li><a href="#latihan-1">E.2 Latihan 1 — Pencarian Resep</a></li>
+<li><a href="#latihan-2">E.3 Latihan 2 — Ubah dan Hapus Resep</a></li>
+<li><a href="#latihan-3">E.4 Latihan 3 — Unit Test</a></li>
+</ul>
+</li>
+<li><a href="#hasil">F. Hasil dan Pembahasan</a>
+</li>
+<li><a href="#kesimpulan">G. Kesimpulan</a>
+</li>
+<li><a href="#repo">H. Repository GitHub</a>
+</li>
+</ul></aside></div>
+<div class="content-col"><div class="laprak-card" id="tujuan">
+<div class="section-label"><span class="num">A</span>Tujuan Praktikum</div>
+<p>Praktikum 8 membahas <strong>HTTP Request dan Integrasi API</strong> pada aplikasi Flutter ResepKu. Pada Modul 7, data resep masih berasal dari daftar yang ditulis langsung di dalam kode. Pada praktikum ini sumber data dipindahkan ke REST API <code>https://dummyjson.com/recipes</code>, sehingga aplikasi dapat mengambil data dari server, menampilkan status proses, dan mengirim data melalui request HTTP.</p>
+<p>Setelah menyelesaikan praktikum, mahasiswa diharapkan mampu:</p>
+<ul>
+<li>memahami struktur respons JSON dari REST API dan mengubah objek JSON menjadi model <code>Recipe</code> menggunakan <code>factory Recipe.fromJson()</code>;</li>
+<li>melakukan request <code>GET</code> menggunakan package <code>http</code> melalui class service yang terpisah dari tampilan;</li>
+<li>menampilkan data menggunakan <code>FutureBuilder</code> dengan loading state, error state, tombol coba lagi, dan pull-to-refresh;</li>
+<li>mengirim resep baru menggunakan request <code>POST</code> melalui halaman form serta memvalidasi input pengguna;</li>
+<li>mengimplementasikan pencarian resep, mengubah nama resep menggunakan <code>PUT</code>, dan menghapus resep menggunakan <code>DELETE</code>;</li>
+<li>menguji model dan service menggunakan <code>MockClient</code> sehingga pengujian tidak membutuhkan koneksi internet.</li>
+</ul>
+<div class="info-box blue"><i class="bi bi-lightbulb-fill"></i><div><strong>Permasalahan utama.</strong> Bagaimana ResepKu mengambil 50 resep dari server, tetap memberikan informasi yang jelas saat data sedang dimuat atau terjadi kegagalan koneksi, dan menyediakan proses tambah, cari, ubah, serta hapus resep?</div></div>
+</div>
+<div class="laprak-card" id="teori">
+<div class="section-label"><span class="num">B</span>Dasar Teori</div>
+<p><strong>1. REST API dan HTTP Request.</strong> REST API merupakan antarmuka yang memungkinkan aplikasi berkomunikasi dengan server melalui HTTP. Aplikasi mengirim request ke endpoint tertentu, kemudian server mengembalikan response yang berisi status dan data. ResepKu menggunakan DummyJSON sebagai REST API latihan.</p>
+<table class="result-table"><thead><tr><th>Method</th><th>Endpoint</th><th>Fungsi pada ResepKu</th></tr></thead><tbody>
+<tr><td><code>GET</code></td><td><span class="endpoint">/recipes?limit=50</span></td><td>Mengambil daftar resep dari server.</td></tr>
+<tr><td><code>GET</code></td><td><span class="endpoint">/recipes/search?q=...</span></td><td>Mencari resep berdasarkan kata kunci.</td></tr>
+<tr><td><code>POST</code></td><td><span class="endpoint">/recipes/add</span></td><td>Mengirim data resep baru dari form.</td></tr>
+<tr><td><code>PUT</code></td><td><span class="endpoint">/recipes/{id}</span></td><td>Mengirim perubahan nama resep.</td></tr>
+<tr><td><code>DELETE</code></td><td><span class="endpoint">/recipes/{id}</span></td><td>Mengirim permintaan penghapusan resep.</td></tr>
+</tbody></table>
+<p><strong>2. JSON dan Model.</strong> JSON (JavaScript Object Notation) adalah format pertukaran data yang umum dipakai API. Respons daftar resep memiliki objek terluar dengan key <code>recipes</code> yang berisi array objek resep, serta informasi seperti <code>total</code>, <code>skip</code>, dan <code>limit</code>. Factory <code>fromJson</code> mengubah setiap objek JSON menjadi instance <code>Recipe</code> agar data mempunyai tipe yang konsisten di dalam aplikasi.</p>
+<p><strong>3. Future, async/await, dan FutureBuilder.</strong> Request HTTP membutuhkan waktu sehingga hasilnya tidak langsung tersedia. <code>Future</code> merepresentasikan hasil operasi asynchronous. Kata kunci <code>async</code> dan <code>await</code> digunakan agar operasi asynchronous dapat ditulis secara berurutan. <code>FutureBuilder</code> menghubungkan Future dengan antarmuka, sehingga UI dapat menampilkan loading, error, atau data sesuai kondisi request.</p>
+<table class="result-table"><thead><tr><th>Kondisi</th><th>Makna</th><th>Respons UI</th></tr></thead><tbody>
+<tr><td><code>ConnectionState.waiting</code></td><td>Request masih berjalan dan data belum tersedia.</td><td>Menampilkan <code>CircularProgressIndicator</code>.</td></tr>
+<tr><td><code>snapshot.hasError</code></td><td>Request gagal atau service melempar exception.</td><td>Menampilkan <code>ErrorView</code> dan tombol Coba lagi.</td></tr>
+<tr><td><code>snapshot.hasData</code></td><td>Respons berhasil dibaca.</td><td>Menampilkan daftar resep, atau pesan bila daftar kosong.</td></tr>
+</tbody></table>
+<p><strong>4. Pemisahan service dari UI.</strong> Class <code>RecipeService</code> bertanggung jawab atas komunikasi HTTP, parsing respons, timeout, dan pemeriksaan status. Widget cukup memanggil method seperti <code>fetchRecipes()</code> atau <code>addRecipe()</code>. Pemisahan ini membuat kode lebih terorganisasi, dapat digunakan ulang, dan lebih mudah diuji.</p>
+<p><strong>5. Dependency Injection dan MockClient.</strong> Constructor <code>RecipeService</code> menerima <code>http.Client</code> dari luar. Pada aplikasi normal, service menggunakan client HTTP biasa. Saat pengujian, client tersebut diganti dengan <code>MockClient</code> yang memberikan respons palsu. Dengan demikian, unit test dapat dijalankan tanpa menghubungi internet.</p>
+<p><strong>6. Status HTTP dan penanganan error.</strong> Status 2xx menunjukkan request berhasil. Status non-2xx ditangani dengan melempar <code>RecipeServiceException</code>, sehingga halaman dapat menampilkan pesan kesalahan. Request juga dibatasi dengan timeout agar aplikasi tidak menunggu server tanpa batas waktu.</p>
+<div class="info-box purple"><i class="bi bi-exclamation-circle-fill"></i><div><strong>Catatan tentang DummyJSON.</strong> Operasi <code>POST</code>, <code>PUT</code>, dan <code>DELETE</code> pada DummyJSON hanya simulasi. Server mengembalikan respons seolah data berhasil ditambah, diubah, atau dihapus, tetapi perubahan tidak disimpan permanen. Karena itu, data hasil POST tidak muncul setelah daftar dimuat ulang.</div></div>
+</div>
+<div class="laprak-card" id="alat">
+<div class="section-label"><span class="num">C</span>Alat dan Bahan</div>
+<ul>
+<li>Laptop atau komputer untuk menjalankan Flutter dan mengembangkan aplikasi.</li>
+<li>Flutter SDK versi stable dan Dart SDK.</li>
+<li>Visual Studio Code dengan ekstensi Flutter dan Dart.</li>
+<li>Android Emulator atau perangkat Android sebagai target aplikasi.</li>
+<li>Koneksi internet untuk mengakses DummyJSON dan mengunduh package.</li>
+<li>Project ResepKu dari Modul Praktikum 7 (project dilanjutkan, bukan membuat project baru).</li>
+<li>Package <code>http</code> untuk request HTTP, <code>provider</code> untuk dependency pada service dan state aplikasi, serta <code>cached_network_image</code> yang tetap digunakan pada halaman detail versi SliverAppBar.</li>
+<li>Package pengujian <code>flutter_test</code> dan <code>MockClient</code> dari <code>package:http/testing.dart</code>.</li>
+<li>REST API DummyJSON: <code>https://dummyjson.com/docs/recipes</code>.</li>
+</ul>
+</div>
+<div class="laprak-card" id="langkah">
+<div class="section-label"><span class="num">D</span>Langkah Praktikum</div>
+<p>Praktikum dilanjutkan dari project <strong>ResepKu Modul 7</strong>. Struktur UI list, grid, kartu resep, fitur favorit, tema, dan komponen gambar tetap digunakan. Perubahan utama dilakukan pada sumber data: daftar dummy diganti dengan data REST API, kemudian ditambahkan fitur pengiriman resep baru.</p>
+<div class="info-box blue"><i class="bi bi-info-circle-fill"></i><div><strong>Perhatian untuk halaman detail.</strong> Karena halaman detail pada project ini menggunakan <code>CustomScrollView</code> dan <code>SliverAppBar</code> dari bonus Modul 7, bagian langkah memasak harus ditambahkan sebagai sliver. Menu ubah dan hapus pada Latihan 2 juga ditempatkan di <code>actions</code> milik <code>SliverAppBar</code>, setelah tombol favorit.</div></div>
+<div class="sub-section-title" id="bagian-a">Bagian A <span class="file-badge">Mengenal API dan Model fromJson</span></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">1</span> A.1 Membaca Respons API di Browser</div>
+<p>Langkah pertama adalah memeriksa bentuk data yang dikirim server sebelum membuat model. URL yang dibuka pada browser laptop adalah <span class="endpoint">https://dummyjson.com/recipes?limit=2</span>. Respons menunjukkan bahwa daftar resep berada pada key <code>recipes</code>, sedangkan objek terluar juga memiliki informasi jumlah data dan batas hasil.</p>
+<div class="sub-label">Hasil pengamatan respons JSON</div>
+<table class="result-table"><thead><tr><th>Pertanyaan</th><th>Jawaban / hasil pengamatan</th></tr></thead><tbody>
+<tr><td>Nilai <code>total</code></td><td>50, yaitu jumlah resep pada dataset DummyJSON.</td></tr>
+<tr><td>Key yang berisi daftar resep</td><td>recipes, berupa array/list objek resep.</td></tr>
+<tr><td>Tipe nilai <code>rating</code> pada resep pertama</td><td>double (angka desimal) pada respons yang diamati.</td></tr>
+<tr><td>Tiga key yang belum ada pada model Recipe Modul 7</td><td>instructions, tags, dan mealType. Field instructions digunakan untuk menampilkan langkah memasak pada halaman detail.</td></tr>
+</tbody></table>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li>Key <code>recipes</code> digunakan untuk mengambil array resep dari response JSON.</li>
+<li>Setiap item di dalam array merupakan satu objek resep dengan pasangan key dan value.</li>
+<li>Nilai <code>rating</code> perlu dibaca sebagai tipe <code>num</code> sebelum dikonversi ke <code>double</code>, karena JSON dapat memberikan angka dalam bentuk integer atau desimal.</li>
+<li>Perbandingan dengan model Modul 7 memperlihatkan bahwa beberapa data baru tersedia dari API, terutama <code>instructions</code> untuk menampilkan urutan memasak.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Tampilan browser berisi JSON response recipes" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-a1-respons-api.png"/>
+<div class="img-cap">Gambar D.A-1 – Respons JSON DummyJSON pada endpoint /recipes?limit=2 yang memperlihatkan struktur data resep.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">2</span> A.2 Memasang Package http</div>
+<p>Package <code>http</code> dipasang agar aplikasi dapat mengirim request GET, POST, PUT, dan DELETE. Perintah dijalankan pada terminal di dalam folder utama project <code>resepku</code>.</p>
+<div class="sub-label">Hasil pemasangan package http</div><div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul><li>Perintah <code>flutter pub add http</code> menambahkan package <code>http</code> ke bagian <code>dependencies</code> pada <code>pubspec.yaml</code>.</li><li>Package ini menyediakan HTTP client yang digunakan untuk mengirim request ke endpoint REST API.</li><li>Setelah proses selesai, dependency diunduh dan project dapat menggunakan import <code>package:http/http.dart</code>.</li></ul></div><div class="img-wrap"><img alt="Terminal VS Code menampilkan hasil pemasangan package http" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-a2-http-package.png"/><div class="img-cap">Gambar D.A-2 – Hasil menjalankan perintah flutter pub add http pada terminal project ResepKu.</div></div></div>
+<div class="step-block" id="step-a3">
+<div class="step-title"><span class="step-num">3</span>A.3 Membuat Model Recipe dengan fromJson</div>
+<p>Model <code>Recipe</code> disesuaikan agar dapat menerima data yang berasal dari JSON. Perubahan dilakukan pada file <code>lib/models/recipe.dart</code> dengan menambahkan field <code>instructions</code> serta factory <code>Recipe.fromJson()</code>. Field tersebut memungkinkan satu objek JSON dari server diubah menjadi objek <code>Recipe</code> yang digunakan oleh halaman aplikasi.</p>
+<div class="sub-label">File: lib/models/recipe.dart</div>
+<div class="penjelasan-box">
+<div class="penjelasan-title">Penjelasan Kode</div>
+<ul>
+<li><code>factory Recipe.fromJson(Map&lt;String, dynamic&gt; json)</code> membuat objek <code>Recipe</code> berdasarkan pasangan key dan value dari respons JSON.</li>
+<li>Field wajib seperti <code>id</code> dan <code>name</code> dibaca dari key yang sesuai, sedangkan field opsional memakai nilai bawaan seperti <code>'-'</code>, <code>0</code>, atau <code>''</code> agar data yang tidak tersedia tidak menyebabkan parsing gagal.</li>
+<li><code>(json['rating'] as num? ?? 0).toDouble()</code> menerima angka bertipe integer maupun desimal, kemudian mengubahnya menjadi <code>double</code>. Dengan demikian, nilai <code>5</code> dapat dibaca sebagai <code>5.0</code>.</li>
+<li><code>List&lt;String&gt;.from(...)</code> mengubah array pada JSON menjadi <code>List&lt;String&gt;</code> untuk field bahan dan langkah memasak.</li>
+<li>Parameter <code>instructions = const []</code> menyediakan daftar kosong sebagai nilai bawaan apabila langkah memasak tidak tersedia.</li>
+</ul>
+</div>
+<div class="img-wrap"><img alt="Screenshot kode recipe.dart pada VS Code yang menampilkan field dan factory fromJson" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-a3-model-fromjson.png"/><div class="img-cap">Gambar D.A-3 – Model Recipe pada file recipe.dart dengan field instructions dan factory fromJson.</div></div></div><div class="step-block">
+<div class="step-title"><span class="step-num">4</span> A.4 Menghapus Data Dummy</div>
+<p>Setelah model siap membaca response API, file <code>lib/data/dummy_recipes.dart</code> beserta folder <code>data</code> dihapus. Mulai tahap berikutnya, data resep tidak lagi diambil dari daftar yang ditulis langsung di source code, melainkan dari <code>RecipeService</code>.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><p>Penghapusan file dummy menyebabkan referensi <code>dummyRecipes</code> pada HomePage sementara menampilkan error. Hal tersebut wajar karena HomePage memang akan diubah pada Bagian B untuk menggunakan data hasil <code>fetchRecipes()</code>.</p></div>
+<div class="img-wrap">
+<img alt="VS Code Explorer setelah file dummy dihapus" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-a4-hapus-dummy.png"/>
+<div class="img-cap">Gambar D.A-4 – Struktur folder project setelah file dummy_recipes.dart dan folder data dihapus.</div>
+</div>
+</div>
+<div class="sub-section-title" id="bagian-b">Bagian B <span class="file-badge">RecipeService dan FutureBuilder</span></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">5</span> B.1 Membuat RecipeService</div>
+<p>Semua komunikasi dengan REST API ditempatkan di satu class yaitu <code>lib/services/recipe_service.dart</code>. Widget tidak mengirim HTTP request secara langsung. Service menggunakan base URL DummyJSON, menyediakan HTTP client yang dapat diganti saat pengujian, serta memberi batas waktu request selama 10 detik.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan Kode</div><ul>
+<li><code>http.Client? client</code> memungkinkan service menerima client dari luar. Jika tidak diberikan, service membuat client HTTP biasa.</li>
+<li><code>_client.get(uri)</code> mengirim request GET ke endpoint daftar resep.</li>
+<li><code>.timeout(_timeout)</code> membatasi waktu tunggu request menjadi 10 detik.</li>
+<li><code>jsonDecode</code> mengubah teks JSON menjadi Map, lalu daftar pada <code>body['recipes']</code> dipetakan menjadi objek <code>Recipe</code>.</li>
+<li><code>_checkStatus</code> memeriksa status response. Status di luar rentang 2xx akan menghasilkan <code>RecipeServiceException</code>.</li>
+<li><code>close()</code> menutup HTTP client ketika service tidak lagi digunakan.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode RecipeService pada editor" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b1-recipe-service.png"/>
+<div class="img-cap">Gambar D.B-1 – Screenshot kode dari editor VS Code pada recipe_service.dart: fetchRecipes, timeout, parsing JSON, dan pemeriksaan status.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">6</span> B.2 Mendaftarkan RecipeService sebagai Provider</div>
+<p>Service didaftarkan di <code>lib/main.dart</code> menggunakan <code>Provider</code> biasa karena <code>RecipeService</code> tidak menyimpan state UI yang berubah dan tidak memerlukan <code>notifyListeners()</code>. Provider lain yang sudah ada, seperti <code>FavoriteProvider</code> dan <code>ThemeProvider</code>, tetap dipertahankan.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li><code>Provider</code> membuat satu instance <code>RecipeService</code> yang dapat diakses oleh widget di bawahnya.</li>
+<li><code>dispose</code> memastikan HTTP client ditutup ketika Provider dibuang.</li>
+<li>Provider harus berada di atas <code>MaterialApp</code> agar halaman yang dibuka dengan Navigator dapat mengakses service.</li>
+<li>Pada project ini, getter tema yang digunakan adalah <code>ThemeProvider.themeMode</code> sesuai implementasi ThemeProvider yang dipakai di project.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode MultiProvider di main.dart" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b2-provider-main.png"/>
+<div class="img-cap">Gambar D.B-2 – Screenshot kode dari editor VS Code pada main.dart: MultiProvider dan pendaftaran RecipeService.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">7</span> B.3 Membuat Widget ErrorView</div>
+<p>File <code>lib/widgets/error_view.dart</code> dibuat agar pesan kegagalan request dapat digunakan kembali pada beberapa halaman. Widget ini menampilkan ikon koneksi bermasalah, pesan error, dan tombol <strong>Coba lagi</strong>.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan Kode</div><ul>
+<li>Parameter <code>message</code> menerima pesan yang akan ditampilkan.</li>
+<li>Parameter <code>onRetry</code> menerima callback untuk memulai request ulang.</li>
+<li><code>FilledButton.icon</code> menggabungkan ikon refresh dengan label Coba lagi.</li>
+<li>Dengan widget terpisah, HomePage dan SearchPage dapat menggunakan tampilan error yang konsisten.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode ErrorView di editor" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b3-error-view.png"/>
+<div class="img-cap">Gambar D.B-3 – Screenshot kode dari editor VS Code pada error_view.dart: pesan error dan tombol Coba lagi.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">8</span> B.4 Mengubah HomePage Menggunakan FutureBuilder</div>
+<p>HomePage diubah menjadi <code>StatefulWidget</code> karena perlu menyimpan Future hasil request serta state tampilan list atau grid. Request pertama dibuat satu kali di <code>initState()</code>, sedangkan request ulang dibuat melalui method <code>_reload()</code>.</p>
+<div class="img-wrap">
+<img alt="Kode HomePage dengan FutureBuilder" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b4-home-code.png"/>
+<div class="img-cap">Gambar D.B-4a – Kode HomePage yang menyimpan Future, menjalankan FutureBuilder, dan menangani request ulang.</div>
+</div>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan Kode</div><ul>
+<li><code>initState()</code> menjalankan request pertama ketika state halaman dibuat.</li>
+<li><code>_reload()</code> membuat Future baru di dalam <code>setState</code> agar FutureBuilder mengulang request.</li>
+<li>Loading ditampilkan ketika request masih menunggu dan data belum tersedia.</li>
+<li>Error diperiksa sebelum data ditampilkan, lalu diarahkan ke <code>ErrorView</code>.</li>
+<li>Data sukses dikirim ke fungsi pembangun list atau grid. Data favorit, tombol pengaturan, dan tombol pergantian tampilan tetap digunakan.</li>
+<li><code>RefreshIndicator</code> digunakan agar pengguna dapat menarik daftar ke bawah untuk melakukan pull-to-refresh.</li>
+</ul></div>
+<div class="info-box purple"><i class="bi bi-lightbulb-fill"></i><div><strong>Mengapa Future tidak dibuat di build()?</strong> Jika <code>fetchRecipes()</code> dipanggil langsung di dalam <code>build()</code>, setiap perubahan state, misalnya menekan tombol grid, dapat membuat request baru. Dengan menyimpan Future di field dan menginisialisasikannya di <code>initState()</code>, pergantian tampilan tidak mengulang request.</div></div>
+<div class="img-wrap">
+<img alt="Indikator loading FutureBuilder pada HomePage" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b4-loading.png"/>
+<div class="img-cap">Gambar D.B-4b – Indikator loading ketika HomePage sedang mengambil data resep dari API.</div>
+</div>
+<div class="img-wrap">
+<img alt="HomePage ResepKu dengan daftar resep dari API" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b4-home-futurebuilder.png"/>
+<div class="img-cap">Gambar D.B-4c – Home ResepKu setelah data resep berhasil diterima dari server.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">9</span> B.5 Menampilkan Langkah Memasak di DetailPage</div>
+<p>Data resep dari API memiliki field <code>instructions</code>. Karena project menggunakan <code>CustomScrollView</code> dan <code>SliverAppBar</code>, widget biasa seperti judul dan daftar langkah harus diletakkan dalam bentuk sliver. Tiga bagian ditambahkan setelah <code>SliverList.builder</code> yang menampilkan bahan.</p>
+<div class="img-wrap">
+<img alt="Kode DetailPage untuk menampilkan instructions" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b5-detail-code.png"/>
+<div class="img-cap">Gambar D.B-5a – Kode sliver pada DetailPage untuk menampilkan daftar langkah memasak.</div>
+</div>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan Kode</div><ul>
+<li><code>SliverToBoxAdapter</code> membungkus widget biasa agar dapat menjadi anak dari <code>CustomScrollView</code>.</li>
+<li>Judul Langkah hanya ditampilkan jika <code>instructions</code> tidak kosong.</li>
+<li><code>SliverList.builder</code> membangun setiap langkah secara efisien berdasarkan index.</li>
+<li>Nomor langkah dimulai dari satu, yaitu <code>index + 1</code>.</li>
+<li>Sliver terakhir memberi ruang di bawah item terakhir. ListView biasa tidak dimasukkan ke dalam SliverToBoxAdapter karena dapat menyebabkan viewport tidak memiliki batas tinggi.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Halaman detail resep dengan langkah memasak" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b5-detail-instructions.png"/>
+<div class="img-cap">Gambar D.B-5b – Halaman detail resep yang menampilkan bagian Langkah di bawah daftar bahan.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">10</span> B.6 Menguji Error State dan Pull-to-Refresh</div>
+<p>Pengujian dilakukan untuk memastikan aplikasi tetap memberi respons ketika tidak dapat mengakses server. Mode pesawat diaktifkan, kemudian aplikasi di-hot restart. HomePage menampilkan ErrorView. Setelah mode pesawat dimatikan, tombol Coba lagi ditekan agar daftar resep dimuat kembali. Selanjutnya daftar ditarik ke bawah untuk menguji pull-to-refresh.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Hasil yang diamati</div><ul>
+<li>Saat jaringan tidak tersedia, request gagal dan FutureBuilder mengarahkan tampilan ke ErrorView.</li>
+<li>Ketika koneksi kembali tersedia, tombol Coba lagi membuat Future baru dan memuat ulang data.</li>
+<li>Pull-to-refresh menjalankan request ulang melalui method refresh.</li>
+<li>Saat refresh, data lama tetap dapat terlihat sampai hasil request baru diterima.</li>
+</ul></div>
+<div class="img-pair">
+<div class="img-wrap"><img alt="ErrorView ketika mode pesawat aktif" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b6-error-state.png"/><div class="img-cap">Gambar D.B-6a – ErrorView yang muncul ketika koneksi internet terputus.</div></div>
+<div class="img-wrap"><img alt="Pull to refresh pada daftar resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-b6-refresh.png"/><div class="img-cap">Gambar D.B-6b – Pull-to-refresh pada daftar resep setelah koneksi kembali tersedia.</div></div>
+</div>
+</div>
+<div class="sub-section-title" id="bagian-c">Bagian C <span class="file-badge">Mengirim Resep Baru (POST)</span></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">11</span> C.1 Menambahkan Method addRecipe</div>
+<p>Method <code>addRecipe()</code> ditambahkan ke <code>RecipeService</code>. Method ini menerima nama resep, jenis cuisine, dan waktu memasak. Data dikirim ke endpoint <span class="endpoint">POST /recipes/add</span> dalam bentuk JSON.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan Kode</div><ul>
+<li><code>_client.post()</code> mengirim data ke endpoint tambah resep.</li>
+<li>Header <code>Content-Type: application/json</code> menandakan body request berupa JSON.</li>
+<li><code>jsonEncode</code> mengubah Map menjadi teks JSON.</li>
+<li>Respons diperiksa melalui <code>_checkStatus</code>, lalu diubah menjadi objek <code>Recipe</code> menggunakan <code>fromJson</code>.</li>
+<li>Field yang tidak dikirim akan menggunakan nilai bawaan pada model.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode method addRecipe pada service" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c1-addrecipe-service.png"/>
+<div class="img-cap">Gambar D.C-1 – Kode method addRecipe pada RecipeService untuk mengirim request POST.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">12</span> C.2 Membuat Halaman AddRecipePage</div>
+<p>Halaman <code>lib/pages/add_recipe_page.dart</code> dibuat sebagai form untuk mengisi data resep baru. Halaman menggunakan <code>StatefulWidget</code> karena menyimpan controller TextFormField dan status proses penyimpanan.</p>
+<div class="img-wrap">
+<img alt="Kode AddRecipePage di VS Code" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c2-add-recipe-code.png"/>
+<div class="img-cap">Gambar D.C-2a – Kode AddRecipePage yang mengelola controller, form, validasi, dan proses penyimpanan.</div>
+</div>
+<div class="penjelasan-box"><div class="penjelasan-title">Komponen form</div><ul>
+<li><code>_formKey</code> digunakan untuk menjalankan validasi seluruh form.</li>
+<li><code>_nameController</code> untuk nama resep, <code>_cuisineController</code> untuk cuisine, dan <code>_minutesController</code> untuk waktu memasak.</li>
+<li>Validator nama dan cuisine memastikan isian tidak kosong. Validator waktu memasak memastikan nilai berupa angka lebih dari nol.</li>
+<li>Variabel <code>_saving</code> menonaktifkan tombol Simpan selama request berjalan dan menampilkan indikator kecil.</li>
+<li>Controller ditutup melalui <code>dispose()</code> agar resource tidak tertinggal.</li>
+<li>Setelah request selesai, <code>if (!mounted) return;</code> memastikan halaman masih aktif sebelum melakukan navigasi atau menampilkan pesan.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Halaman form Tambah Resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c2-add-recipe-page.png"/>
+<div class="img-cap">Gambar D.C-2b – Tampilan form Tambah Resep pada emulator.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">13</span> C.3 Menambahkan Tombol Tambah pada HomePage</div>
+<p>Tombol <code>FloatingActionButton</code> ditambahkan pada HomePage. Ketika ditekan, aplikasi membuka <code>AddRecipePage</code> menggunakan Navigator. Jika halaman form mengembalikan objek resep, HomePage menampilkan SnackBar yang berisi nama dan ID hasil response server.</p>
+<div class="img-wrap">
+<img alt="Kode HomePage untuk membuka AddRecipePage" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c3-home-fab-code.png"/>
+<div class="img-cap">Gambar D.C-3a – Kode navigasi _openAddPage dan FloatingActionButton pada HomePage.</div>
+</div>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li><code>Navigator.push&lt;Recipe&gt;</code> membuka halaman form dan menerima objek Recipe sebagai nilai kembalian.</li>
+<li>Jika pengguna membatalkan form atau nilai hasil kosong, proses berhenti.</li>
+<li>Jika response berhasil, SnackBar menampilkan nama resep dan ID baru yang diberikan server.</li>
+<li>HomePage memeriksa <code>mounted</code> setelah proses navigasi asynchronous sebelum menggunakan context.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="HomePage dengan tombol plus" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c3-home-fab.png"/>
+<div class="img-cap">Gambar D.C-3b – Tombol tambah resep pada halaman Home ResepKu.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">14</span> C.4 Mencoba Request POST</div>
+<p>Pengujian dilakukan dengan dua kondisi. Pertama, tombol Simpan ditekan ketika form masih kosong. Validasi harus menampilkan pesan wajib diisi dan request tidak boleh dikirim. Kedua, form diisi dengan nama <strong>Rendang</strong>, cuisine <strong>Indonesian</strong>, dan waktu memasak <strong>180 menit</strong>, kemudian tombol Simpan ditekan.</p>
+<div class="info-box purple"><i class="bi bi-info-circle-fill"></i><div><strong>Hasil POST pada DummyJSON.</strong> Server mengembalikan objek yang berisi ID baru, tetapi data tidak benar-benar disimpan. Karena itu, setelah daftar di-refresh, resep yang baru dikirim tidak muncul. Perilaku ini memang dirancang demikian pada API latihan.</div></div>
+<div class="img-pair">
+<div class="img-wrap"><img alt="Validasi form tambah resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c4-validasi.png"/><div class="img-cap">Gambar D.C-4a – Pesan validasi yang ditampilkan ketika form dikirim tanpa mengisi field wajib.</div></div>
+<div class="img-wrap"><img alt="SnackBar hasil POST berisi ID" onerror="this.style.display='none';" src="../images/laporan/laporan12/d-c4-post-snackbar.png"/><div class="img-cap">Gambar D.C-4b – SnackBar yang menampilkan nama resep dan ID dari respons POST.</div></div>
+</div>
+</div>
+<div class="sub-section-title" id="bagian-d">Bagian D <span class="file-badge">Pengujian Aplikasi</span></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num">15</span> D.1 Menguji Integrasi Fitur</div>
+<p>Pengujian dilakukan dengan menjalankan aplikasi dan mencoba tujuh skenario yang ditetapkan pada Modul Praktikum 8. Hasil pengamatan dicatat dengan membandingkan perilaku aplikasi terhadap hasil yang diharapkan.</p>
+<table class="result-table checklist-table"><thead><tr><th>No.</th><th>Skenario</th><th>Hasil yang diharapkan</th><th>Hasil pengamatan</th></tr></thead><tbody>
+<tr><td>1</td><td>Membuka aplikasi</td><td>Indikator loading muncul, kemudian 50 resep dari server ditampilkan.</td><td>Daftar resep dimuat melalui request GET.</td></tr>
+<tr><td>2</td><td>Menandai dua resep sebagai favorit, kemudian melakukan refresh.</td><td>Ikon hati tetap merah dan badge tetap menunjukkan jumlah 2.</td><td>State favorit tetap terkait dengan ID resep.</td></tr>
+<tr><td>3</td><td>Menekan tombol grid lalu kembali ke list.</td><td>Tidak muncul indikator loading baru.</td><td>Future yang sudah disimpan digunakan kembali.</td></tr>
+<tr><td>4</td><td>Membuka detail salah satu resep.</td><td>Foto, porsi, bahan, dan langkah memasak tampil.</td><td>Detail membaca data Recipe dari hasil API.</td></tr>
+<tr><td>5</td><td>Mengaktifkan mode pesawat lalu melakukan hot restart.</td><td>ErrorView tampil dengan tombol Coba lagi.</td><td>Kesalahan request ditampilkan melalui state error.</td></tr>
+<tr><td>6</td><td>Mematikan mode pesawat dan menekan Coba lagi.</td><td>Daftar resep dapat dimuat kembali.</td><td>Request baru dijalankan melalui _reload().</td></tr>
+<tr><td>7</td><td>Mengirim resep baru melalui tombol +.</td><td>SnackBar menampilkan ID dari server.</td><td>Response POST ditampilkan kepada pengguna.</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="laprak-card" id="latihan">
+<div class="section-label"><span class="num">E</span>Pertanyaan Analisis dan Latihan</div>
+<div class="latihan-banner"><i class="bi bi-journal-code"></i><div><h5>Analisis, Search, PUT/DELETE, dan Unit Test</h5><p>Bagian ini merangkum lima pertanyaan analisis, dua latihan fitur API, serta bonus unit test tanpa internet yang diselesaikan pada project ResepKu.</p></div></div>
+<div class="sub-section-title" id="analisis">E.1 <span class="file-badge">Jawaban Pertanyaan Analisis</span></div>
+<div class="question-card"><div class="q-title">Pertanyaan 1 — Mengapa status favorit tetap benar setelah refresh?</div><p>Setiap proses refresh menghasilkan objek <code>Recipe</code> baru karena data kembali dibentuk dari JSON. Meskipun objeknya berbeda, identitas resep tetap sama karena memiliki nilai <code>id</code> yang sama dari server. <code>FavoriteProvider</code> membandingkan resep berdasarkan identitas/ID tersebut, bukan hanya berdasarkan alamat objek di memori. Oleh karena itu, ketika daftar dibangun ulang, resep dengan ID yang tersimpan di daftar favorit tetap dikenali sebagai favorit dan ikon hati tetap aktif.</p></div>
+<div class="question-card"><div class="q-title">Pertanyaan 2 — Mengapa tombol grid tidak menampilkan loading baru?</div><p>Future request disimpan di variabel <code>_recipesFuture</code> dan dibuat satu kali pada <code>initState()</code>. Ketika tombol grid ditekan, yang berubah hanya state tampilan <code>_isGrid</code>, sedangkan Future yang dipakai FutureBuilder tetap sama. Jika <code>fetchRecipes()</code> ditulis langsung di dalam <code>build()</code>, setiap rebuild berpotensi menjalankan request baru. Akibatnya, pergantian tampilan list dan grid dapat menyebabkan pemanggilan API berulang dan indikator loading muncul kembali.</p></div>
+<div class="question-card"><div class="q-title">Pertanyaan 3 — Sebutkan dua keuntungan menggunakan RecipeService.</div><p>Pertama, pemisahan tanggung jawab membuat widget hanya mengurus tampilan dan interaksi, sedangkan proses HTTP, parsing JSON, timeout, dan pemeriksaan status terpusat di <code>RecipeService</code>. Kedua, service lebih mudah diuji dan digunakan ulang karena client dapat diganti dengan <code>MockClient</code> tanpa internet. Pemisahan ini juga memudahkan perubahan endpoint atau aturan komunikasi tanpa harus mengubah seluruh widget.</p></div>
+<div class="question-card"><div class="q-title">Pertanyaan 4 — Mengapa data POST tidak muncul setelah daftar dimuat ulang?</div><p>DummyJSON hanya menyimulasikan operasi POST. Server memberikan response berisi data resep dan ID baru, tetapi tidak menyimpan perubahan secara permanen pada dataset. Karena itu, request GET berikutnya tetap mengembalikan data asli. Pada aplikasi dengan backend sungguhan, server biasanya menyimpan data ke database setelah validasi. Aplikasi dapat menampilkan hasil dengan menambahkan objek response ke daftar lokal atau mengambil ulang daftar dari server.</p></div>
+<div class="question-card"><div class="q-title">Pertanyaan 5 — Skenario apa yang dicegah oleh pemeriksaan mounted?</div><p>Baris <code>if (!mounted) return;</code> mencegah kode menggunakan <code>BuildContext</code>, melakukan navigasi, atau menjalankan <code>setState()</code> setelah halaman sudah tidak berada di widget tree. Contohnya, pengguna menekan Simpan lalu menutup halaman form ketika request masih berjalan. Saat response diterima, halaman mungkin sudah dibuang. Pemeriksaan <code>mounted</code> memastikan proses berhenti dengan aman sehingga tidak terjadi kesalahan penggunaan State atau context setelah widget di-dispose.</p></div>
+<div class="sub-section-title" id="latihan-1">E.2 <span class="file-badge">Latihan 1 — Pencarian Resep</span></div>
+<p>Latihan 1 menambahkan fitur pencarian yang dibuka dari ikon kaca pembesar pada AppBar Home. Pengguna mengetik kata kunci, menekan Enter, kemudian hasil pencarian ditampilkan melalui FutureBuilder.</p>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">1</span>Menambahkan searchRecipes pada RecipeService</div>
+<p>Method <code>searchRecipes(String query)</code> mengirim request GET ke endpoint pencarian. Parameter query dibangun menggunakan <code>Uri.replace(queryParameters: ...)</code> agar spasi dan karakter khusus di-encode dengan benar.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li>Endpoint menggunakan pola <code>/recipes/search?q=...</code>.</li>
+<li>Hasil pencarian tetap diubah menjadi <code>List&lt;Recipe&gt;</code> melalui <code>Recipe.fromJson</code>.</li>
+<li>Pemeriksaan status dan timeout menggunakan mekanisme yang sama seperti fetchRecipes.</li>
+</ul></div>
+<div class="img-wrap"><img alt="Kode ikon pencarian pada HomePage di VS Code" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-home-search-code.png"/><div class="img-cap">Gambar E.1-1a – Kode tombol pencarian pada actions AppBar HomePage.</div></div><div class="img-wrap">
+<img alt="Kode searchRecipes dalam RecipeService" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-search-service.png"/>
+<div class="img-cap">Gambar E.1-1b – Kode method searchRecipes pada RecipeService untuk request GET pencarian.</div>
+</div></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">2</span>Membuat SearchPage</div>
+<p>File <code>lib/pages/search_page.dart</code> dibuat sebagai <code>StatefulWidget</code>. Halaman memiliki TextField pada AppBar dan field <code>Future&lt;List&lt;Recipe&gt;&gt;?</code> yang bernilai null sebelum pengguna melakukan pencarian.</p>
+<div class="img-wrap">
+<img alt="Kode SearchPage di VS Code" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-search-page-code.png"/>
+<div class="img-cap">Gambar E.1-2a – Kode SearchPage yang mengelola input kata kunci dan FutureBuilder.</div>
+</div>
+<div class="penjelasan-box"><div class="penjelasan-title">Alur halaman pencarian</div><ul>
+<li>Pengguna mengetik kata kunci pada TextField.</li>
+<li>Event <code>onSubmitted</code> membuat Future baru di dalam <code>setState</code>.</li>
+<li>FutureBuilder menampilkan loading, hasil, atau ErrorView.</li>
+<li>Jika daftar hasil kosong, halaman menampilkan pesan khusus bahwa resep tidak ditemukan.</li>
+<li>Setiap hasil menggunakan kembali widget <code>RecipeTile</code>, sehingga tampilan foto, informasi resep, tombol favorit, dan navigasi detail konsisten dengan HomePage.</li>
+</ul></div>
+<div class="info-box blue"><i class="bi bi-images"></i><div><strong>Output yang perlu dibuktikan:</strong> hasil pencarian yang berisi resep, hasil pencarian kosong, dan kondisi error. Ketiganya menunjukkan bahwa SearchPage menangani FutureBuilder pada setiap state.</div></div>
+<div class="img-wrap">
+<img alt="Halaman pencarian pada emulator" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-search-page.png"/>
+<div class="img-cap">Gambar E.1-2b – Halaman pencarian yang menampilkan resep sesuai kata kunci.</div>
+</div>
+<div class="img-pair">
+<div class="img-wrap">
+<img alt="Output pencarian kosong" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-search-empty.png"/>
+<div class="img-cap">Gambar E.1-3 – Pesan ketika pencarian tidak menemukan resep yang sesuai.</div>
+</div>
+<div class="img-wrap">
+<img alt="Output error pencarian" onerror="this.style.display='none';" src="../images/laporan/laporan12/e1-search-error.png"/>
+<div class="img-cap">Gambar E.1-4 – Tampilan error ketika request pencarian gagal.</div>
+</div>
+</div>
+</div>
+<div class="sub-section-title" id="latihan-2">E.3 <span class="file-badge">Latihan 2 — Mengubah dan Menghapus Resep</span></div>
+<p>Latihan 2 menambahkan menu tindakan pada halaman detail. Karena halaman detail ResepKu menggunakan <code>SliverAppBar</code>, <code>PopupMenuButton</code> ditempatkan di dalam <code>actions</code> milik SliverAppBar setelah tombol favorit, bukan pada AppBar biasa.</p>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">1</span>Method updateRecipe dan deleteRecipe</div>
+<p>Di <code>RecipeService</code> ditambahkan dua method. <code>updateRecipe</code> mengirim request PUT beserta body JSON yang berisi nama baru. <code>deleteRecipe</code> mengirim request DELETE, membaca response, lalu mengembalikan status <code>isDeleted</code>.</p>
+<table class="result-table"><thead><tr><th>Method</th><th>Request</th><th>Hasil yang digunakan UI</th></tr></thead><tbody>
+<tr><td><code>updateRecipe</code></td><td>PUT <span class="endpoint">/recipes/{id}</span><br/>Body: <code>{"name":"Nama baru"}</code></td><td>Nama pada response ditampilkan di SnackBar.</td></tr>
+<tr><td><code>deleteRecipe</code></td><td>DELETE <span class="endpoint">/recipes/{id}</span></td><td>Jika <code>isDeleted == true</code>, halaman detail ditutup dan pesan berhasil ditampilkan.</td></tr>
+</tbody></table>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li>Dialog ubah nama berisi TextField untuk mengisi nama baru.</li>
+<li>Dialog hapus meminta konfirmasi sebelum request DELETE dilakukan.</li>
+<li>Setelah setiap operasi asynchronous, status <code>mounted</code> diperiksa sebelum menggunakan context atau mengubah UI.</li>
+<li>Dialog ubah nama pada project ini menggunakan widget StatefulWidget khusus agar TextEditingController dikelola dan di-dispose pada lifecycle dialog.</li>
+<li>Setelah penghapusan berhasil, DetailPage ditutup dan SnackBar ditampilkan pada halaman sebelumnya.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode service untuk request PUT dan DELETE" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-service-put-delete.png"/>
+<div class="img-cap">Gambar E.2-1 – Kode method updateRecipe dan deleteRecipe pada RecipeService.</div>
+</div><div class="img-wrap">
+<img alt="Kode method update dan delete di DetailPage" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-detail-methods-code.png"/>
+<div class="img-cap">Gambar E.2-2a – Kode method _updateRecipeName dan _deleteRecipe pada DetailPage.</div>
+</div></div>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">2</span>Menambahkan PopupMenuButton pada SliverAppBar</div>
+<p>Menu titik tiga menyediakan pilihan <strong>Ubah Nama</strong> dan <strong>Hapus Resep</strong>. Menu diletakkan setelah tombol favorit pada daftar actions SliverAppBar. Pengguna memilih aksi, kemudian aplikasi membuka dialog yang sesuai dan menjalankan request API setelah input atau konfirmasi diberikan.</p>
+<div class="img-wrap">
+<img alt="Kode DetailPage dengan PopupMenuButton" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-detail-sliver-code.png"/>
+<div class="img-cap">Gambar E.2-2b – Kode PopupMenuButton pada actions SliverAppBar setelah tombol favorit.</div>
+</div>
+<div class="info-box purple"><i class="bi bi-info-circle-fill"></i><div><strong>Catatan dari modul.</strong> Nama pada FlexibleSpaceBar tidak otomatis berubah setelah PUT berhasil, karena <code>widget.recipe</code> tidak diganti dan DummyJSON hanya menyimulasikan perubahan. Nama dari response server cukup ditampilkan di SnackBar.</div></div>
+<div class="img-pair">
+<div class="img-wrap"><img alt="Popup menu detail resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-detail-popup.png"/><div class="img-cap">Gambar E.2-3 – Menu tindakan pada halaman detail resep yang berisi pilihan Ubah Nama dan Hapus Resep.</div></div>
+<div class="img-wrap"><img alt="Dialog ubah nama resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-edit-dialog.png"/><div class="img-cap">Gambar E.2-4 – Dialog Ubah Nama Resep dengan kolom untuk memasukkan nama baru.</div></div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">3</span>Menguji PUT dan DELETE</div>
+<p>Untuk menguji PUT, pengguna memilih Ubah Nama, mengisi nama baru, lalu menekan Simpan. Aplikasi mengirim request dan menampilkan nama dari response server pada SnackBar. Untuk DELETE, pengguna memilih Hapus Resep, menyetujui dialog konfirmasi, lalu aplikasi mengirim request. Jika response mengandung <code>isDeleted: true</code>, halaman detail ditutup dan SnackBar penghapusan ditampilkan.</p>
+<div class="img-pair">
+<div class="img-wrap"><img alt="SnackBar hasil update resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-update-snackbar.png"/><div class="img-cap">Gambar E.2-5 – SnackBar yang menampilkan nama resep dari respons PUT.</div></div>
+<div class="img-wrap"><img alt="Dialog konfirmasi hapus resep" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-delete-confirm.png"/><div class="img-cap">Gambar E.2-6 – Dialog konfirmasi sebelum aplikasi mengirim request DELETE.</div></div>
+</div>
+<div class="img-wrap">
+<img alt="SnackBar resep berhasil dihapus pada halaman sebelumnya" onerror="this.style.display='none';" src="../images/laporan/laporan12/e2-delete-snackbar.png"/>
+<div class="img-cap">Gambar E.2-7 – SnackBar keberhasilan penghapusan setelah halaman detail ditutup.</div>
+</div>
+</div>
+<div class="sub-section-title" id="latihan-3">E.4 <span class="file-badge">Latihan 3 (Bonus) — Unit Test tanpa Internet</span></div>
+<p>Latihan bonus membuat file <code>test/recipe_service_test.dart</code> untuk menguji proses parsing model dan request service. Pengujian memakai <code>MockClient</code> dari <code>package:http/testing.dart</code> sehingga respons dapat dibuat secara lokal tanpa menghubungi internet.</p>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">1</span>Membuat File Test dan Menggunakan MockClient</div>
+<p>File test ditempatkan pada folder <code>test/</code> di root project, sejajar dengan folder <code>lib/</code>. Test menggunakan <code>flutter_test</code>, <code>http</code>, dan <code>MockClient</code>. Service dibuat dengan memasukkan mock client melalui constructor.</p>
+<div class="penjelasan-box"><div class="penjelasan-title">Penjelasan</div><ul>
+<li><code>MockClient((request) async { ... })</code> menggantikan request HTTP sungguhan dengan response yang ditentukan di dalam test.</li>
+<li>Response sukses menggunakan status 200 dan body JSON yang memiliki key <code>recipes</code>.</li>
+<li>Response gagal menggunakan status 404 untuk memeriksa apakah service melempar <code>RecipeServiceException</code>.</li>
+<li><code>service.close()</code> dipanggil setelah pengujian untuk menutup client.</li>
+</ul></div>
+<div class="img-wrap">
+<img alt="Kode unit test RecipeService" onerror="this.style.display='none';" src="../images/laporan/laporan12/e3-test-code.png"/>
+<div class="img-cap">Gambar E.3-1 – Kode unit test pada recipe_service_test.dart yang menggunakan MockClient.</div>
+</div>
+</div>
+<div class="step-block">
+<div class="step-title"><span class="step-num latihan">2</span>Menjalankan Unit Test</div>
+<p>Pengujian dijalankan dari folder utama project ResepKu melalui terminal terintegrasi VS Code menggunakan perintah flutter test test/recipe_service_test.dart. Hasil pengujian menunjukkan tiga test berhasil dijalankan tanpa menghubungi internet.</p>
+
+<p>Terminal menunjukkan <strong>+3: All tests passed!</strong>, yang berarti ketiga test berhasil dijalankan.</p>
+<table class="result-table"><thead><tr><th>No.</th><th>Test</th><th>Tujuan pemeriksaan</th><th>Hasil</th></tr></thead><tbody>
+<tr><td>1</td><td><code>Recipe.fromJson</code></td><td>Memastikan rating integer 5 dibaca sebagai 5.0 dan field opsional yang tidak ada memakai nilai bawaan.</td><td class="status-done"><i class="bi bi-check-circle-fill"></i> Passed</td></tr>
+<tr><td>2</td><td><code>fetchRecipes</code> – response palsu</td><td>Memastikan response JSON palsu diubah menjadi <code>List&lt;Recipe&gt;</code>.</td><td class="status-done"><i class="bi bi-check-circle-fill"></i> Passed</td></tr>
+<tr><td>3</td><td><code>fetchRecipes</code> – status 404</td><td>Memastikan service melempar <code>RecipeServiceException</code> saat status bukan 2xx.</td><td class="status-done"><i class="bi bi-check-circle-fill"></i> Passed</td></tr>
+</tbody></table>
+<div class="info-box green"><i class="bi bi-check-circle-fill"></i><div><strong>Hasil pengujian aktual.</strong> Berdasarkan output terminal yang dijalankan pada project, ketiga pengujian berhasil: <code>00:21 +3: All tests passed!</code>.</div></div>
+<div class="img-wrap">
+<img alt="Terminal menunjukkan ketiga unit test berhasil" onerror="this.style.display='none';" src="../images/laporan/laporan12/e3-test-output.png"/>
+<div class="img-cap">Gambar E.3-2 – Hasil menjalankan flutter test test/recipe_service_test.dart dengan tiga test berhasil.</div>
+</div>
+</div>
+</div>
+<div class="laprak-card" id="hasil">
+<div class="section-label"><span class="num">F</span>Hasil dan Pembahasan</div>
+<p>Hasil praktikum adalah aplikasi ResepKu yang tidak lagi bergantung pada daftar resep dummy di dalam kode. Data resep dimuat dari REST API melalui <code>RecipeService</code>, dipetakan menjadi objek <code>Recipe</code>, lalu ditampilkan pada HomePage menggunakan FutureBuilder. Fitur list, grid, favorit, pengaturan tema, detail resep, dan gambar dari Modul 6–7 tetap dipertahankan.</p>
+<table class="result-table"><thead><tr><th>Komponen</th><th>Hasil implementasi</th><th>Status</th></tr></thead><tbody>
+<tr><td>Model fromJson</td><td>JSON dikonversi menjadi Recipe; rating dikonversi ke double dan field opsional memiliki nilai bawaan.</td><td class="status-done">Berhasil</td></tr>
+<tr><td>GET dan FutureBuilder</td><td>Daftar resep dari server ditampilkan dengan loading, error, retry, serta refresh.</td><td class="status-done">Diimplementasikan</td></tr>
+<tr><td>Detail instructions</td><td>Langkah memasak ditampilkan menggunakan sliver pada halaman detail.</td><td class="status-done">Diimplementasikan</td></tr>
+<tr><td>POST tambah resep</td><td>Form memvalidasi input dan mengirim request. Response server menampilkan ID baru melalui SnackBar; data bersifat simulasi.</td><td class="status-sim">Simulasi API</td></tr>
+<tr><td>Latihan 1 Search</td><td>Halaman pencarian memanggil endpoint search dan menampilkan hasil melalui FutureBuilder.</td><td class="status-done">Diimplementasikan</td></tr>
+<tr><td>Latihan 2 PUT/DELETE</td><td>Nama resep dapat dikirim untuk diperbarui dan penghapusan dilakukan setelah konfirmasi.</td><td class="status-sim">Simulasi API</td></tr>
+<tr><td>Latihan 3 Unit Test</td><td>Tiga pengujian berhasil dijalankan dengan MockClient.</td><td class="status-done">3 Passed</td></tr>
+</tbody></table>
+<p><strong>Pembahasan hasil.</strong> Pemisahan request ke dalam RecipeService membuat halaman tidak perlu mengetahui detail HTTP. FutureBuilder bertugas menghubungkan proses asynchronous dengan tampilan, sehingga pengguna memperoleh feedback ketika data sedang dimuat atau gagal diambil. Penggunaan Future yang disimpan pada state juga mencegah request berulang ketika pengguna hanya mengganti bentuk tampilan dari list ke grid.</p>
+<p>Pengujian menggunakan MockClient menunjukkan bahwa RecipeService dapat diuji tanpa internet. Pengujian berhasil membuktikan konversi rating integer menjadi double, pembacaan daftar Recipe dari response palsu, serta penanganan status 404 melalui RecipeServiceException. Operasi tambah, ubah, dan hapus pada DummyJSON perlu dipahami sebagai simulasi, bukan penyimpanan permanen.</p>
+</div>
+<div class="laprak-card" id="kesimpulan">
+<div class="section-label"><span class="num">G</span>Kesimpulan</div>
+<p>Berdasarkan pelaksanaan Praktikum 8 pada aplikasi ResepKu, dapat disimpulkan bahwa:</p>
+<ol>
+<li>REST API memungkinkan aplikasi memperoleh data dari server melalui request HTTP. Endpoint DummyJSON yang digunakan mencakup GET daftar resep, GET pencarian, POST tambah, PUT ubah, dan DELETE hapus.</li>
+<li>Model <code>Recipe.fromJson()</code> mempermudah konversi JSON menjadi objek Dart. Konversi <code>num</code> ke <code>double</code> serta pemberian nilai bawaan untuk field opsional membantu mencegah kesalahan parsing.</li>
+<li>Pemisahan komunikasi HTTP ke dalam <code>RecipeService</code> membuat struktur program lebih terorganisasi dan mempermudah proses pengujian.</li>
+<li><code>FutureBuilder</code> digunakan untuk menampilkan loading, error, dan data berdasarkan kondisi Future. Future yang disimpan pada state mencegah request baru ketika hanya terjadi rebuild tampilan list atau grid.</li>
+<li>Request POST membutuhkan validasi form dan penanganan response. Pada DummyJSON, operasi perubahan data hanya disimulasikan sehingga tidak menyimpan data secara permanen.</li>
+<li>Fitur pencarian, ubah nama, dan hapus resep memperluas interaksi pengguna dengan REST API. Pemeriksaan <code>mounted</code> menjaga agar UI tidak diakses setelah widget dilepas dari widget tree.</li>
+<li>Unit test dengan <code>MockClient</code> dapat dijalankan tanpa internet. Hasil <code>+3: All tests passed!</code> membuktikan ketiga pengujian model dan service berhasil.</li>
+</ol>
+<p>Dengan demikian, ResepKu telah menerapkan proses integrasi API dari pengambilan data hingga pengiriman request, sekaligus menyediakan penanganan kondisi berhasil dan gagal serta pengujian otomatis pada service.</p>
+</div>
+<div class="laprak-card" id="repo">
+<div class="section-label"><span class="num">H</span>Repository GitHub</div>
+<p>Seluruh source code aplikasi ResepKu untuk Praktikum Aplikasi Mobile dapat diakses melalui repository GitHub berikut:</p>
+<div class="text-center mt-4"><a class="github-btn" href="https://github.com/saskiaalifah/2411531002_KelasA_AppMob_ResepKu" rel="noopener" target="_blank"><i class="bi bi-github me-2"></i> Lihat Repository GitHub</a></div>
+</div>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="site-footer py-4">
+<div class="container">
+<div class="row align-items-center gy-3">
+<div class="col-md-4 text-md-start text-center">
+<div class="fw-bold text-uppercase" style="color: var(--text)">
+              Saskia Alifah
+            </div>
+<div class="small mt-1" style="color: var(--muted)">
+              Creative studio — design &amp; code
+            </div>
+</div>
+<div class="col-md-4 text-center">
+<nav>
+<ul class="list-inline mb-0" style="font-size: 13px">
+<li class="list-inline-item">
+<a href="index.html" style="color: var(--muted); text-decoration: none">Home</a>
+</li>
+<li class="list-inline-item">
+<a href="about.html" style="color: var(--muted); text-decoration: none">About</a>
+</li>
+<li class="list-inline-item">
+<a href="main.html" style="color: var(--muted); text-decoration: none">Laporan</a>
+</li>
+<li class="list-inline-item">
+<a href="kontak.html" style="color: var(--muted); text-decoration: none">Contact</a>
+</li>
+</ul>
+</nav>
+</div>
+<div class="col-md-4 text-md-end text-center">
+<div class="d-inline-flex gap-2">
+<a href="#" style="color: var(--muted); font-size: 16px"><i class="fab fa-instagram"></i></a>
+<a href="#" style="color: var(--muted); font-size: 16px"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://github.com/saskiaalifah" style="color: var(--muted); font-size: 16px" target="_blank"><i class="fab fa-github"></i></a>
+</div>
+</div>
+</div>
+<div class="text-center mt-3">
+<small style="color: var(--muted)">© <span id="year"></span> Saskia Alifah. All rights
+            reserved.</small>
+</div>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      window.addEventListener("scroll", function () {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Scroll-spy sederhana untuk highlight item Daftar Isi yang aktif
+      const tocLinks = document.querySelectorAll(".toc-sidebar .toc-list a");
+      const sections = Array.from(tocLinks)
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      function updateActiveToc() {
+        let currentId = "";
+        sections.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= 140) currentId = "#" + sec.id;
+        });
+        tocLinks.forEach((a) =>
+          a.classList.toggle("active", a.getAttribute("href") === currentId),
+        );
+      }
+      window.addEventListener("scroll", updateActiveToc);
+      updateActiveToc();
+    </script>
+</body>
+</html>
